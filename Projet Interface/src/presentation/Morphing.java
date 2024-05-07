@@ -5,6 +5,8 @@ package presentation;
 import java.io.File;
 
 import abstraction.Album;
+import controle.ControleBoutonDroite;
+import controle.ControleBoutonGauche;
 import controle.ControleImageDepart;
 import controle.ControleImageFin;
 import javafx.application.Application;
@@ -37,7 +39,7 @@ public class Morphing extends Application{
         return imageDepart;
 	}
 	
-	public ImageView creerImageFin (Image p) {
+	public ImageView creerImageFin(Image p) {
 		
        imageFin = new ImageView();
        imageFin.setImage(p);
@@ -48,6 +50,16 @@ public class Morphing extends Application{
        return imageFin;
 	}
 	
+	public Button creerBoutonGauche() {
+		boutonGauche = new Button("Upload image");
+		return boutonGauche;
+	}
+	
+	public Button creerBoutonDroite() {
+		boutonDroite = new Button("Upload image");
+		return boutonDroite;
+	}
+	
 	@Override
     public void start(Stage primaryStage) throws Exception {
 		
@@ -56,25 +68,38 @@ public class Morphing extends Application{
         primaryStage.setWidth(1200);
         primaryStage.setHeight(600);
         
-        HBox hBoxGauche = new HBox();
+        /* création d'une fenêtre */
+        HBox root = new HBox();
+        
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(null);
         alb = new Album(new Image(file.toURI().toString()));
-        /* création d'une fenêtre */
-        VBox root = new VBox();
-        hBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
         
-        HBox hBoxDroite = new HBox();
-        hBoxGauche.getChildren().add(creerImageFin(alb.getImageFin()));
-        
+        VBox vBoxGauche = new VBox();
+        vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
+        vBoxGauche.getChildren().add(creerBoutonGauche());
+
         ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
         alb.addObserver(cid);
         
+        ControleBoutonGauche cbg = new ControleBoutonGauche(alb);
+        boutonGauche.setOnAction(cbg);
+        alb.addObserver(cbg);
+        
+        
+        VBox vBoxDroite = new VBox();
+        vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
+        vBoxDroite.getChildren().add(creerBoutonDroite());
+        
         ControleImageFin cif = new ControleImageFin(alb, imageFin);
         alb.addObserver(cif);
+        
+        ControleBoutonDroite cbd = new ControleBoutonDroite(alb);
+        boutonDroite.setOnAction(cbd);
+        alb.addObserver(cbd);
       
-        root.getChildren().add(hBoxGauche);
-        root.getChildren().add(hBoxDroite);
+        root.getChildren().add(vBoxGauche);
+        root.getChildren().add(vBoxDroite);
         
         /* création d'une scene et de son association avec */
         /* la fenêtre + taille */

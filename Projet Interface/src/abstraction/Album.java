@@ -1,8 +1,10 @@
 package abstraction;
 
+import java.io.File;
 import java.util.Observable;
 
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 
 public class Album extends Observable {
 
@@ -12,9 +14,14 @@ public class Album extends Observable {
 	private Image imageDepart;
 	private Image imageFin;
 
-	public Album(Image img) {
-		this.imageDepart = img;
-		this.imageFin = img;
+	public Album() {
+		FileChooser fc = new FileChooser();
+		File file = fc.showOpenDialog(null);
+		this.imageDepart = new Image(file.toURI().toString());
+		
+		fc = new FileChooser();
+		file = fc.showOpenDialog(null);
+		this.imageFin = new Image(file.toURI().toString());
 	}
 
 	public void setImageDepart(String fullpathname) {

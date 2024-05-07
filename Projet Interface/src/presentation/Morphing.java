@@ -71,9 +71,7 @@ public class Morphing extends Application{
         /* création d'une fenêtre */
         HBox root = new HBox();
         
-		FileChooser fc = new FileChooser();
-		File file = fc.showOpenDialog(null);
-        alb = new Album(new Image(file.toURI().toString()));
+        alb = new Album();
         
         VBox vBoxGauche = new VBox();
         vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));

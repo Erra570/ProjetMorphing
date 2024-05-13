@@ -28,7 +28,7 @@ public class Point {
 	
 	
 	public boolean dansTriangle(Point a, Point b, Point c) {
-		return (((position(c,a) >= 0) && (position(a,b) >= 0) && (position(b,c) > 0))
-				|| ((position(c,a) <= 0) && (position(a,b) <= 0) && (position(b,c) < 0)));
+		return (((position(c,a) >= 0) && (position(a,b) >= 0) && (position(b,c) >= 0))
+				|| ((position(c,a) <= 0) && (position(a,b) <= 0) && (position(b,c) <= 0)));
 	}
 }

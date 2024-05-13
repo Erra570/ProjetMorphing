@@ -1,32 +1,17 @@
 package morphingFonction;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 public class MatriceImg {
-	private Color[][] matriceCouleur;
+	private BufferedImage img;
 	private Point[] tabPoint;
 	
 	public MatriceImg(File f, Point[] tabPoint) throws Exception {
-		BufferedImage img = ImageIO.read(f);
-		matriceCouleur = new Color[img.getHeight()][img.getWidth()];
-		for (int y = 0; y < img.getHeight(); y++) {
-			for (int x = 0; x < img.getWidth(); x++) {
-				matriceCouleur[y][x] = new Color(img.getRGB(x,y), true);
-		    }
-		}
+		this.img = ImageIO.read(f);
 		this.tabPoint = tabPoint; 
-	}
-
-	public Color[][] getMatrice() {
-		return matriceCouleur;
-	}
-
-	public void setMatrice(Color[][] matriceCouleur) {
-		this.matriceCouleur = matriceCouleur;
 	}
 
 	public Point[] getTabPoint() {
@@ -40,9 +25,9 @@ public class MatriceImg {
 	@Override
 	public String toString() {
 		String r = "";
-		for (int y = 0; y < matriceCouleur.length; y++) {
-			for (int x = 0; x < matriceCouleur[0].length; x++) {
-				r += "(" + matriceCouleur[y][x].getRed() + "," + matriceCouleur[y][x].getGreen() + "," + matriceCouleur[y][x].getBlue() + ")";
+		for (int y = 0; y < img.getHeight(); y++) {
+			for (int x = 0; x < img.getWidth(); x++) {
+				r += "(" + img.getRGB(x,y) + ")";
 		    }
 			r += "\n";
 		}
@@ -50,14 +35,8 @@ public class MatriceImg {
 	}
 	
 	public void creerImage() {
-		BufferedImage image = new BufferedImage(matriceCouleur[0].length, matriceCouleur.length, BufferedImage.TYPE_INT_RGB);
-		for (int y = 0; y < matriceCouleur.length; y++) {
-			for (int x = 0; x < matriceCouleur[0].length; x++) {
-				image.setRGB(x, y, matriceCouleur[y][x].getRGB());
-		    }
-		}
 		try {
-			ImageIO.write(image, "JPG", new File("imgTest5.jpg"));
+			ImageIO.write(img, "JPG", new File("imgTest5.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -66,39 +45,23 @@ public class MatriceImg {
 	
 	public void matriceSuivante(Point[] tabSuivant) {
 		for(int i = 0; i<tabSuivant.length; i++) {
-			if(this.tabPoint[i] != tabSuivant[i]) {
-				Color c;
-				if(this.tabPoint[i].getX() != tabSuivant[i].getX()) {
-					if(this.tabPoint[i].getX() < tabSuivant[i].getX()) {
-						c = this.matriceCouleur[this.tabPoint[i].getY()][this.tabPoint[i].getX() - 1];
-					} else {
-						c = this.matriceCouleur[this.tabPoint[i].getY()][this.tabPoint[i].getX() + 1];						
-					}
-					for (int y = 0; y < matriceCouleur.length; y++) {
-						for (int x = 0; x < matriceCouleur[0].length; x++) {
-							Point p = new Point(x,y);
-							if (p.dansTriangle(this.tabPoint[i], this.tabPoint[(i+1) % tabSuivant.length], tabSuivant[i]))
-								this.matriceCouleur[y][x] = c;
-							if (p.dansTriangle(this.tabPoint[i], this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length], tabSuivant[i]))
-								this.matriceCouleur[y][x] = c;
-						}
-					}
-				} else {
-					if(this.tabPoint[i].getY() < tabSuivant[i].getY()) {
-						c = this.matriceCouleur[this.tabPoint[i].getY() - 1][this.tabPoint[i].getX()];
-					} else {
-						c = this.matriceCouleur[this.tabPoint[i].getY() + 1][this.tabPoint[i].getX()];
-					}
-					for (int y = 0; y < matriceCouleur.length; y++) {
-						for (int x = 0; x < matriceCouleur[0].length; x++) {
-							Point p = new Point(x,y);
-							if (p.dansTriangle(this.tabPoint[i], this.tabPoint[(i+1) % tabSuivant.length], tabSuivant[i]))
-								this.matriceCouleur[y][x] = c;
-							if (p.dansTriangle(this.tabPoint[i], this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length], tabSuivant[i]))
-								this.matriceCouleur[y][x] = c;
+			if((this.tabPoint[i].getX() != tabSuivant[i].getX()) || (this.tabPoint[i].getY() != tabSuivant[i].getY())) {
+				int minY = Integer.min(Integer.min(Integer.min(this.tabPoint[i].getY(), this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length].getY()), this.tabPoint[(i+1) % tabSuivant.length].getY()), tabSuivant[i].getY());
+				int maxY = Integer.max(Integer.max(Integer.max(this.tabPoint[i].getY(), this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length].getY()), this.tabPoint[(i+1) % tabSuivant.length].getY()), tabSuivant[i].getY());
+				int minX = Integer.min(Integer.min(Integer.min(this.tabPoint[i].getX(), this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length].getX()), this.tabPoint[(i+1) % tabSuivant.length].getX()), tabSuivant[i].getX());
+				int maxX = Integer.max(Integer.max(Integer.max(this.tabPoint[i].getX(), this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length].getX()), this.tabPoint[(i+1) % tabSuivant.length].getX()), tabSuivant[i].getX());
+				for (int y = minY; y < maxY; y++) {
+					for (int x = minX; x < maxX; x++) {
+						Point p = new Point(x,y);
+						if (p.dansTriangle(this.tabPoint[(i+1) % tabSuivant.length], this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length], tabSuivant[i]))
+							this.img.setRGB(x, y, this.img.getRGB(img.getWidth()/2,img.getHeight()/2));
+						else {
+							if (p.dansTriangle(this.tabPoint[i], this.tabPoint[(i+1) % tabSuivant.length], this.tabPoint[(i-1+tabSuivant.length) % tabSuivant.length]))
+								this.img.setRGB(x, y, this.img.getRGB(0,0));
 						}
 					}
 				}
+				this.tabPoint[i] = tabSuivant[i];
 			}
 		}
 	}

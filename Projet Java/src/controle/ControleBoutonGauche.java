@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 
+@SuppressWarnings("deprecation")
 public class ControleBoutonGauche implements Observer, EventHandler<ActionEvent>{
 	
 	private Album alb;

@@ -7,9 +7,10 @@ import java.util.Observer;
 import abstraction.Album;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.image.ImageView;
+// import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 
+@SuppressWarnings("deprecation")
 public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent>{
 	
 	private Album alb;

@@ -2,7 +2,7 @@ package presentation;
 
 
 
-import java.io.File;
+// import java.io.File;
 
 import abstraction.Album;
 import controle.ControleBoutonDroite;
@@ -17,7 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
+// import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class Morphing extends Application{
@@ -60,6 +60,7 @@ public class Morphing extends Application{
 		return boutonDroite;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
     public void start(Stage primaryStage) throws Exception {
 		

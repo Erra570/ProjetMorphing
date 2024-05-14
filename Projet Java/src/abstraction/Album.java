@@ -6,9 +6,12 @@ import java.util.Observable;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 
+@SuppressWarnings("deprecation")
 public class Album extends Observable {
 
+	@SuppressWarnings("removal")
 	public static final Integer IMAGE_Depart = new Integer(0); // PAC
+	@SuppressWarnings("removal")
 	public static final Integer IMAGE_Fin = new Integer(1); // PAC
 	
 	private Image imageDepart;

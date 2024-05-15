@@ -5,6 +5,7 @@ import java.util.Observable;
 
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
+import presentation.Fichier;
 
 @SuppressWarnings("deprecation")
 public class Album extends Observable {
@@ -16,11 +17,14 @@ public class Album extends Observable {
 	
 	private Image imageDepart;
 	private Image imageFin;
+	private Fichier f;
 
-	public Album() {
+	public Album(Fichier f) {
 		FileChooser fc = new FileChooser();
 		File file = fc.showOpenDialog(null);
 		this.imageDepart = new Image(file.toURI().toString());
+		this.f = f;
+		f.setF(file);
 		
 		fc = new FileChooser();
 		file = fc.showOpenDialog(null);

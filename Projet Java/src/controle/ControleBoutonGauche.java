@@ -8,14 +8,17 @@ import abstraction.Album;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
+import presentation.Fichier;
 
 @SuppressWarnings("deprecation")
 public class ControleBoutonGauche implements Observer, EventHandler<ActionEvent>{
 	
 	private Album alb;
+	private Fichier f;
 	
-	public ControleBoutonGauche(Album alb) {
+	public ControleBoutonGauche(Album alb, Fichier f) {
 		this.alb = alb;
+		this.f = f;
 	}
 
 	@Override
@@ -23,6 +26,7 @@ public class ControleBoutonGauche implements Observer, EventHandler<ActionEvent>
 		FileChooser fc = new FileChooser();
 		final File file = fc.showOpenDialog(null); 
 		alb.setImageDepart(file.toURI().toString());
+		f.setF(file);
 	}
 
 	@Override

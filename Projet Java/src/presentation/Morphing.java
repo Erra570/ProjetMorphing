@@ -37,6 +37,7 @@ public class Morphing extends Application{
 	private Button boutonPoly;
 	private Button boutonFA;
 	private Button boutonVisage;
+	private Fichier f;
 	
 	
 	public StackPane creerImageDepart(Image p) {
@@ -52,6 +53,9 @@ public class Morphing extends Application{
         Canvas canva1 = new Canvas(p.getWidth(), p.getHeight());
         canva1.setOnMouseClicked(e -> creationPoint(e, canva1));
         stack1.getChildren().addAll(imageDepart,canva1);
+        
+        // On créer la matrice de points associée à l'image
+        //TODO
         
         return stack1;
 	}
@@ -92,7 +96,7 @@ public class Morphing extends Application{
 		gc.fillOval(x + xImg, y + yImg, 6, 6);
 		
 		// On créer le point
-		//TODO
+		
 	}
 	@SuppressWarnings("deprecation")
 	@Override
@@ -106,7 +110,9 @@ public class Morphing extends Application{
         /* création d'une fenêtre */
         HBox root = new HBox();
         
-        alb = new Album();
+        f = new Fichier();
+        
+        alb = new Album(f);
         
         VBox vBoxGauche = new VBox();
         vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
@@ -115,7 +121,7 @@ public class Morphing extends Application{
         ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
         alb.addObserver(cid);
         
-        ControleBoutonGauche cbg = new ControleBoutonGauche(alb);
+        ControleBoutonGauche cbg = new ControleBoutonGauche(alb, f);
         boutonGauche.setOnAction(cbg);
         alb.addObserver(cbg);
         
@@ -127,7 +133,7 @@ public class Morphing extends Application{
         ControleImageFin cif = new ControleImageFin(alb, imageFin);
         alb.addObserver(cif);
         
-        ControleBoutonDroite cbd = new ControleBoutonDroite(alb);
+        ControleBoutonDroite cbd = new ControleBoutonDroite(alb, f);
         boutonDroite.setOnAction(cbd);
         alb.addObserver(cbd);
       

@@ -45,7 +45,7 @@ public class Morphing extends Application{
         imageDepart = new ImageView();
         imageDepart.setImage(p);
         // on peut changer la taille de l'image grâce au Rectangle 2D
-        Rectangle2D viewportRect = new Rectangle2D(10, 10, 600, 450);
+        Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
         imageDepart.setViewport(viewportRect);
         
         // Le stack pane permet de superposer le canva et l'image
@@ -65,7 +65,7 @@ public class Morphing extends Application{
        imageFin = new ImageView();
        imageFin.setImage(p);
 
-       Rectangle2D viewportRect = new Rectangle2D(10, 10, 600, 450);
+       Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
        imageFin.setViewport(viewportRect);
        
        return imageFin;
@@ -98,14 +98,14 @@ public class Morphing extends Application{
 		// On créer le point
 		
 	}
-	@SuppressWarnings("deprecation")
+	
 	@Override
     public void start(Stage primaryStage) throws Exception {
 		
         /* donner un nom à la fenêtre */
         primaryStage.setTitle("Morphing d'image");
         primaryStage.setWidth(1200);
-        primaryStage.setHeight(600);
+        primaryStage.setHeight(700);
         
         /* création d'une fenêtre */
         HBox root = new HBox();
@@ -142,10 +142,16 @@ public class Morphing extends Application{
         
         /*Création du reste de la fenêtre*/
         /*Création des boutons en haut de la fenêtre*/
+        HBox top = new HBox();
+        
+        BorderPane visuPoly = new BorderPane();
+        visuPoly.setCenter(root);
+        
         boutonPoly = new Button("Polygone");
+        boutonPoly.setOnAction(e -> visuPoly.setCenter(root));
         boutonFA = new Button("Formes Arrondies");
         boutonVisage = new Button("Visages");
-        HBox top = new HBox();
+        
         // On fait en sorte que les boutons ne soient pas collés, et centré
         top.setSpacing(50);
         top.setPadding(new Insets(10,0,10,0));
@@ -155,8 +161,7 @@ public class Morphing extends Application{
         top.getChildren().add(boutonFA);
         top.getChildren().add(boutonVisage);
         
-        BorderPane visuPoly = new BorderPane();
-        visuPoly.setCenter(root);
+        
         visuPoly.setTop(top);
         
         
@@ -164,7 +169,6 @@ public class Morphing extends Application{
         /* création d'une scene et de son association avec */
         /* la fenêtre + taille */
         Scene scenePoly = new Scene(visuPoly);
-        boutonPoly.setOnAction(e -> primaryStage.setScene(scenePoly));
 
         /* Ajouter la scene */
         primaryStage.setScene(scenePoly);

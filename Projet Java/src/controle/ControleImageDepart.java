@@ -6,7 +6,6 @@ import java.util.Observer;
 import abstraction.Album;
 import javafx.scene.image.ImageView;
 
-@SuppressWarnings("deprecation")
 public class ControleImageDepart implements Observer{
 	
 	private Album alb;

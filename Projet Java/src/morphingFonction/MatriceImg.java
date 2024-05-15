@@ -4,22 +4,33 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 public class MatriceImg {
 	private BufferedImage img;
-	private ArrayList<Point> tabPoint;
+	private List<Point> tabPoint;
 	
-	public MatriceImg(File f, ArrayList<Point> tabPoint) throws Exception {
+	public MatriceImg(File f, List<Point> tabPoint) throws Exception {
 		this.img = ImageIO.read(f);
-		this.tabPoint = tabPoint; 
+		this.tabPoint = new ArrayList<>();
+		for(int i = 0; i<tabPoint.size(); i++)
+			this.tabPoint.add(tabPoint.get(i)); 
+	}
+	
+	public BufferedImage getImg() {
+		return img;
 	}
 
-	public ArrayList<Point> getTabPoint() {
+	public void setImg(BufferedImage img) {
+		this.img = img;
+	}
+
+	public List<Point> getTabPoint() {
 		return tabPoint;
 	}
 
-	public void setTabPoint(ArrayList<Point> tabPoint) {
+	public void setTabPoint(List<Point> tabPoint) {
 		this.tabPoint = tabPoint;
 	}
 
@@ -51,8 +62,8 @@ public class MatriceImg {
 				int maxY = Integer.max(Integer.max(Integer.max(this.tabPoint.get(i).getY(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getY()), this.tabPoint.get((i+1) % tabSuivant.length).getY()), tabSuivant[i].getY());
 				int minX = Integer.min(Integer.min(Integer.min(this.tabPoint.get(i).getX(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getX()), this.tabPoint.get((i+1) % tabSuivant.length).getX()), tabSuivant[i].getX());
 				int maxX = Integer.max(Integer.max(Integer.max(this.tabPoint.get(i).getX(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getX()), this.tabPoint.get((i+1) % tabSuivant.length).getX()), tabSuivant[i].getX());
-				for (int y = minY; y < maxY; y++) {
-					for (int x = minX; x < maxX; x++) {
+				for (int y = minY - 1; y < maxY + 1; y++) {
+					for (int x = minX - 1; x < maxX + 1; x++) {
 						Point p = new Point(x,y);
 						if (p.dansTriangle(this.tabPoint.get((i+1) % tabSuivant.length), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length), tabSuivant[i]))
 							this.img.setRGB(x, y, this.img.getRGB(img.getWidth()/2,img.getHeight()/2));

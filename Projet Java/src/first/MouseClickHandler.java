@@ -10,7 +10,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.List;
 
 /**
- *Classe permettant de gérer la création de courbes et de points 
+ * Classe permettant de gérer la création de courbes et de points 
  * @author Nicolas F
  *
  */

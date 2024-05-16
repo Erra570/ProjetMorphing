@@ -27,6 +27,11 @@ import javafx.scene.shape.QuadCurve;
 import javafx.stage.Stage;
 import presentation.Fichier;
 
+/**
+ * Classe permettant de créer des courbes pour les formes arrondies
+ * @author Nicolas F
+ *
+ */
 public class FormesArrondies extends Application {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;

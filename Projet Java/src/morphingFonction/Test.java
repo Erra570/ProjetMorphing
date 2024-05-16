@@ -4,8 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Teste {
+/**
+ * Classe Test contenant la méthode main pour tester le morphing d'images.
+ */
+public class Test {
 	
+	/**
+     * Méthode principale pour exécuter le test de morphing d'images.
+     * 
+     * @param args les arguments de la ligne de commande
+     * @throws Exception si une erreur se produit lors de la lecture du fichier ou de la manipulation de l'image
+     */
 	public static void main(String[] args) throws Exception {
 		double nombre = 60;
 		
@@ -17,14 +26,14 @@ public class Teste {
 		
 		List<Point> tabF = new ArrayList<>();
 		tabF.add(0, new Point(250,2));
-		tabF.add(1, new Point(2,498));
-		tabF.add(2, new Point(498,498));
+		tabF.add(1, new Point(2,100));
+		tabF.add(2, new Point(250,300));
 		tabF.add(3, new Point(250,2));
 		
-		MatriceImg m = new MatriceImg(new File("gImg.jpg"), tabD);
+		MatriceImg m = new MatriceImg(new File("img/gImg.jpg"), tabD);
 		
 		AnimatedGifEncoder e = new AnimatedGifEncoder();
-		e.start("testGif.gif");
+		e.start("img/testGif.gif");
 		e.setRepeat(0);
 		e.setFrameRate(60);
 		e.addFrame(m.getImg());

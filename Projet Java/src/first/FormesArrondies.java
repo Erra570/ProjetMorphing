@@ -9,7 +9,7 @@ import controle.ControleBoutonGauche;
 import controle.ControleImageDepart;
 import controle.ControleImageFin;
 import javafx.application.Application;
-// import javafx.geometry.Insets;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -32,11 +32,13 @@ import presentation.Fichier;
  *
  */
 public class FormesArrondies extends Application {
-	// private static final int WIDTH = 600;
-	// private static final int HEIGHT = 400;
+	private static final int WIDTH = 600;
+	private static final int HEIGHT = 400;
 
 	private List<QuadCurve> curves = new ArrayList<>(); // liste de courbes
+	private List<QuadCurve> curves2 = new ArrayList<>(); // liste de courbes pour l'image de fin
 	private List<Circle> points = new ArrayList<>(); // liste de points
+	private List<Circle> points2 = new ArrayList<>(); // liste de points pour l'image de fin
 	private Pane gestPoints1;
 	private Pane gestPoints2;
 	private boolean closeState = false; // etat de fermeture du périmètre
@@ -46,79 +48,81 @@ public class FormesArrondies extends Application {
 	private ImageView imageFin;
 	private Button boutonGauche;
 	private Button boutonDroite;
-	// private Button boutonPoly;
-	// private Button boutonFA;
-	// private Button boutonVisage;
+	private Button boutonPoly;
+	private Button boutonFA;
+	private Button boutonVisage;
 	private Fichier f;
 	private BorderPane root;
-	// private HBox pCentre;
+	private HBox pCentre;
 	private VBox right;
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage primaryStage) {
-		
-        /* création du plan central, contenant les images */
-        HBox pCentre = new HBox();
-        pCentre.setSpacing(10);
-        f = new Fichier();
-        alb = new Album(f);
-        
-        // Image gauche avec bouton pour changer d'image
-        VBox vBoxGauche = new VBox();
-        vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
-        vBoxGauche.getChildren().add(creerBoutonGauche());
-        ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
-        alb.addObserver(cid);
-        ControleBoutonGauche cbg = new ControleBoutonGauche(alb, f);
-        boutonGauche.setOnAction(cbg);
-        alb.addObserver(cbg);
-        
-        // Image droite avec bouton pour changer d'image
-        VBox vBoxDroite = new VBox();
-        vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
-        vBoxDroite.getChildren().add(creerBoutonDroite());
-        ControleImageFin cif = new ControleImageFin(alb, imageFin);
-        alb.addObserver(cif);
-        ControleBoutonDroite cbd = new ControleBoutonDroite(alb, f);
-        boutonDroite.setOnAction(cbd);
-        alb.addObserver(cbd);
-        
-        // Ajout des deux images au plan central
-        pCentre.getChildren().addAll(vBoxDroite,vBoxGauche);
-        
-        // Boutons droits
-        right = new VBox();
-        Button clo = new Button("Fermer Forme");
+
+		/* création du plan central, contenant les images */
+		HBox pCentre = new HBox();
+		pCentre.setSpacing(10);
+		f = new Fichier();
+		alb = new Album(f);
+
+		// Image gauche avec bouton pour changer d'image
+		VBox vBoxGauche = new VBox();
+		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
+		vBoxGauche.getChildren().add(creerBoutonGauche());
+		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
+		alb.addObserver(cid);
+		ControleBoutonGauche cbg = new ControleBoutonGauche(alb, f);
+		boutonGauche.setOnAction(cbg);
+		alb.addObserver(cbg);
+
+		// Image droite avec bouton pour changer d'image
+		VBox vBoxDroite = new VBox();
+		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
+		vBoxDroite.getChildren().add(creerBoutonDroite());
+		ControleImageFin cif = new ControleImageFin(alb, imageFin);
+		alb.addObserver(cif);
+		ControleBoutonDroite cbd = new ControleBoutonDroite(alb, f);
+		boutonDroite.setOnAction(cbd);
+		alb.addObserver(cbd);
+
+		// Ajout des deux images au plan central
+		pCentre.getChildren().addAll(vBoxDroite, vBoxGauche);
+
+		// Boutons droits
+		right = new VBox();
+		Button clo = new Button("Fermer Forme");
 		clo.setOnAction(event -> close()); // Définir le gestionnaire d'événements
 		right.getChildren().add(clo);
-        
-        Button del = new Button("Annuler");
+
+		Button del = new Button("Annuler");
 		del.setOnAction(event -> delete(curves, points)); // Définir le gestionnaire d'événements
-		right.getChildren().add(del);	
-		
-		 // On fait en sorte que les boutons ne soient pas collés, et centré
-        right.setSpacing(50);
-        right.setAlignment(Pos.CENTER);
-        
-        // Création du plan principal
-        root = new BorderPane();
-        root.setCenter(pCentre);
-        root.setRight(right);
-        
+		right.getChildren().add(del);
+
+		// On fait en sorte que les boutons ne soient pas collés, et centré
+		right.setSpacing(50);
+		right.setAlignment(Pos.CENTER);
+
+		// Création du plan principal
+		root = new BorderPane();
+		root.setCenter(pCentre);
+		root.setRight(right);
+
 		scene = new Scene(root);
 
 		MouseClickHandler clickHandler = new MouseClickHandler(curves, points, closeState, gestPoints1);
-		scene.setOnMouseClicked(clickHandler);
+		MouseClickHandler clickHandler2 = new MouseClickHandler(curves2, points2, closeState, gestPoints2);
+		gestPoints1.setOnMouseClicked(clickHandler);
+		gestPoints2.setOnMouseClicked(clickHandler2);
 
 		MouseMoveHandler moveHandler = new MouseMoveHandler(curves, points, closeState, scene);
-		scene.setOnMouseMoved(moveHandler);
+		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, scene);
+		gestPoints1.setOnMouseMoved(moveHandler);
+		gestPoints2.setOnMouseMoved(moveHandler2);
 
-		
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
-        primaryStage.setTitle("Morphing d'image");
-        primaryStage.setResizable(false);
+		primaryStage.setTitle("Morphing d'image");
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 
@@ -126,50 +130,52 @@ public class FormesArrondies extends Application {
 	 * Création de l'image gauche sur l'interface
 	 * 
 	 * @param p image à afficher
-	 * @return le plan contenant l'image dans une imageView et le gestionnaire de points
+	 * @return le plan contenant l'image dans une imageView et le gestionnaire de
+	 *         points
 	 */
 	public StackPane creerImageDepart(Image p) {
-		//On créer l'image view
-        imageDepart = new ImageView();
-        imageDepart.setImage(p);
-        // on peut changer la taille de l'image grâce au Rectangle 2D
-        Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
-        imageDepart.setViewport(viewportRect);
-        
-        // Le stack pane permet de superposer le gestionnaire de points et l'image
-        gestPoints1 = new Pane();
-        gestPoints1.prefHeight(p.getHeight());
-        gestPoints1.prefWidth(p.getWidth());
-        StackPane stack1 = new StackPane();
-        stack1.getChildren().addAll(imageDepart,gestPoints1);
-        
-        return stack1;
+		// On créer l'image view
+		imageDepart = new ImageView();
+		imageDepart.setImage(p);
+		// on peut changer la taille de l'image grâce au Rectangle 2D
+		Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
+		imageDepart.setViewport(viewportRect);
+
+		// Le stack pane permet de superposer le gestionnaire de points et l'image
+		gestPoints1 = new Pane();
+		gestPoints1.prefHeight(p.getHeight());
+		gestPoints1.prefWidth(p.getWidth());
+		StackPane stack1 = new StackPane();
+		stack1.getChildren().addAll(imageDepart, gestPoints1);
+
+		return stack1;
 	}
-	
+
 	/**
 	 * Création de l'image de droite (image de fin)
 	 * 
 	 * @param p image à afficher
-	 * @return le plan contenant l'image dans une imageView et le gestionnaire de points
+	 * @return le plan contenant l'image dans une imageView et le gestionnaire de
+	 *         points
 	 */
 	public StackPane creerImageFin(Image p) {
-			
-	       imageFin = new ImageView();
-	       imageFin.setImage(p);
 
-	       Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
-	       imageFin.setViewport(viewportRect);
-	       
-	       	// Le stack pane permet de superposer le gestionnaire de points et l'image
-	        gestPoints2 = new Pane();
-	        gestPoints2.prefHeight(p.getHeight());
-	        gestPoints2.prefWidth(p.getWidth());
-	        StackPane stack2 = new StackPane();
-	        stack2.getChildren().addAll(imageFin,gestPoints1);
-	        
-	        return stack2;
-		}
-	
+		imageFin = new ImageView();
+		imageFin.setImage(p);
+
+		Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
+		imageFin.setViewport(viewportRect);
+
+		// Le stack pane permet de superposer le gestionnaire de points et l'image
+		gestPoints2 = new Pane();
+		gestPoints2.prefHeight(p.getHeight());
+		gestPoints2.prefWidth(p.getWidth());
+		StackPane stack2 = new StackPane();
+		stack2.getChildren().addAll(imageFin, gestPoints1);
+
+		return stack2;
+	}
+
 	/**
 	 * Création du bouton pour modifier l'image de début
 	 * 
@@ -179,7 +185,7 @@ public class FormesArrondies extends Application {
 		boutonGauche = new Button("Changer d'image");
 		return boutonGauche;
 	}
-	
+
 	/**
 	 * Création du bouton pour modifier l'image de fin
 	 * 
@@ -189,7 +195,7 @@ public class FormesArrondies extends Application {
 		boutonDroite = new Button("Changer d'image");
 		return boutonDroite;
 	}
-	
+
 	/**
 	 * Création d'un point de controle qui se situe entre deux points, la courbe
 	 * associée sera une droite

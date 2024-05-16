@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class teste {
+public class Teste {
 	
 	public static void main(String[] args) throws Exception {
 		double nombre = 60;

@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -48,14 +49,10 @@ public class Morphing extends Application{
         Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
         imageDepart.setViewport(viewportRect);
         
-        // Le stack pane permet de superposer le canva et l'image
+        // Le stack pane permet de superposer le gestionnaire de points et l'image
+       
         StackPane stack1 = new StackPane();
-        Canvas canva1 = new Canvas(p.getWidth(), p.getHeight());
-        canva1.setOnMouseClicked(e -> creationPoint(e, canva1));
-        stack1.getChildren().addAll(imageDepart,canva1);
-        
-        // On créer la matrice de points associée à l'image
-        //TODO
+  
         
         return stack1;
 	}
@@ -102,7 +99,7 @@ public class Morphing extends Application{
 	@Override
     public void start(Stage primaryStage) throws Exception {
 		
-        /* donner un nom à la fenêtre */
+        /* donner un nom et une taille à la fenêtre */
         primaryStage.setTitle("Morphing d'image");
         primaryStage.setWidth(1200);
         primaryStage.setHeight(700);

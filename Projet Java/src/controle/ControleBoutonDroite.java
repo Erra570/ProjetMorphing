@@ -27,6 +27,7 @@ public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent>
 		FileChooser fc = new FileChooser();
 		final File file = fc.showOpenDialog(null); 
 		alb.setImageFin(file.toURI().toString());
+		f.setF(file);
 	}
 
 	@Override

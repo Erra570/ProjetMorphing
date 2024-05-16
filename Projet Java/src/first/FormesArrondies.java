@@ -9,7 +9,7 @@ import controle.ControleBoutonGauche;
 import controle.ControleImageDepart;
 import controle.ControleImageFin;
 import javafx.application.Application;
-import javafx.geometry.Insets;
+// import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -32,8 +32,8 @@ import presentation.Fichier;
  *
  */
 public class FormesArrondies extends Application {
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 400;
+	// private static final int WIDTH = 600;
+	// private static final int HEIGHT = 400;
 
 	private List<QuadCurve> curves = new ArrayList<>(); // liste de courbes
 	private List<QuadCurve> curves2 = new ArrayList<>(); // liste de courbes pour l'image de fin
@@ -48,14 +48,15 @@ public class FormesArrondies extends Application {
 	private ImageView imageFin;
 	private Button boutonGauche;
 	private Button boutonDroite;
-	private Button boutonPoly;
-	private Button boutonFA;
-	private Button boutonVisage;
+	// private Button boutonPoly;
+	// private Button boutonFA;
+	// private Button boutonVisage;
 	private Fichier f;
 	private BorderPane root;
-	private HBox pCentre;
+	// private HBox pCentre;
 	private VBox right;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage primaryStage) {
 

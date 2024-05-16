@@ -54,7 +54,7 @@ public class Morphing extends Application{
         canva1.setOnMouseClicked(e -> creationPoint(e, canva1));
         stack1.getChildren().addAll(imageDepart,canva1);
         
-        // On créer la matrice de points associée à l'image
+        // On crée la matrice de points associée à l'image
         //TODO
         
         return stack1;
@@ -99,6 +99,7 @@ public class Morphing extends Application{
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
     public void start(Stage primaryStage) throws Exception {
 		

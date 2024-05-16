@@ -27,11 +27,6 @@ import javafx.scene.shape.QuadCurve;
 import javafx.stage.Stage;
 import presentation.Fichier;
 
-/**
- * Classe permettant de créer des courbes pour les formes arrondies
- * @author Nicolas F
- *
- */
 public class FormesArrondies extends Application {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;
@@ -60,6 +55,7 @@ public class FormesArrondies extends Application {
 		
         /* création du plan central, contenant les images */
         HBox pCentre = new HBox();
+        pCentre.setSpacing(10);
         f = new Fichier();
         alb = new Album(f);
         
@@ -107,7 +103,7 @@ public class FormesArrondies extends Application {
         
 		scene = new Scene(root);
 
-		MouseClickHandler clickHandler = new MouseClickHandler(curves, points, closeState, root);
+		MouseClickHandler clickHandler = new MouseClickHandler(curves, points, closeState, gestPoints1);
 		scene.setOnMouseClicked(clickHandler);
 
 		MouseMoveHandler moveHandler = new MouseMoveHandler(curves, points, closeState, scene);

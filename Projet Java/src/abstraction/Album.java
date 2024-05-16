@@ -17,7 +17,6 @@ public class Album extends Observable {
 	
 	private Image imageDepart;
 	private Image imageFin;
-	@SuppressWarnings("unused")
 	private Fichier f;
 
 	public Album(Fichier f) {

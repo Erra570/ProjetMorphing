@@ -10,7 +10,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.List;
 
 /**
- * Classe permettant de gérer la création de courbes et de points 
+ *Classe permettant de gérer la création de courbes et de points 
  * @author Nicolas F
  *
  */
@@ -48,9 +48,15 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 			}
 		}
 
-		// Création du point et ajout au dessin
+		// Si la souris n'est pas dans le plan, on n'ajoute pas de points
 		double x = event.getX();
 		double y = event.getY();
+		
+		if (!root.contains(x, y)) {
+			return;
+		}
+		
+		// Création du point et ajout au dessin
 		Circle point = new Circle(x, y, 5);
 		point.setFill(Color.RED);
 		points.add(point);

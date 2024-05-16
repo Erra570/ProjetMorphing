@@ -348,7 +348,7 @@ public class NeuQuant {
 	   ----------------------------------------------------------------------------------- */
 	public void unbiasnet() {
 
-		int i;
+		int i, j;
 
 		for (i = 0; i < netsize; i++) {
 			network[i][0] >>= netbiasshift;

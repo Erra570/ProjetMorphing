@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 import presentation.Fichier;
 
+@SuppressWarnings("deprecation")
 public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent>{
 	
 	private Album alb;

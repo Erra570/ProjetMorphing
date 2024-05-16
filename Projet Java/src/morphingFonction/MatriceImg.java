@@ -7,10 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+
+
+/**
+ * Classe MatriceImg représentant une image sous forme d'une ArrayList de points associés pour le morphing.
+ * Permet de charger une image à partir d'un fichier et de manipuler les points associés.
+ */
 public class MatriceImg {
 	private BufferedImage img;
 	private List<Point> tabPoint;
 	
+    /**
+     * Constructeur de la classe MatriceImg
+     * 
+     * @param f le fichier image à charger
+     * @param tabPoint la liste des points de morphing associés à l'image
+     */
 	public MatriceImg(File f, List<Point> tabPoint) throws Exception {
 		this.img = ImageIO.read(f);
 		this.tabPoint = new ArrayList<>();
@@ -18,22 +30,47 @@ public class MatriceImg {
 			this.tabPoint.add(tabPoint.get(i)); 
 	}
 	
+    /**
+     * Getter de l'image.
+     * 
+     * @return l'image BufferedImage
+     */
 	public BufferedImage getImg() {
 		return img;
 	}
 
+	/**
+     * Setter de l'image.
+     * 
+     * @param img l'image BufferedImage à définir
+     */
 	public void setImg(BufferedImage img) {
 		this.img = img;
 	}
 
+    /**
+     * Getter de la liste des points de morphing.
+     * 
+     * @return la liste
+     */
 	public List<Point> getTabPoint() {
 		return tabPoint;
 	}
 
+    /**
+     * Setter de la liste des points de morphing.
+     * 
+     * @param tabPoint liste des points de morphing
+     */
 	public void setTabPoint(List<Point> tabPoint) {
 		this.tabPoint = tabPoint;
 	}
 
+	/**
+     * Retourne une représentation sous forme de chaîne de caractères de l'image.
+     * 
+     * @return une chaîne de caractères représentant l'image
+     */
 	@Override
 	public String toString() {
 		String r = "";
@@ -46,6 +83,9 @@ public class MatriceImg {
 		return r;
 	}
 	
+    /**
+     * Crée une nouvelle image en enregistrant l'image actuelle dans un fichier.
+     */
 	public void creerImage() {
 		try {
 			ImageIO.write(img, "JPG", new File("imgTest5.jpg"));
@@ -55,6 +95,13 @@ public class MatriceImg {
 		}
 	}
 	
+	
+    /**
+     * Met à jour les points de l'image en fonction d'un tableau de nouveaux points et ajuste les pixels de l'image
+     * en fonction des triangles définis par ces points.
+     * 
+     * @param tabSuivant le tableau de nouveaux points de morphing
+     */
 	public void matriceSuivante(Point[] tabSuivant) {
 		for(int i = 0; i<tabSuivant.length; i++) {
 			if((this.tabPoint.get(i).getX() != tabSuivant[i].getX()) || (this.tabPoint.get(i).getY() != tabSuivant[i].getY())) {

@@ -24,7 +24,7 @@ public class Album extends Observable {
 		File file = fc.showOpenDialog(null);
 		this.imageDepart = new Image(file.toURI().toString());
 		this.f = f;
-		f.setF(file);
+		this.f.setF(file);
 		
 		fc = new FileChooser();
 		file = fc.showOpenDialog(null);

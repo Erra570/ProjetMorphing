@@ -12,6 +12,11 @@ import javafx.scene.control.Button;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe permettant de créer des courbes pour les formes arrondies
+ * @author Nicolas F
+ *
+ */
 public class FormesArrondies extends Application {
 	private static final int WIDTH = 600;
 	private static final int HEIGHT = 400;

@@ -95,7 +95,7 @@ public class Morphing extends Application{
 		gc.setFill(Color.PLUM);
 		gc.fillOval(x + xImg, y + yImg, 6, 6);
 		
-		// On créer le point
+		// On crée le point
 		
 	}
 	

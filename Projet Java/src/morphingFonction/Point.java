@@ -100,10 +100,9 @@ public class Point {
         Path path = new Path();
         path.getElements().add(new MoveTo(tab[0].getX(), tab[0].getY()));
         path.getElements().add(new QuadCurveTo(tab[2].getX(), tab[2].getY(), tab[1].getX(), tab[1].getY()));
-        for (int i = 3; i < tab.length - 1; i += 2) {
+        for (int i = 3; i < tab.length; i += 2) {
             path.getElements().add(new QuadCurveTo(tab[i+1].getX(), tab[i+1].getY(), tab[i].getX(), tab[i].getY()));
         }
-        path.getElements().add(new QuadCurveTo(tab[tab.length - 1].getX(), tab[tab.length - 1].getY(), tab[0].getX(), tab[0].getY()));
 
         // Remplissage de la figure
         path.setFill(Color.TRANSPARENT);

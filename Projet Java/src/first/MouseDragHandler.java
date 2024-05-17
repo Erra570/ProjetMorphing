@@ -109,8 +109,13 @@ public class MouseDragHandler implements EventHandler<MouseEvent> {
 
 		// Gestion de la courbe associée au dernier sommet avec le périmètre ouvert
 		if (indexPoint == points.size() - 2 && !closeState) {
-			updateCurve(curves.get(curves.size() - 1), points.get(indexPoint - 2), points.get(indexPoint + 1),
-					points.get(indexPoint));
+			if (indexPoint != 1) {
+				updateCurve(curves.get(curves.size() - 1), points.get(indexPoint - 2), points.get(indexPoint + 1),
+						points.get(indexPoint));
+			} else {
+				updateCurve(curves.get(0), points.get(0), points.get(2), points.get(1));
+			}
+
 		}
 
 	}

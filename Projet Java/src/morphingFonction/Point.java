@@ -1,5 +1,10 @@
 package morphingFonction;
 
+import javafx.scene.paint.Color;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.QuadCurveTo;
+
 /**
  * Classe Point représentant un point en deux dimensions avec des coordonnées x et y.
  * Contient des méthodes pour manipuler et comparer des points.
@@ -78,4 +83,18 @@ public class Point {
 		return (((position(c,a) >= 0) && (position(a,b) >= 0) && (position(b,c) >= 0))
 				|| ((position(c,a) <= 0) && (position(a,b) <= 0) && (position(b,c) <= 0)));
 	}
+	
+	public boolean dansFigure(Point[] tab) {        
+        Path path = new Path();
+        path.getElements().add(new MoveTo(tab[0].getX(),tab[0].getY()));
+        path.getElements().add(new QuadCurveTo(tab[2].getX(),tab[2].getY(),tab[1].getX(),tab[1].getY()));
+        for(int i = 3; i<tab.length-1; i+=2) {
+            path.getElements().add(new QuadCurveTo(tab[i+1].getX(),tab[i+1].getY(),tab[i].getX(),tab[i].getY()));    
+        }
+        path.getElements().add(new QuadCurveTo(tab[tab.length-1].getX(),tab[tab.length-1].getY(),tab[0].getX(),tab[0].getY()));
+        
+        path.setFill(Color.TRANSPARENT);
+        
+        return path.contains(this.x,this.y);
+    }
 }

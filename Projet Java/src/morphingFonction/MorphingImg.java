@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
  * Classe MatriceImg représentant une image sous forme d'une ArrayList de points associés pour le morphing.
  * Permet de charger une image à partir d'un fichier et de manipuler les points associés.
  */
-public class MatriceImg {
+public class MorphingImg {
 	private BufferedImage img;
 	private List<Point> tabPoint;
 	
@@ -23,7 +23,7 @@ public class MatriceImg {
      * @param f le fichier image à charger
      * @param tabPoint la liste des points de morphing associés à l'image
      */
-	public MatriceImg(File f, List<Point> tabPoint) throws Exception {
+	public MorphingImg(File f, List<Point> tabPoint) throws Exception {
 		this.img = ImageIO.read(f);
 		this.tabPoint = new ArrayList<>();
 		for(int i = 0; i<tabPoint.size(); i++)
@@ -65,30 +65,13 @@ public class MatriceImg {
 	public void setTabPoint(List<Point> tabPoint) {
 		this.tabPoint = tabPoint;
 	}
-
-	/**
-     * Retourne une représentation sous forme de chaîne de caractères de l'image.
-     * 
-     * @return une chaîne de caractères représentant l'image
-     */
-	@Override
-	public String toString() {
-		String r = "";
-		for (int y = 0; y < img.getHeight(); y++) {
-			for (int x = 0; x < img.getWidth(); x++) {
-				r += "(" + img.getRGB(x,y) + ")";
-		    }
-			r += "\n";
-		}
-		return r;
-	}
 	
     /**
      * Crée une nouvelle image en enregistrant l'image actuelle dans un fichier.
      */
 	public void creerImage() {
 		try {
-			ImageIO.write(img, "JPG", new File("imgTest5.jpg"));
+			ImageIO.write(img, "JPG", new File("img/imgTest5.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,7 +85,7 @@ public class MatriceImg {
      * 
      * @param tabSuivant le tableau de nouveaux points de morphing
      */
-	public void matriceSuivante(Point[] tabSuivant) {
+	public void imgSuivanteFormeSimple(Point[] tabSuivant) {
 		for(int i = 0; i<tabSuivant.length; i++) {
 			if((this.tabPoint.get(i).getX() != tabSuivant[i].getX()) || (this.tabPoint.get(i).getY() != tabSuivant[i].getY())) {
 				int minY = Integer.min(Integer.min(Integer.min(this.tabPoint.get(i).getY(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getY()), this.tabPoint.get((i+1) % tabSuivant.length).getY()), tabSuivant[i].getY());
@@ -125,7 +108,7 @@ public class MatriceImg {
 		}
 	}
 	
-	public void imgSuivante(Point[] tabSuivant) {
+	public void imgSuivanteFormeArrondie(Point[] tabSuivant) {
         int c = this.img.getRGB(img.getWidth()/2,img.getHeight()/2);
         for (int y = 0; y < this.img.getHeight(); y++) {
             for (int x = 0; x < this.img.getWidth(); x++) {
@@ -140,4 +123,36 @@ public class MatriceImg {
             this.tabPoint.set(i, tabSuivant[i]);
         }
     }
+	
+	public void creerGif(List<Point> tabD, List<Point> tabF, double nombreImg) {
+		
+		AnimatedGifEncoder e = new AnimatedGifEncoder();
+		e.start("img/testGif.gif");
+		e.setRepeat(0);
+		e.setFrameRate(60);
+		
+		for(int i = 0; i<10; i++)
+			e.addFrame(this.getImg());
+			
+		double[] x = new double[tabD.size()];
+		double[] y = new double[tabD.size()];
+		for (int j=0; j<tabD.size(); j++) {
+			x[j] = (double)(tabF.get(j).getX() - tabD.get(j).getX())/nombreImg;
+			y[j] = (double)(tabF.get(j).getY() - tabD.get(j).getY())/nombreImg;
+		}
+		
+		for(int i=1; i<=nombreImg; i++) {
+			Point[] tabSuivant = new Point[tabD.size()];
+			for (int j=0; j<tabD.size(); j++) {
+				tabSuivant[j] = new Point(tabD.get(j).getX() + (int)(i*x[j]),tabD.get(j).getY() + (int)(i*y[j]));
+			}
+			this.imgSuivanteFormeArrondie(tabSuivant);				
+			e.addFrame(this.getImg());
+		}
+
+		for(int i = 0; i<10; i++)
+			e.addFrame(this.getImg());
+		
+		e.finish();
+	}
 }

@@ -16,7 +16,6 @@ public class Test {
      * @throws Exception si une erreur se produit lors de la lecture du fichier ou de la manipulation de l'image
      */
 	public static void main(String[] args) throws Exception {
-		double nombre = 60;
 		
 		List<Point> tabD = new ArrayList<>();
         tabD.add(0, new Point(2,2));
@@ -38,30 +37,10 @@ public class Test {
         tabF.add(6, new Point(498,498));
         tabF.add(7, new Point(498,2));
 		
-		MatriceImg m = new MatriceImg(new File("img/gImg.jpg"), tabD);
+		MorphingImg m = new MorphingImg(new File("img/gImg.jpg"), tabD);
 		
-		AnimatedGifEncoder e = new AnimatedGifEncoder();
-		e.start("img/testGif.gif");
-		e.setRepeat(0);
-		e.setFrameRate(60);
-		e.addFrame(m.getImg());
-		double[] x = new double[tabD.size()];
-		double[] y = new double[tabD.size()];
-		for (int j=0; j<tabD.size(); j++) {
-			x[j] = (double)(tabF.get(j).getX() - tabD.get(j).getX())/nombre;
-			y[j] = (double)(tabF.get(j).getY() - tabD.get(j).getY())/nombre;
-		}
+		m.creerGif(tabD, tabF, 60);
 		
-		for(int i=1; i<=nombre; i++) {
-			Point[] tabSuivant = new Point[tabD.size()];
-			for (int j=0; j<tabD.size(); j++) {
-				tabSuivant[j] = new Point(tabD.get(j).getX() + (int)(i*x[j]),tabD.get(j).getY() + (int)(i*y[j]));
-			}
-			m.imgSuivante(tabSuivant);				
-			e.addFrame(m.getImg());
-		}
-		
-		e.finish();
 		System.out.println("Traitement terminé!");
 	}
 }

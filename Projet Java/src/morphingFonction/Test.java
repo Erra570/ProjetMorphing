@@ -19,16 +19,24 @@ public class Test {
 		double nombre = 60;
 		
 		List<Point> tabD = new ArrayList<>();
-		tabD.add(0, new Point(2,2));
-		tabD.add(1, new Point(2,498));
-		tabD.add(2, new Point(498,498));
-		tabD.add(3, new Point(498,2));
-		
-		List<Point> tabF = new ArrayList<>();
-		tabF.add(0, new Point(250,2));
-		tabF.add(1, new Point(2,100));
-		tabF.add(2, new Point(250,300));
-		tabF.add(3, new Point(250,2));
+        tabD.add(0, new Point(2,2));
+        tabD.add(1, new Point(2,498));
+        tabD.add(2, new Point(2,250));
+        tabD.add(3, new Point(498,498));
+        tabD.add(4, new Point(250,498));
+        tabD.add(5, new Point(498,2));
+        tabD.add(6, new Point(498,250));
+        tabD.add(7, new Point(250,2));
+        
+        List<Point> tabF = new ArrayList<>();
+        tabF.add(0, new Point(250,2));
+        tabF.add(1, new Point(2,250));
+        tabF.add(2, new Point(2,2));
+        tabF.add(3, new Point(250,498));
+        tabF.add(4, new Point(2,498));
+        tabF.add(5, new Point(498,250));
+        tabF.add(6, new Point(498,498));
+        tabF.add(7, new Point(498,2));
 		
 		MatriceImg m = new MatriceImg(new File("img/gImg.jpg"), tabD);
 		

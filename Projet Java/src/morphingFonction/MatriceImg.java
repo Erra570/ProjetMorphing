@@ -124,4 +124,20 @@ public class MatriceImg {
 			}
 		}
 	}
+	
+	public void imgSuivante(Point[] tabSuivant) {
+        int c = this.img.getRGB(img.getWidth()/2,img.getHeight()/2);
+        for (int y = 0; y < this.img.getHeight(); y++) {
+            for (int x = 0; x < this.img.getWidth(); x++) {
+                Point p = new Point(x,y);
+                if (p.dansFigure(tabSuivant))
+                    this.img.setRGB(x, y, c);
+                else
+                    this.img.setRGB(x, y, this.img.getRGB(0,0));
+            }
+        }
+        for(int i = 0; i<tabSuivant.length; i++) {
+            this.tabPoint.set(i, tabSuivant[i]);
+        }
+    }
 }

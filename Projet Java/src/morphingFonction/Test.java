@@ -57,10 +57,11 @@ public class Test {
 			for (int j=0; j<tabD.size(); j++) {
 				tabSuivant[j] = new Point(tabD.get(j).getX() + (int)(i*x[j]),tabD.get(j).getY() + (int)(i*y[j]));
 			}
-			m.matriceSuivante(tabSuivant);				
+			m.imgSuivante(tabSuivant);				
 			e.addFrame(m.getImg());
 		}
 		
 		e.finish();
+		System.out.println("Traitement terminé!");
 	}
 }

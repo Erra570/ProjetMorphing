@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Observable;
 
 import javafx.scene.image.Image;
-import javafx.stage.FileChooser;
 import presentation.Fichier;
 
 /**
@@ -39,7 +38,7 @@ public class Album extends Observable {
 		File file = new File("img/default.png");
 		this.imageDepart = new Image(file.toURI().toString());
 		this.f = f;
-		f.setF(file);
+		this.f.setF(file);
 		this.imageFin = new Image(file.toURI().toString());
 	}
 

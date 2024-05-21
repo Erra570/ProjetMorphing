@@ -23,7 +23,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.QuadCurve;
 import javafx.stage.Stage;
 import presentation.Fichier;
 
@@ -32,11 +31,9 @@ import presentation.Fichier;
  *
  */
 public class FormesArrondies extends Application {
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 400;
 
-	private List<QuadCurve> curves1 = new ArrayList<>(); // liste de courbes
-	private List<QuadCurve> curves2 = new ArrayList<>(); // liste de courbes pour l'image de fin
+	private List<QCurve> curves1 = new ArrayList<>(); // liste de courbes
+	private List<QCurve> curves2 = new ArrayList<>(); // liste de courbes pour l'image de fin
 	private List<Circle> points1 = new ArrayList<>(); // liste de points
 	private List<Circle> points2 = new ArrayList<>(); // liste de points pour l'image de fin
 	private Pane gestPoints1;
@@ -48,9 +45,6 @@ public class FormesArrondies extends Application {
 	private ImageView imageFin;
 	private Button boutonGauche;
 	private Button boutonDroite;
-	private Button boutonPoly;
-	private Button boutonFA;
-	private Button boutonVisage;
 	private Fichier f;
 	private BorderPane root;
 	private HBox pCentre;
@@ -59,11 +53,12 @@ public class FormesArrondies extends Application {
 	private Button clo;
 	private Button del;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage primaryStage) {
 
 		/* création du plan central, contenant les images */
-		HBox pCentre = new HBox();
+		pCentre = new HBox();
 		pCentre.setSpacing(10);
 		f = new Fichier();
 		alb = new Album(f);
@@ -89,7 +84,7 @@ public class FormesArrondies extends Application {
 		alb.addObserver(cbd);
 
 		
-		pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
+		this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
 
 		// Partie droite (boutons et couleurs)
 		right = new VBox();
@@ -99,7 +94,7 @@ public class FormesArrondies extends Application {
 
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
-		del.setOnAction(event -> delete(curves1, curves2, points1, points2)); // Définir le gestionnaire d'événements
+		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
 		coulCurv = new ColorPicker(Color.BLACK);
 		
 		right.getChildren().addAll(clo,del,coulCurv);
@@ -108,7 +103,7 @@ public class FormesArrondies extends Application {
 
 		
 		root = new BorderPane();
-		root.setCenter(pCentre);
+		root.setCenter(this.pCentre);
 		root.setRight(right);
 
 		scene = new Scene(root);
@@ -116,8 +111,8 @@ public class FormesArrondies extends Application {
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del);
 		gestPoints1.setOnMouseClicked(clickHandler);
 		
-		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, root,1);
-		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, root,2);
+		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1,1);
+		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2,2);
 
 		gestPoints1.setOnMouseMoved(moveHandler1);
 		gestPoints2.setOnMouseMoved(moveHandler2);
@@ -213,27 +208,29 @@ public class FormesArrondies extends Application {
 	 * @param curves liste des courbes
 	 * @param points liste des points
 	 */
-	private void delete(List<QuadCurve> curves1, List<QuadCurve> curves2, List<Circle> points1, List<Circle> points2) {
+	private void delete() {
 		if (closeState) {
-			gestPoints1.getChildren().remove(curves1.remove(curves1.size() - 1));
-			gestPoints2.getChildren().remove(curves2.remove(curves2.size() - 1));
+			curves1.get(curves1.size() - 1).delete(gestPoints1);
+			curves1.remove(curves1.size() - 1);
+			curves2.get(curves2.size() - 1).delete(gestPoints2);
+			curves2.remove(curves2.size() - 1);
 			gestPoints1.getChildren().remove(points1.remove(points1.size() - 1));
 			gestPoints2.getChildren().remove(points2.remove(points2.size() - 1));
 			closeState = false;
-			clo.setDisable(false);
-			
 
-			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del);
+			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del);
 			gestPoints1.setOnMouseClicked(clickHandler);
-			MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, root,1);
-			MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, root,2);
+			MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
+			MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
 			gestPoints1.setOnMouseMoved(moveHandler1);
 			gestPoints2.setOnMouseMoved(moveHandler2);
 
 		} else {
 			if (!curves1.isEmpty()) {
-				gestPoints1.getChildren().remove(curves1.remove(curves1.size() - 1));
-				gestPoints2.getChildren().remove(curves2.remove(curves2.size() - 1));
+				curves1.get(curves1.size() - 1).delete(gestPoints1);
+				curves1.remove(curves1.size() - 1);
+				curves2.get(curves2.size() - 1).delete(gestPoints2);
+				curves2.remove(curves2.size() - 1);
 			}
 			if (!points1.isEmpty()) {
 				gestPoints1.getChildren().remove(points1.remove(points1.size() - 1));
@@ -251,6 +248,7 @@ public class FormesArrondies extends Application {
 			}
 		}
 		System.out.println("" + points1.size());
+		System.out.println("" + curves1.size());
 	}
 
 
@@ -271,29 +269,25 @@ public class FormesArrondies extends Application {
 		points2.add(pointControl2);
 		gestPoints2.getChildren().add(pointControl2);
 		
-		QuadCurve curve1 = new QuadCurve(points1.get(points1.size() - 3).getCenterX(),
+		QCurve curve1 = new QCurve(points1.get(points1.size() - 3).getCenterX(),
 				points1.get(points1.size() - 3).getCenterY(), points1.get(points1.size() - 1).getCenterX(),
 				points1.get(points1.size() - 1).getCenterY(), points1.get(0).getCenterX(), points1.get(0).getCenterY());
-		curve1.setStroke(Color.BLACK);
-		curve1.setFill(null);
 		curves1.add(curve1);
-		gestPoints1.getChildren().add(curve1);
+		curve1.drawCurve(gestPoints1);
 		
-		QuadCurve curve2 = new QuadCurve(points2.get(points2.size() - 3).getCenterX(),
+		QCurve curve2 = new QCurve(points2.get(points2.size() - 3).getCenterX(),
 				points2.get(points2.size() - 3).getCenterY(), points2.get(points2.size() - 1).getCenterX(),
 				points2.get(points2.size() - 1).getCenterY(), points2.get(0).getCenterX(), points2.get(0).getCenterY());
-		curve2.setStroke(Color.BLACK);
-		curve2.setFill(null);
 		curves2.add(curve2);
-		gestPoints2.getChildren().add(curve2);
+		curve2.drawCurve(gestPoints2);
 		closeState = true;
 		clo.setDisable(true);
 
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del);
 		gestPoints1.setOnMouseClicked(clickHandler);
 		
-		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, root,1);
-		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, root,2);
+		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1,1);
+		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2,2);
 
 		gestPoints1.setOnMouseMoved(moveHandler1);
 		gestPoints2.setOnMouseMoved(moveHandler2);

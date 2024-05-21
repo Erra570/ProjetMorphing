@@ -8,7 +8,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.QuadCurve;
 
 /**
  * Classe permettant de gérer la création de courbes et de points
@@ -18,8 +17,8 @@ import javafx.scene.shape.QuadCurve;
  */
 public class MouseClickHandler implements EventHandler<MouseEvent> {
 
-	private List<QuadCurve> curves1;
-	private List<QuadCurve> curves2;
+	private List<QCurve> curves1;
+	private List<QCurve> curves2;
 	private List<Circle> points1;
 	private List<Circle> points2;
 	private Pane root1;
@@ -28,7 +27,7 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 	private Button clo;
 	private Button del;
 
-	public MouseClickHandler(List<QuadCurve> curves1, List<QuadCurve> curves2, List<Circle> points1,
+	public MouseClickHandler(List<QCurve> curves1, List<QCurve> curves2, List<Circle> points1,
 			List<Circle> points2, boolean closeState, Pane root1, Pane root2,Button clo, Button del) {
 		this.curves1 = curves1;
 		this.curves2 = curves2;
@@ -70,12 +69,12 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 		}
 
 		// Création du point et ajout au dessin
-		Circle point1 = new Circle(x, y, 5);
+		Circle point1 = new Circle(x, y, 7);
 		point1.setFill(Color.RED);
 		points1.add(point1);
 		root1.getChildren().add(point1);
 		
-		Circle point2 = new Circle(x, y, 5);
+		Circle point2 = new Circle(x, y, 7);
 		point2.setFill(Color.RED);
 		points2.add(point2);
 		root2.getChildren().add(point2);
@@ -100,23 +99,19 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 
 		// Création de la première courbe
 		if (nombrePoint % 3 == 0 && nombrePoint < 4) {
-			QuadCurve curve1 = new QuadCurve(points1.get(nombrePoint - 3).getCenterX(),
+			QCurve curve1 = new QCurve(points1.get(nombrePoint - 3).getCenterX(),
 					points1.get(nombrePoint - 3).getCenterY(), points1.get(nombrePoint - 1).getCenterX(),
 					points1.get(nombrePoint - 1).getCenterY(), points1.get(nombrePoint - 2).getCenterX(),
 					points1.get(nombrePoint - 2).getCenterY());
-			curve1.setStroke(Color.BLACK);
-			curve1.setFill(null);
 			curves1.add(curve1);
-			root1.getChildren().add(curve1);
+			curve1.drawCurve(root1);
 			
-			QuadCurve curve2 = new QuadCurve(points2.get(nombrePoint - 3).getCenterX(),
+			QCurve curve2 = new QCurve(points2.get(nombrePoint - 3).getCenterX(),
 					points2.get(nombrePoint - 3).getCenterY(), points2.get(nombrePoint - 1).getCenterX(),
 					points2.get(nombrePoint - 1).getCenterY(), points2.get(nombrePoint - 2).getCenterX(),
 					points2.get(nombrePoint - 2).getCenterY());
-			curve2.setStroke(Color.BLACK);
-			curve2.setFill(null);
 			curves2.add(curve2);
-			root2.getChildren().add(curve2);
+			curve2.drawCurve(root2);
 		}
 
 		// Création des courbes, sauf pour celle de fermeture
@@ -135,23 +130,19 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 			
 			nombrePoint++;
 			
-			QuadCurve curve1 = new QuadCurve(points1.get(nombrePoint - 4).getCenterX(),
+			QCurve curve1 = new QCurve(points1.get(nombrePoint - 4).getCenterX(),
 					points1.get(nombrePoint - 4).getCenterY(), points1.get(nombrePoint - 1).getCenterX(),
 					points1.get(nombrePoint - 1).getCenterY(), points1.get(nombrePoint - 2).getCenterX(),
 					points1.get(nombrePoint - 2).getCenterY());
-			curve1.setStroke(Color.BLACK);
-			curve1.setFill(null);
 			curves1.add(curve1); // Ajoute la courbe à la liste des courbes
-			root1.getChildren().add(curve1); // Ajoute la courbe à la scène
+			curve1.drawCurve(root1); // Ajoute la courbe à la scène
 			
-			QuadCurve curve2 = new QuadCurve(points2.get(nombrePoint - 4).getCenterX(),
+			QCurve curve2 = new QCurve(points2.get(nombrePoint - 4).getCenterX(),
 					points2.get(nombrePoint - 4).getCenterY(), points2.get(nombrePoint - 1).getCenterX(),
 					points2.get(nombrePoint - 1).getCenterY(), points2.get(nombrePoint - 2).getCenterX(),
 					points2.get(nombrePoint - 2).getCenterY());
-			curve2.setStroke(Color.BLACK);
-			curve2.setFill(null);
 			curves2.add(curve2);
-			root2.getChildren().add(curve2);
+			curve2.drawCurve(root2);
 		}
 		
 		if (nombrePoint > 1) {

@@ -121,7 +121,7 @@ public class FormesArrondies extends Application {
 		clo.getStyleClass().add("bouton");
 		del.getStyleClass().add("bouton");
 
-		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del);
+		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 		
 		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1,1);
@@ -232,7 +232,7 @@ public class FormesArrondies extends Application {
 			closeState = false;
 			clo.setDisable(false);
 
-			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del);
+			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del, coulCurv.getValue());
 			gestPoints1.setOnMouseClicked(clickHandler);
 			MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
 			MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
@@ -285,19 +285,19 @@ public class FormesArrondies extends Application {
 		
 		curve1 = new QCurve(points1.get(points1.size() - 3).getCenterX(),
 				points1.get(points1.size() - 3).getCenterY(), points1.get(points1.size() - 1).getCenterX(),
-				points1.get(points1.size() - 1).getCenterY(), points1.get(0).getCenterX(), points1.get(0).getCenterY());
+				points1.get(points1.size() - 1).getCenterY(), points1.get(0).getCenterX(), points1.get(0).getCenterY(),coulCurv.getValue());
 		curves1.add(curve1);
 		curve1.drawCurve(gestPoints1);
 		
 		curve2 = new QCurve(points2.get(points2.size() - 3).getCenterX(),
 				points2.get(points2.size() - 3).getCenterY(), points2.get(points2.size() - 1).getCenterX(),
-				points2.get(points2.size() - 1).getCenterY(), points2.get(0).getCenterX(), points2.get(0).getCenterY());
+				points2.get(points2.size() - 1).getCenterY(), points2.get(0).getCenterX(), points2.get(0).getCenterY(),coulCurv.getValue());
 		curves2.add(curve2);
 		curve2.drawCurve(gestPoints2);
 		closeState = true;
 		clo.setDisable(true);
 
-		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del);
+		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 		
 		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1,1);
@@ -310,9 +310,11 @@ public class FormesArrondies extends Application {
 
 	private void changeColor(Color couleur) {
 		for (int i = 0 ; i < curves1.size() ; i++) {
-			curves1.get(i).setColor(couleur);
-			curves2.get(i).setColor(couleur);
+			curves1.get(i).colorChange(couleur, gestPoints1);
+			curves2.get(i).colorChange(couleur, gestPoints2);
 		}
+		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
+		gestPoints1.setOnMouseClicked(clickHandler);
 	}
 
 	public static void main(String[] args) {

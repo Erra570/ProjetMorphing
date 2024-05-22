@@ -26,10 +26,10 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 	private boolean closeState;
 	private Button clo;
 	private Button del;
-	private Color couleur;
+	private Color couleur= Color.BLUE;
 
 	public MouseClickHandler(List<QCurve> curves1, List<QCurve> curves2, List<Circle> points1,
-			List<Circle> points2, boolean closeState, Pane root1, Pane root2,Button clo, Button del) {
+			List<Circle> points2, boolean closeState, Pane root1, Pane root2,Button clo, Button del, Color coul) {
 		this.curves1 = curves1;
 		this.curves2 = curves2;
 		this.points1 = points1;
@@ -39,6 +39,7 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 		this.root2 = root2;
 		this.clo = clo;
 		this.del = del;
+		this.couleur= coul;
 	}
 
 	@Override
@@ -103,14 +104,14 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 			QCurve curve1 = new QCurve(points1.get(nombrePoint - 3).getCenterX(),
 					points1.get(nombrePoint - 3).getCenterY(), points1.get(nombrePoint - 1).getCenterX(),
 					points1.get(nombrePoint - 1).getCenterY(), points1.get(nombrePoint - 2).getCenterX(),
-					points1.get(nombrePoint - 2).getCenterY());
+					points1.get(nombrePoint - 2).getCenterY(), couleur);
 			curves1.add(curve1);
 			curve1.drawCurve(root1);
 			
 			QCurve curve2 = new QCurve(points2.get(nombrePoint - 3).getCenterX(),
 					points2.get(nombrePoint - 3).getCenterY(), points2.get(nombrePoint - 1).getCenterX(),
 					points2.get(nombrePoint - 1).getCenterY(), points2.get(nombrePoint - 2).getCenterX(),
-					points2.get(nombrePoint - 2).getCenterY());
+					points2.get(nombrePoint - 2).getCenterY(), couleur);
 			curves2.add(curve2);
 			curve2.drawCurve(root2);
 		}
@@ -134,14 +135,14 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 			QCurve curve1 = new QCurve(points1.get(nombrePoint - 4).getCenterX(),
 					points1.get(nombrePoint - 4).getCenterY(), points1.get(nombrePoint - 1).getCenterX(),
 					points1.get(nombrePoint - 1).getCenterY(), points1.get(nombrePoint - 2).getCenterX(),
-					points1.get(nombrePoint - 2).getCenterY());
+					points1.get(nombrePoint - 2).getCenterY(),couleur);
 			curves1.add(curve1); // Ajoute la courbe à la liste des courbes
 			curve1.drawCurve(root1); // Ajoute la courbe à la scène
 			
 			QCurve curve2 = new QCurve(points2.get(nombrePoint - 4).getCenterX(),
 					points2.get(nombrePoint - 4).getCenterY(), points2.get(nombrePoint - 1).getCenterX(),
 					points2.get(nombrePoint - 1).getCenterY(), points2.get(nombrePoint - 2).getCenterX(),
-					points2.get(nombrePoint - 2).getCenterY());
+					points2.get(nombrePoint - 2).getCenterY(),couleur);
 			curves2.add(curve2);
 			curve2.drawCurve(root2);
 		}

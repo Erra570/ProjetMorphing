@@ -35,7 +35,6 @@ public class Test {
 
 		//double nombreImg = 60;
 		//int i = 25;
-
 		
 		/*
 		 * tabF.add(0, new QCurve(250,2,2,2,2,250)); tabF.add(0, new
@@ -45,11 +44,10 @@ public class Test {
 		 */
 
 		MorphingImg m = new MorphingImg(new File("img/gImg.jpg"), tabD);
-
+		
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();
-		 m.creerGif(tabD, tabF, 60);
-
+		m.creerGif(tabD, tabF, 60);
 		System.out.println("Traitement terminé!");
 	}
 }

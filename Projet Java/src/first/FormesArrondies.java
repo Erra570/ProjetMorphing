@@ -2,7 +2,6 @@ package first;
 
 import morphingFonction.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +58,7 @@ public class FormesArrondies extends Application {
 	private Button startMorph;
 	private QCurve curve1;
 	private QCurve curve2;
+	private ControleBoutonDroite cbd;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -88,7 +88,7 @@ public class FormesArrondies extends Application {
 		vBoxDroite.getChildren().add(creerBoutonDroite());
 		ControleImageFin cif = new ControleImageFin(alb, imageFin);
 		alb.addObserver(cif);
-		ControleBoutonDroite cbd = new ControleBoutonDroite(alb, f);
+		cbd = new ControleBoutonDroite(alb, f);
 		boutonDroite.setOnAction(cbd);
 		alb.addObserver(cbd);
 
@@ -338,7 +338,7 @@ public class FormesArrondies extends Application {
         	tabF.add(i, curves2.get(i));
         }
         
-		MorphingImg m = new MorphingImg(new File("img/gImg.jpg"), tabD);
+		MorphingImg m = new MorphingImg(cbd.getF(), tabD);
 
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();

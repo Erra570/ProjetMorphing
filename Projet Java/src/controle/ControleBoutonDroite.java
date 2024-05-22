@@ -15,7 +15,7 @@ import presentation.Fichier;
 public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent>{
 	
 	private Album alb;
-	private Fichier f;
+	public Fichier f;
 	
 	public ControleBoutonDroite(Album alb, Fichier f) {
 		this.alb = alb;

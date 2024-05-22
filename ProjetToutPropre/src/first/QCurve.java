@@ -41,6 +41,7 @@ public class QCurve {
 		curvePoints.clear(); // Effacer les points précédents
 		for (int i = 0; i <= step; i++) {
 			double t = (double) i / step;
+			getPoint(t).getStyleClass().add("pts");
 			curvePoints.add(getPoint(t));
 		}
 		return curvePoints;
@@ -110,7 +111,7 @@ public class QCurve {
 
 	public void drawCurve(Pane root) {
 		root.getChildren().removeAll(curvePoints);
-		curvePoints = this.courbeQuad(500); // Nombre de points pour dessiner la courbe
+		curvePoints = this.courbeQuad(300); // Nombre de points pour dessiner la courbe
 		for (Circle p : curvePoints) {
 			// Utiliser un rayon plus petit pour les points de la
 			// courbe

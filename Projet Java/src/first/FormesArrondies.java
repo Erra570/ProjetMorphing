@@ -75,7 +75,9 @@ public class FormesArrondies extends Application {
 		alb.addObserver(cid);
 		ControleBoutonGauche cbg = new ControleBoutonGauche(alb, f);
 		boutonGauche.setOnAction(cbg);
+		boutonGauche.setPrefWidth(450);
 		alb.addObserver(cbg);
+
 
 		// Image droite avec bouton pour changer d'image
 		VBox vBoxDroite = new VBox();
@@ -86,6 +88,7 @@ public class FormesArrondies extends Application {
 		alb.addObserver(cif);
 		ControleBoutonDroite cbd = new ControleBoutonDroite(alb, f);
 		boutonDroite.setOnAction(cbd);
+		boutonDroite.setPrefWidth(450);
 		alb.addObserver(cbd);
 
 		
@@ -119,7 +122,12 @@ public class FormesArrondies extends Application {
 		// Ajout de la feuille css
 		scene.getStylesheets().add("file:css/Style.css") ;
 		clo.getStyleClass().add("bouton");
+		clo.getStyleClass().add("boutonDroit");
 		del.getStyleClass().add("bouton");
+		del.getStyleClass().add("boutonDroit");
+		boutonDroite.getStyleClass().add("bouton");
+		boutonGauche.getStyleClass().add("bouton");
+		coulCurv.getStyleClass().add("bouton");
 
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
@@ -210,6 +218,7 @@ public class FormesArrondies extends Application {
 		double xControl = ((start.getCenterX() + end.getCenterX()) / 2);
 		double yControl = ((start.getCenterY() + end.getCenterY()) / 2);
 		Circle pointControl = new Circle(xControl, yControl, 5);
+		pointControl.getStyleClass().add("pts"); // Ajout pour le curseur
 		return pointControl;
 	}
 	
@@ -268,7 +277,7 @@ public class FormesArrondies extends Application {
 
 
 
-/**
+	/**
 	 * Permet de fermé le graphe en reliant le dernier point au premier
 	 */
 	private void close() {

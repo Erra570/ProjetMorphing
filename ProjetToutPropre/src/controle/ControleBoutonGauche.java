@@ -14,7 +14,7 @@ import presentation.Fichier;
 public class ControleBoutonGauche implements Observer, EventHandler<ActionEvent>{
 	
 	private Album alb;
-	private Fichier f;
+	public Fichier f;
 	
 	public ControleBoutonGauche(Album alb, Fichier f) {
 		this.alb = alb;

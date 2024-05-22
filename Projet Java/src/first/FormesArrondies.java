@@ -14,6 +14,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -52,11 +53,13 @@ public class FormesArrondies extends Application {
 	private ColorPicker coulCurv;
 	private Button clo;
 	private Button del;
+	private QCurve curve1;
+	private QCurve curve2;
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage primaryStage) {
-
+		
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
@@ -65,6 +68,7 @@ public class FormesArrondies extends Application {
 
 		// Image gauche avec bouton pour changer d'image
 		VBox vBoxGauche = new VBox();
+		vBoxGauche.setAlignment(Pos.CENTER);
 		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
 		vBoxGauche.getChildren().add(creerBoutonGauche());
 		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
@@ -75,6 +79,7 @@ public class FormesArrondies extends Application {
 
 		// Image droite avec bouton pour changer d'image
 		VBox vBoxDroite = new VBox();
+		vBoxDroite.setAlignment(Pos.CENTER);
 		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
 		vBoxDroite.getChildren().add(creerBoutonDroite());
 		ControleImageFin cif = new ControleImageFin(alb, imageFin);
@@ -88,18 +93,21 @@ public class FormesArrondies extends Application {
 
 		// Partie droite (boutons et couleurs)
 		right = new VBox();
+		right.setAlignment(Pos.CENTER);
 		clo = new Button("Fermer Forme");
 		clo.setOnAction(event -> close()); // Définir le gestionnaire d'événements
 		clo.setDisable(true);
+		
 
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
 		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
-		coulCurv = new ColorPicker(Color.BLACK);
 		
-		right.getChildren().addAll(clo,del,coulCurv);
-		right.setSpacing(50);
-		right.setAlignment(Pos.CENTER);
+		
+		Label labCoulCurv = new Label("Couleur de la courbe");
+		coulCurv = new ColorPicker(Color.BLUE);
+		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
+		right.getChildren().addAll(clo,del,labCoulCurv,coulCurv);
 
 		
 		root = new BorderPane();
@@ -107,6 +115,11 @@ public class FormesArrondies extends Application {
 		root.setRight(right);
 
 		scene = new Scene(root);
+		
+		// Ajout de la feuille css
+		scene.getStylesheets().add("file:css/Style.css") ;
+		clo.getStyleClass().add("bouton");
+		del.getStyleClass().add("bouton");
 
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del);
 		gestPoints1.setOnMouseClicked(clickHandler);
@@ -217,6 +230,7 @@ public class FormesArrondies extends Application {
 			gestPoints1.getChildren().remove(points1.remove(points1.size() - 1));
 			gestPoints2.getChildren().remove(points2.remove(points2.size() - 1));
 			closeState = false;
+			clo.setDisable(false);
 
 			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del);
 			gestPoints1.setOnMouseClicked(clickHandler);
@@ -269,13 +283,13 @@ public class FormesArrondies extends Application {
 		points2.add(pointControl2);
 		gestPoints2.getChildren().add(pointControl2);
 		
-		QCurve curve1 = new QCurve(points1.get(points1.size() - 3).getCenterX(),
+		curve1 = new QCurve(points1.get(points1.size() - 3).getCenterX(),
 				points1.get(points1.size() - 3).getCenterY(), points1.get(points1.size() - 1).getCenterX(),
 				points1.get(points1.size() - 1).getCenterY(), points1.get(0).getCenterX(), points1.get(0).getCenterY());
 		curves1.add(curve1);
 		curve1.drawCurve(gestPoints1);
 		
-		QCurve curve2 = new QCurve(points2.get(points2.size() - 3).getCenterX(),
+		curve2 = new QCurve(points2.get(points2.size() - 3).getCenterX(),
 				points2.get(points2.size() - 3).getCenterY(), points2.get(points2.size() - 1).getCenterX(),
 				points2.get(points2.size() - 1).getCenterY(), points2.get(0).getCenterX(), points2.get(0).getCenterY());
 		curves2.add(curve2);
@@ -294,9 +308,12 @@ public class FormesArrondies extends Application {
 		
 	}
 
-	
-
-	
+	private void changeColor(Color couleur) {
+		for (int i = 0 ; i < curves1.size() ; i++) {
+			curves1.get(i).setColor(couleur);
+			curves2.get(i).setColor(couleur);
+		}
+	}
 
 	public static void main(String[] args) {
 		launch(args);

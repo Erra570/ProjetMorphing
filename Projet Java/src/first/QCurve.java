@@ -15,6 +15,7 @@ public class QCurve {
 	private double XFin;
 	private double YFin;
 	private List<Circle> curvePoints;
+	private Color couleur;
 
 	public QCurve(double xd, double yd, double xc, double yc, double xf, double yf) {
 		this.XDepart = xd;
@@ -24,6 +25,7 @@ public class QCurve {
 		this.XFin = xf;
 		this.YFin = yf;
 		this.curvePoints = new ArrayList<Circle>();
+		this.couleur = Color.BLUE;
 	}
 
 	public Circle getPoint(double t) throws IllegalArgumentException {
@@ -91,6 +93,10 @@ public class QCurve {
 	public void setYFin(double yFin) {
 		YFin = yFin;
 	}
+	
+	public void setColor(Color coul) {
+		this.couleur = coul;
+	}
 
 	public void update(Circle depart, Circle controle, Circle fin, Pane root) {
 		this.setXControl(controle.getCenterX()); 
@@ -109,7 +115,7 @@ public class QCurve {
 			// Utiliser un rayon plus petit pour les points de la
 			// courbe
 			p.setRadius(1);
-			p.setFill(Color.BLUE); // Changer la couleur pour différencier les points de la courbe
+			p.setFill(this.couleur); // Changer la couleur pour différencier les points de la courbe
 			root.getChildren().add(p);
 		}
 	}

@@ -26,6 +26,7 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 	private boolean closeState;
 	private Button clo;
 	private Button del;
+	private Color couleur;
 
 	public MouseClickHandler(List<QCurve> curves1, List<QCurve> curves2, List<Circle> points1,
 			List<Circle> points2, boolean closeState, Pane root1, Pane root2,Button clo, Button del) {

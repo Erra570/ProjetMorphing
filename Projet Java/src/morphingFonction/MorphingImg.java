@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 
@@ -203,7 +204,7 @@ public class MorphingImg {
         	double XFin = (tabF.get(j).getXFin() - tabD.get(j).getXFin()) / nombreImg;
         	double YFin = (tabF.get(j).getYFin() - tabD.get(j).getYFin()) / nombreImg;
              
-            tabIncrement[j] = new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin);
+            tabIncrement[j] = new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE);
         }
         
         // Création des images intermédiaires en interpolant les points
@@ -216,7 +217,7 @@ public class MorphingImg {
             	double YControl = tabD.get(j).getYControl() + (i * tabIncrement[j].getYControl());
             	double XFin = tabD.get(j).getXFin() + (i * tabIncrement[j].getXFin());
             	double YFin = tabD.get(j).getYFin() + (i * tabIncrement[j].getYFin());
-                tabSuivant.add(j, new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin));
+                tabSuivant.add(j, new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE));
             }
             this.imgSuivanteFormeArrondie(tabSuivant);                
             e.addFrame(this.getImg());

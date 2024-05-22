@@ -1,5 +1,8 @@
 package first;
 
+import morphingFonction.*;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +56,7 @@ public class FormesArrondies extends Application {
 	private ColorPicker coulCurv;
 	private Button clo;
 	private Button del;
+	private Button startMorph;
 	private QCurve curve1;
 	private QCurve curve2;
 
@@ -103,11 +107,19 @@ public class FormesArrondies extends Application {
 		del.setDisable(true);
 		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
 		
+		startMorph = new Button("Commencer le morphing");
+        startMorph.setOnAction(event -> {
+			try {
+				startMorphing();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 		
 		Label labCoulCurv = new Label("Couleur de la courbe");
 		coulCurv = new ColorPicker(Color.BLUE);
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
-		right.getChildren().addAll(clo,del,labCoulCurv,coulCurv);
+		right.getChildren().addAll(clo,del,labCoulCurv,coulCurv, startMorph);
 
 		
 		root = new BorderPane();
@@ -317,6 +329,25 @@ public class FormesArrondies extends Application {
 		gestPoints1.setOnMouseClicked(clickHandler);
 	}
 
+	
+    private void startMorphing() throws Exception {
+        List<QCurve> tabD = new ArrayList<>();
+        List<QCurve> tabF = new ArrayList<>();
+        for (int i = 0 ; i < curves1.size() ; i++) {
+        	tabD.add(i, curves1.get(i));
+        	tabF.add(i, curves2.get(i));
+        }
+        
+		MorphingImg m = new MorphingImg(new File("img/gImg.jpg"), tabD);
+
+		//m.imgSuivanteFormeArrondie(tabSuivant);
+		//m.creerImage();
+		 m.creerGif(tabD, tabF, 60);
+
+		System.out.println("Traitement terminé!");
+    }
+    
+    
 	public static void main(String[] args) {
 		launch(args);
 	}

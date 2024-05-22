@@ -17,6 +17,10 @@ public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent>
 	private Album alb;
 	public Fichier f;
 	
+	public Fichier getF() {
+		return f;
+	}
+
 	public ControleBoutonDroite(Album alb, Fichier f) {
 		this.alb = alb;
 		this.f = f;

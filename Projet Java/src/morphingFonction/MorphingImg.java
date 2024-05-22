@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.paint.Color;
+import presentation.Fichier;
 
 import javax.imageio.ImageIO;
 
@@ -33,6 +34,13 @@ public class MorphingImg {
         }
     }
 
+    public MorphingImg(Fichier f, List<QCurve> tabPoint) throws Exception {
+        this.img = ImageIO.read(f.getF());  // Lecture de l'image à partir du fichier
+        this.tabPoint = new ArrayList<>();
+        for(int i = 0; i<tabPoint.size(); i++) {
+            this.tabPoint.add(tabPoint.get(i));  // Copie des points de morphing
+        }
+    }
     /**
      * Getter de l'image.
      * 

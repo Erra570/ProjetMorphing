@@ -147,14 +147,14 @@ public class MorphingImg {
             boolean hautSortie = false;
             for (int x = 1; x < this.img.getWidth()-1; x++) {
             	if ((this.img.getRGB(x-1, y+1) == n) && (this.img.getRGB(x, y) == n))
-            		hautEntre = true;
+            		basEntre = true;
             	if ((this.img.getRGB(x+1, y-1) == n) && (this.img.getRGB(x, y) == n))
-            		basEntre = true;   
+            		hautEntre = true;   
             	
-            	if ((this.img.getRGB(x-1, y-1) == n) && (this.img.getRGB(x-1, y) != n) &&  (this.img.getRGB(x, y) == n))
-            		hautSortie = true;
             	if ((this.img.getRGB(x+1, y+1) == n) && (this.img.getRGB(x, y) == n))
-            		basSortie = true;  
+            		basSortie = true;
+            	if ((this.img.getRGB(x-1, y-1) == n) && (this.img.getRGB(x, y-1) != n) && (this.img.getRGB(x, y) == n))
+            		hautSortie = true;  
             	
             	if ((((this.img.getRGB(x-1, y-1) != n) && (this.img.getRGB(x, y-1) != n) && (this.img.getRGB(x+1, y-1) != n)) || ((this.img.getRGB(x-1, y+1) != n) && (this.img.getRGB(x, y+1) != n) && (this.img.getRGB(x+1, y+1) != n))) && (!hautEntre || !basEntre) && (!hautSortie || !basSortie)) {
             		
@@ -162,6 +162,12 @@ public class MorphingImg {
             	else {
             		if ((this.img.getRGB(x, y) == n) && (this.img.getRGB(x+1, y) != n)) {
                 		courant = !courant;
+                		if (!courant) {
+                			hautEntre = false;
+                			basEntre = false;
+                			hautEntre = false;
+                			basSortie = false; 
+                		}
                 	}
             	}
             	            	

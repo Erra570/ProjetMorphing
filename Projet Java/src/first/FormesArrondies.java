@@ -64,6 +64,7 @@ public class FormesArrondies extends Application {
 	private QCurve curve1;
 	private QCurve curve2;
 	private ControleBoutonDroite cbd;
+	private ControleBoutonGauche cbg;
 	private ProgressIndicator pBar;
 	private Task<Scene> morphingTask;
 	
@@ -94,7 +95,7 @@ public class FormesArrondies extends Application {
 		vBoxGauche.getChildren().add(creerBoutonGauche());
 		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
 		alb.addObserver(cid);
-		ControleBoutonGauche cbg = new ControleBoutonGauche(alb, f);
+		cbg = new ControleBoutonGauche(alb, f);
 		boutonGauche.setOnAction(cbg);
 		boutonGauche.setPrefWidth(450);
 		alb.addObserver(cbg);
@@ -378,7 +379,7 @@ public class FormesArrondies extends Application {
         	tabF.add(i, curves2.get(i));
         }
         
-		MorphingImg m = new MorphingImg(cbd.getF(), tabD);
+		MorphingImg m = new MorphingImg(cbg.getF(), tabD);
 
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();

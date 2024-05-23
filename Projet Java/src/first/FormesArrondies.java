@@ -10,16 +10,15 @@ import controle.ControleBoutonGauche;
 import controle.ControleImageDepart;
 import controle.ControleImageFin;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -29,6 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import morphingFonction.MorphingImg;
 import presentation.Fichier;
@@ -66,8 +66,6 @@ public class FormesArrondies extends Application {
 	private QCurve curve1;
 	private QCurve curve2;
 	private ControleBoutonDroite cbd;
-	private Album albRes;
-	private StackPane resultats;
 	private ControleBoutonGauche cbg;
 	private ProgressIndicator pBar;
 	private Task<Scene> morphingTask;
@@ -135,20 +133,19 @@ public class FormesArrondies extends Application {
 		startMorph = new Button("Commencer le morphing");
         startMorph.setOnAction(event -> {
 			try {
-				startMorphing(primaryStage);
 				primaryStage.setScene(loadScene);
 	            morphingTask = new Task<>() {
 	                @Override
 	                protected Scene call() throws Exception {
 	                	try {
-	                		startMorphing();
+	                		startMorphing(primaryStage);
 	                	} catch (InterruptedException e) {
 	                        e.printStackTrace();
 	                    }
 	                	return scene;
 	                }
 	            };
-	            morphingTask.setOnSucceeded(event2 -> primaryStage.setScene(morphingTask.getValue()));
+	            morphingTask.setOnSucceeded(event2 -> primaryStage.setScene(showResult));   //primaryStage.setScene(morphingTask.getValue())
 	            new Thread(morphingTask).start();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -178,7 +175,8 @@ public class FormesArrondies extends Application {
 		startMorph.getStyleClass().add("bouton");
 		startMorph.getStyleClass().add("boutonDroit");
 		right.getStyleClass().add("panDroit");
-
+		
+		
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 		
@@ -398,12 +396,13 @@ public class FormesArrondies extends Application {
 		 /* Création de la scène de résultats*/
 		 File fRes = new File("img/testGif.gif");
 		 ImageView imgResult = new ImageView(fRes.toURI().toString());
+		 Button retour = new Button("Retour");
+		 retour.setOnAction(e -> primaryStage.setScene(scene));
+		 Text infoResult = new Text("Gif enregistré dans img");
 		 VBox resultBox = new VBox();
-		 resultBox.getChildren().add(imgResult);
-		 
-		 
+		 resultBox.getChildren().addAll(infoResult,imgResult,retour);
 		 showResult = new Scene(resultBox);
-		 primaryStage.setScene(showResult);
+
     }
     
     

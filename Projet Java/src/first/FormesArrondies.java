@@ -1,7 +1,6 @@
 package first;
 
-import morphingFonction.*;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import controle.ControleBoutonGauche;
 import controle.ControleImageDepart;
 import controle.ControleImageFin;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -27,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import morphingFonction.MorphingImg;
 import presentation.Fichier;
 
 /**
@@ -43,6 +44,7 @@ public class FormesArrondies extends Application {
 	private Pane gestPoints2;
 	private boolean closeState = false; // etat de fermeture du périmètre
 	private Scene scene;
+	private Scene showResult;
 	private Album alb;
 	private ImageView imageDepart;
 	private ImageView imageFin;
@@ -59,6 +61,8 @@ public class FormesArrondies extends Application {
 	private QCurve curve1;
 	private QCurve curve2;
 	private ControleBoutonDroite cbd;
+	private Album albRes;
+	private StackPane resultats;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -67,6 +71,7 @@ public class FormesArrondies extends Application {
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
+		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
 		alb = new Album(f);
 
@@ -113,7 +118,7 @@ public class FormesArrondies extends Application {
 		startMorph = new Button("Commencer le morphing");
         startMorph.setOnAction(event -> {
 			try {
-				startMorphing();
+				startMorphing(primaryStage);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -124,11 +129,9 @@ public class FormesArrondies extends Application {
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
 		right.getChildren().addAll(clo,del,labCoulCurv,coulCurv, startMorph);
 
-		
 		root = new BorderPane();
 		root.setCenter(this.pCentre);
 		root.setRight(right);
-
 		scene = new Scene(root);
 		
 		// Ajout de la feuille css
@@ -140,6 +143,10 @@ public class FormesArrondies extends Application {
 		boutonDroite.getStyleClass().add("bouton");
 		boutonGauche.getStyleClass().add("bouton");
 		coulCurv.getStyleClass().add("bouton");
+		coulCurv.getStyleClass().add("boutonDroit");
+		startMorph.getStyleClass().add("bouton");
+		startMorph.getStyleClass().add("boutonDroit");
+		right.getStyleClass().add("panDroit");
 
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
@@ -155,6 +162,7 @@ public class FormesArrondies extends Application {
 		primaryStage.setTitle("Morphing d'image");
 		primaryStage.setResizable(false);
 		primaryStage.show();
+		
 	}
 
 	/**
@@ -339,7 +347,10 @@ public class FormesArrondies extends Application {
 	}
 
 	
-    private void startMorphing() throws Exception {
+    private void startMorphing(Stage primaryStage) throws Exception {
+    	
+		
+		
         List<QCurve> tabD = new ArrayList<>();
         List<QCurve> tabF = new ArrayList<>();
         for (int i = 0 ; i < curves1.size() ; i++) {
@@ -352,8 +363,16 @@ public class FormesArrondies extends Application {
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();
 		 m.creerGif(tabD, tabF, 60);
-
-		System.out.println("Traitement terminé!");
+		 
+		 /* Création de la scène de résultats*/
+		 File fRes = new File("img/testGif.gif");
+		 ImageView imgResult = new ImageView(fRes.toURI().toString());
+		 VBox resultBox = new VBox();
+		 resultBox.getChildren().add(imgResult);
+		 
+		 
+		 showResult = new Scene(resultBox);
+		 primaryStage.setScene(showResult);
     }
     
     

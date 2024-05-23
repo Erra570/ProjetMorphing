@@ -5,7 +5,8 @@
 .boutonDroit {
   -fx-padding: 10px;
   -fx-border-insets: 10px;
-  -fx-background-insets: 10px;
+  -fx-background-insets: 7px;
+  -fx-margin-right: 10px;
 }
 
 .pts {

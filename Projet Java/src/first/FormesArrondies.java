@@ -11,9 +11,12 @@ import controle.ControleImageDepart;
 import controle.ControleImageFin;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -50,8 +53,10 @@ public class FormesArrondies extends Application {
 	private ImageView imageFin;
 	private Button boutonGauche;
 	private Button boutonDroite;
+	private TextField texte;
 	private Fichier f;
 	private BorderPane root;
+	private VBox loading;
 	private HBox pCentre;
 	private VBox right;
 	private ColorPicker coulCurv;
@@ -63,6 +68,9 @@ public class FormesArrondies extends Application {
 	private ControleBoutonDroite cbd;
 	private Album albRes;
 	private StackPane resultats;
+	private ControleBoutonGauche cbg;
+	private ProgressIndicator pBar;
+	private Task<Scene> morphingTask;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -74,6 +82,15 @@ public class FormesArrondies extends Application {
 		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
 		alb = new Album(f);
+		
+		// Barre de chargement
+		loading = new VBox();
+		pBar = new ProgressIndicator();
+		texte = new TextField("Morphing en cours...");
+		loading.getChildren().add(texte);
+		loading.getChildren().add(pBar);
+		
+		Scene loadScene = new Scene(loading);
 
 		// Image gauche avec bouton pour changer d'image
 		VBox vBoxGauche = new VBox();
@@ -82,7 +99,7 @@ public class FormesArrondies extends Application {
 		vBoxGauche.getChildren().add(creerBoutonGauche());
 		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
 		alb.addObserver(cid);
-		ControleBoutonGauche cbg = new ControleBoutonGauche(alb, f);
+		cbg = new ControleBoutonGauche(alb, f);
 		boutonGauche.setOnAction(cbg);
 		boutonGauche.setPrefWidth(450);
 		alb.addObserver(cbg);
@@ -119,6 +136,20 @@ public class FormesArrondies extends Application {
         startMorph.setOnAction(event -> {
 			try {
 				startMorphing(primaryStage);
+				primaryStage.setScene(loadScene);
+	            morphingTask = new Task<>() {
+	                @Override
+	                protected Scene call() throws Exception {
+	                	try {
+	                		startMorphing();
+	                	} catch (InterruptedException e) {
+	                        e.printStackTrace();
+	                    }
+	                	return scene;
+	                }
+	            };
+	            morphingTask.setOnSucceeded(event2 -> primaryStage.setScene(morphingTask.getValue()));
+	            new Thread(morphingTask).start();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -358,7 +389,7 @@ public class FormesArrondies extends Application {
         	tabF.add(i, curves2.get(i));
         }
         
-		MorphingImg m = new MorphingImg(cbd.getF(), tabD);
+		MorphingImg m = new MorphingImg(cbg.getF(), tabD);
 
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();

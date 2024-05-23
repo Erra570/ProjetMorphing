@@ -16,6 +16,10 @@ public class ControleBoutonGauche implements Observer, EventHandler<ActionEvent>
 	private Album alb;
 	public Fichier f;
 	
+	public Fichier getF() {
+		return f;
+	}
+	
 	public ControleBoutonGauche(Album alb, Fichier f) {
 		this.alb = alb;
 		this.f = f;

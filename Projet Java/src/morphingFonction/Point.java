@@ -1,10 +1,10 @@
 package morphingFonction;
 
-import java.util.List;
+//import java.util.List;
 
-import first.QCurve;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+//import first.QCurve;
+//import javafx.scene.paint.Color;
+//import javafx.scene.shape.Circle;
 
 /**
  * Classe représentant un point avec des coordonnées x et y.

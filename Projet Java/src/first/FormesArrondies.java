@@ -387,7 +387,7 @@ public class FormesArrondies extends Application {
         	tabF.add(i, curves2.get(i));
         }
         
-		MorphingImg m = new MorphingImg(cbg.getF(), tabD);
+		MorphingImg m = new MorphingImg(cbg.getFichier(), tabD);
 
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();

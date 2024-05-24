@@ -18,19 +18,28 @@ import java.util.List;
  */
 public class MouseDragHandler implements EventHandler<MouseEvent> {
 
-	private List<QCurve> curves;
-	private List<Circle> points;
-	private boolean closeState;
-	private int indexPoint;
-	private Pane root;
+    private List<QCurve> courbes;
+    private List<Circle> points;
+    private boolean etatFerme;
+    private int indexPoint;
+    private Pane panneau;
 
-	public MouseDragHandler(List<QCurve> curves, List<Circle> points, boolean closeState, int indexPoint, Pane root) {
-		this.curves = curves;
-		this.points = points;
-		this.closeState = closeState;
-		this.indexPoint = indexPoint;
-		this.root = root;
-	}
+    /**
+     * Constructeur du gestionnaire de curseur.
+     * 
+     * @param courbes Liste des courbes.
+     * @param points Liste des points.
+     * @param etatFerme État de fermeture des formes.
+     * @param indexPoint Index du point à déplacer.
+     * @param panneau Panneau contenant les points.
+     */
+	public MouseDragHandler(List<QCurve> courbes, List<Circle> points, boolean etatFerme, int indexPoint, Pane panneau) {
+        this.courbes = courbes;
+        this.points = points;
+        this.etatFerme = etatFerme;
+        this.indexPoint = indexPoint;
+        this.panneau = panneau;
+    }
 
 	@Override
 	/**
@@ -39,88 +48,80 @@ public class MouseDragHandler implements EventHandler<MouseEvent> {
 	 */
 	public void handle(MouseEvent event) {
 
-		// Permet de déplacer un point
-		points.get(indexPoint).setCursor(Cursor.CLOSED_HAND);
-		points.get(indexPoint).setCenterX(event.getX());
-		points.get(indexPoint).setCenterY(event.getY());
+	     // Permet de déplacer un point
+        points.get(indexPoint).setCursor(Cursor.CLOSED_HAND);
+        points.get(indexPoint).setCenterX(event.getX());
+        points.get(indexPoint).setCenterY(event.getY());
 
-		// Gestion des courbes en bougeant un sommet sommet sauf le premier et le
-		// dernier
-		if (indexPoint >= 1 && indexPoint % 2 == 1 && indexPoint < points.size() - 3) {
-			if (indexPoint == 1) {
-				curves.get(indexPoint / 2).update(points.get(indexPoint - 1), points.get(indexPoint + 1),
-						points.get(indexPoint), root);
-				curves.get((indexPoint / 2) + 1).update(points.get(indexPoint), points.get(indexPoint + 3),
-						points.get(indexPoint + 2), root);
-			} else {
-				curves.get(indexPoint / 2).update(points.get(indexPoint - 2), points.get(indexPoint + 1),
-						points.get(indexPoint), root);
-				curves.get((indexPoint / 2) + 1).update(points.get(indexPoint), points.get(indexPoint + 3),
-						points.get(indexPoint + 2), root);
-			}
-		}
+        // Gestion des courbes en bougeant un sommet sauf le premier et le dernier
+        if (indexPoint >= 1 && indexPoint % 2 == 1 && indexPoint < points.size() - 3) {
+            if (indexPoint == 1) {
+                courbes.get(indexPoint / 2).update(points.get(indexPoint - 1), points.get(indexPoint + 1),
+                        points.get(indexPoint), panneau);
+                courbes.get((indexPoint / 2) + 1).update(points.get(indexPoint), points.get(indexPoint + 3),
+                        points.get(indexPoint + 2), panneau);
+            } else {
+                courbes.get(indexPoint / 2).update(points.get(indexPoint - 2), points.get(indexPoint + 1),
+                        points.get(indexPoint), panneau);
+                courbes.get((indexPoint / 2) + 1).update(points.get(indexPoint), points.get(indexPoint + 3),
+                        points.get(indexPoint + 2), panneau);
+            }
+        }
 
-		// Gestion des courbes en bougeant un points de contrôle
-		if (indexPoint != 0 && indexPoint % 2 == 0) {
-			if (!closeState) {// Le périmètre est ouvert
-				if (indexPoint == 2) {
-					curves.get((indexPoint / 2) - 1).update(points.get(indexPoint - 2), points.get(indexPoint),
-							points.get(indexPoint - 1), root);
-				} else {
-					curves.get((indexPoint / 2) - 1).update(points.get(indexPoint - 3), points.get(indexPoint),
-							points.get(indexPoint - 1), root);
-				}
+        // Gestion des courbes en bougeant un point de contrôle
+        if (indexPoint != 0 && indexPoint % 2 == 0) {
+            if (!etatFerme) { // Le périmètre est ouvert
+                if (indexPoint == 2) {
+                    courbes.get((indexPoint / 2) - 1).update(points.get(indexPoint - 2), points.get(indexPoint),
+                            points.get(indexPoint - 1), panneau);
+                } else {
+                    courbes.get((indexPoint / 2) - 1).update(points.get(indexPoint - 3), points.get(indexPoint),
+                            points.get(indexPoint - 1), panneau);
+                }
+            } else { // Le périmètre est fermé
+                if (indexPoint == 2) {
+                    courbes.get((indexPoint / 2) - 1).update(points.get(indexPoint - 2), points.get(indexPoint),
+                            points.get(indexPoint - 1), panneau);
+                } else {
+                    courbes.get((indexPoint / 2) - 1).update(points.get(indexPoint - 3), points.get(indexPoint),
+                            points.get(indexPoint - 1), panneau);
+                }
+            }
+        }
 
-			} else { // Le périmètre est fermé
-				if (indexPoint == 2) {
-					curves.get((indexPoint / 2) - 1).update(points.get(indexPoint - 2), points.get(indexPoint),
-							points.get(indexPoint - 1), root);
-				} else {
-					curves.get((indexPoint / 2) - 1).update(points.get(indexPoint - 3), points.get(indexPoint),
-							points.get(indexPoint - 1), root);
+        // Gestion de la courbe associée au dernier point de contrôle
+        if (indexPoint == points.size() - 1 && etatFerme) {
+            courbes.get(courbes.size() - 1).update(points.get(indexPoint - 2), points.get(indexPoint), points.get(0),
+                    panneau);
+        }
 
-				}
-			}
-		}
+        // Gestion des courbes associées au premier sommet
+        if (indexPoint == 0) {
+            if (etatFerme) { // Le périmètre est fermé
+                courbes.get(0).update(points.get(0), points.get(2), points.get(1), panneau);
+                courbes.get(courbes.size() - 1).update(points.get(points.size() - 3), points.get(points.size() - 1),
+                        points.get(0), panneau);
+            } else { // Le périmètre est ouvert
+                courbes.get(0).update(points.get(0), points.get(2), points.get(1), panneau);
+            }
+        }
 
-		// Gestion de la courbe associée au dernier point de contrôle
-		if (indexPoint == points.size() - 1 && closeState) {
-			curves.get(curves.size() - 1).update(points.get(indexPoint - 2), points.get(indexPoint), points.get(0),
-					root);
-		}
+        // Gestion des courbes associées au dernier sommet avec le périmètre fermé
+        if (indexPoint == points.size() - 3 && etatFerme) {
+            courbes.get(courbes.size() - 1).update(points.get(indexPoint), points.get(indexPoint + 2), points.get(0),
+                    panneau);
+            courbes.get(courbes.size() - 2).update(points.get(indexPoint - 2), points.get(indexPoint + 1),
+                    points.get(indexPoint), panneau);
+        }
 
-		// Gestion des courbes associées au premier sommet
-		if (indexPoint == 0) {
-			if (closeState) {// Le périmètre est fermé
-				curves.get(0).update(points.get(0), points.get(2), points.get(1), root);
-				curves.get(curves.size() - 1).update(points.get(points.size() - 3), points.get(points.size() - 1),
-						points.get(0), root);
-			} else {// Le périmètre est ouvert
-				curves.get(0).update(points.get(0), points.get(2), points.get(1), root);
-			}
-		}
-
-		// Gestion des courbes associées au dernier sommet avec le périmètre fermé
-		if (indexPoint == points.size() - 3 && closeState) {
-
-			curves.get(curves.size() - 1).update(points.get(indexPoint), points.get(indexPoint + 2), points.get(0),
-					root);
-			curves.get(curves.size() - 2).update(points.get(indexPoint - 2), points.get(indexPoint + 1),
-					points.get(indexPoint), root);
-		}
-
-		// Gestion de la courbe associée au dernier sommet avec le périmètre ouvert
-		if (indexPoint == points.size() - 2 && !closeState && indexPoint != 0) {
-			if (indexPoint != 1) {
-				curves.get(curves.size() - 1).update(points.get(indexPoint - 2), points.get(indexPoint + 1),
-						points.get(indexPoint), root);
-			} else {
-				curves.get(0).update(points.get(0), points.get(2), points.get(1), root);
-			}
-
-		}
-
-	}
-
-
+        // Gestion de la courbe associée au dernier sommet avec le périmètre ouvert
+        if (indexPoint == points.size() - 2 && !etatFerme && indexPoint != 0) {
+            if (indexPoint != 1) {
+                courbes.get(courbes.size() - 1).update(points.get(indexPoint - 2), points.get(indexPoint + 1),
+                        points.get(indexPoint), panneau);
+            } else {
+                courbes.get(0).update(points.get(0), points.get(2), points.get(1), panneau);
+            }
+        }
+    }
 }

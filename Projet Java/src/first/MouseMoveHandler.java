@@ -17,21 +17,19 @@ import java.util.List;
  */
 public class MouseMoveHandler implements EventHandler<MouseEvent> {
 
-	private List<QCurve> curves;
-	private List<Circle> points;
-	//private List<QuadCurve> curves2;
-	//private List<Circle> points2;
-	private boolean closeState;
-	private Pane root;
-	private int ID;
+    private List<QCurve> courbes;
+    private List<Circle> points;
+    private boolean etatFerme;
+    private Pane panneau;
+    private int identifiant;
 
-	public MouseMoveHandler(List<QCurve> curves, List<Circle> points, boolean closeState, Pane root, int ID) {
-		this.curves = curves;
-		this.points = points;
-		this.closeState = closeState;
-		this.root = root;
-		this.ID = ID;
-	}
+	public MouseMoveHandler(List<QCurve> courbes, List<Circle> points, boolean etatFerme, Pane panneau, int identifiant) {
+        this.courbes = courbes;
+        this.points = points;
+        this.etatFerme = etatFerme;
+        this.panneau = panneau;
+        this.identifiant = identifiant;
+    }
 
 	@Override
 	/**
@@ -41,19 +39,15 @@ public class MouseMoveHandler implements EventHandler<MouseEvent> {
 	 * Passer la souris par dessus un point change la souris, elle change encore lorsqu'un point est déplacé
 	 */
 	public void handle(MouseEvent event) {
-		for (Circle p : points) {
-			if (p.getBoundsInParent().contains(event.getX(), event.getY())) {
-				p.setCursor(Cursor.HAND);
-				System.out.println("" + points.indexOf(p)+ " "+ ID);
-				MouseDragHandler dragHandler = new MouseDragHandler(curves, points, closeState, points.indexOf(p),root);
-				p.setOnMouseDragged(dragHandler);
-			}
-		}
-
-		
-		
-		root.setCursor(Cursor.DEFAULT);
-
-	}
+		for (Circle point : points) {
+            if (point.getBoundsInParent().contains(event.getX(), event.getY())) {
+                point.setCursor(Cursor.HAND);
+                System.out.println("" + points.indexOf(point) + " " + identifiant);
+                MouseDragHandler gestionnaireGlisse = new MouseDragHandler(courbes, points, etatFerme, points.indexOf(point), panneau);
+                point.setOnMouseDragged(gestionnaireGlisse);
+            }
+        }
+        panneau.setCursor(Cursor.DEFAULT);
+    }
 
 }

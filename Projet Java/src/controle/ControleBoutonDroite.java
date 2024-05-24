@@ -3,69 +3,40 @@ package controle;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
+
 import abstraction.Album;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+// import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import presentation.Fichier;
 
-/**
- * Classe de contrôle pour le bouton de droite permettant de sélectionner une image de fin
- * et de la mettre à jour dans l'album.
- * 
- * @auteur Reignier Arnaud
- * @auteur Vigneron Bastien
- * @auteur Finana Tom
- * @auteur Fontaine Nicolas
- * @auteur Charrier Simon
- */
 @SuppressWarnings("deprecation")
-public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent> {
+public class ControleBoutonDroite implements Observer, EventHandler<ActionEvent>{
 	
-    private Album album; // Référence à l'album
-    private Fichier fichier; // Référence au fichier d'image
+	private Album alb;
+	public Fichier f;
+	
+	public Fichier getF() {
+		return f;
+	}
 
-    /**
-     * Constructeur de la classe ControleBoutonDroite
-     * 
-     * @param album Référence à l'album
-     * @param fichier Référence au fichier d'image
-     */
-    public ControleBoutonDroite(Album album, Fichier fichier) {
-        this.album = album;
-        this.fichier = fichier;
-    }
+	public ControleBoutonDroite(Album alb, Fichier f) {
+		this.alb = alb;
+		this.f = f;
+	}
 
-    /**
-     * Retourne le fichier d'image
-     * 
-     * @return Le fichier d'image
-     */
-    public Fichier getFichier() {
-        return fichier;
-    }
+	@Override
+	public void handle(ActionEvent arg0) {
+		FileChooser fc = new FileChooser();
+		final File file = fc.showOpenDialog(null); 
+		alb.setImageFin(file.toURI().toString());
+		f.setF(file);
+	}
 
-    /**
-     * Méthode appelée lors de l'action sur le bouton
-     * 
-     * @param arg0 L'événement de l'action
-     */
-    @Override
-    public void handle(ActionEvent arg0) {
-        FileChooser selecteurFichier = new FileChooser();
-        final File fichierChoisi = selecteurFichier.showOpenDialog(null); 
-        album.setImageFin(fichierChoisi.toURI().toString());
-        fichier.setF(fichierChoisi);
-    }
-
-    /**
-     * Méthode de mise à jour de l'observateur
-     * 
-     * @param obs L'objet obs
-     * @param arg argument passé à l'observateur
-     */
-    @Override
-    public void update(Observable obs, Object arg) {
-        // Méthode générée automatiquement
-    }
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
 }

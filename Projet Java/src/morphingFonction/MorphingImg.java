@@ -150,36 +150,33 @@ public class MorphingImg {
         
         for (int y = 1; y < this.img.getHeight()-1; y++) {
             boolean courant = false;
-            boolean bas = false;
-            boolean haut = false;
+            boolean basEntre = false;
+            boolean hautEntre = false;
+            boolean basSortie = false;
+            boolean hautSortie = false;
             for (int x = 1; x < this.img.getWidth()-1; x++) {
-            	if (((this.img.getRGB(x-1, y+1) == n) || (this.img.getRGB(x, y+1) == n) || (this.img.getRGB(x+1, y+1) == n)) && (this.img.getRGB(x, y) == n) && !bas)
-            		bas = true;
-            	if (((this.img.getRGB(x-1, y-1) == n) || (this.img.getRGB(x, y-1) == n) || (this.img.getRGB(x+1, y-1) == n)) && (this.img.getRGB(x, y) == n) && !haut)
-            		haut = true;
+            	if ((this.img.getRGB(x-1, y+1) == n) && (this.img.getRGB(x, y) == n))
+            		basEntre = true;
+            	if ((this.img.getRGB(x+1, y-1) == n) && (this.img.getRGB(x, y) == n))
+            		hautEntre = true;   
             	
-            	if (((this.img.getRGB(x-1, y+1) == n) || (this.img.getRGB(x, y+1) == n) || (this.img.getRGB(x+1, y+1) == n)) && (this.img.getRGB(x, y) == n) && courant)
-            		bas = false;
-            	if (((this.img.getRGB(x-1, y-1) != n) || (this.img.getRGB(x, y-1) != n) || (this.img.getRGB(x+1, y-1) != n)) && (this.img.getRGB(x, y) == n) && courant)
-            		haut = false;  
+            	if ((this.img.getRGB(x+1, y+1) == n) && (this.img.getRGB(x, y) == n))
+            		basSortie = true;
+            	if ((this.img.getRGB(x-1, y-1) == n) && (this.img.getRGB(x, y-1) != n) && (this.img.getRGB(x, y) == n))
+            		hautSortie = true;  
             	
-            	if ((this.img.getRGB(x+1, y-1) == n) && (this.img.getRGB(x, y) == n) && (this.img.getRGB(x+1, y) != n) && !haut) {
-            		haut = true;
-            	}
-            	
-            	if ((this.img.getRGB(x-1, y-1) == n) && (this.img.getRGB(x, y-1) == n) && (this.img.getRGB(x+1, y-1) == n) && (this.img.getRGB(x+1, y+1) == n) && (this.img.getRGB(x, y) == n) && (this.img.getRGB(x+1, y) != n) && !bas) {
-            		bas = true;
-            	}
-            	
+            	if ((((this.img.getRGB(x-1, y-1) != n) && (this.img.getRGB(x, y-1) != n) && (this.img.getRGB(x+1, y-1) != n)) || ((this.img.getRGB(x-1, y+1) != n) && (this.img.getRGB(x, y+1) != n) && (this.img.getRGB(x+1, y+1) != n))) && (!hautEntre || !basEntre) && (!hautSortie || !basSortie)) {
             		
-            	if (bas && haut) {
-            		if ((this.img.getRGB(x, y) == n) && (this.img.getRGB(x+1, y) != n)) {
-            			courant = true;
-                	}
             	}
             	else {
             		if ((this.img.getRGB(x, y) == n) && (this.img.getRGB(x+1, y) != n)) {
-            			courant = false;
+                		courant = !courant;
+                		if (!courant) {
+                			hautEntre = false;
+                			basEntre = false;
+                			hautEntre = false;
+                			basSortie = false; 
+                		}
                 	}
             	}
             	            	
@@ -238,8 +235,6 @@ public class MorphingImg {
             }
             this.imgSuivanteFormeArrondie(tabSuivant);                
             e.addFrame(this.getImg());
-            if (i == 20)
-            	this.creerImage();
         }
 
         // Ajout de quelques images finales pour finir le GIF

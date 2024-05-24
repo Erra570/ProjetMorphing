@@ -12,3 +12,7 @@
 .pts {
   -fx-cursor: grabbing;
 }
+
+#centeredText {
+  -fx-alignment: center;
+}

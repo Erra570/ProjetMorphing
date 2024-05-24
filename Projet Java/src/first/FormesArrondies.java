@@ -14,11 +14,14 @@ import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -28,7 +31,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import morphingFonction.MorphingImg;
 import presentation.Fichier;
@@ -69,6 +71,7 @@ public class FormesArrondies extends Application {
 	private ControleBoutonGauche cbg;
 	private ProgressIndicator pBar;
 	private Task<Scene> morphingTask;
+	private TextField nbImagesPC;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -131,6 +134,7 @@ public class FormesArrondies extends Application {
 		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
 		
 		startMorph = new Button("Commencer le morphing");
+		startMorph.setDisable(true);
         startMorph.setOnAction(event -> {
 			try {
 				primaryStage.setScene(loadScene);
@@ -155,7 +159,12 @@ public class FormesArrondies extends Application {
 		Label labCoulCurv = new Label("Couleur de la courbe");
 		coulCurv = new ColorPicker(Color.BLUE);
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
-		right.getChildren().addAll(clo,del,labCoulCurv,coulCurv, startMorph);
+		
+		Label labnbImagesPC = new Label("Vitesse (%)");
+		nbImagesPC = new TextField("100");
+		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
+		
+		right.getChildren().addAll(clo,del,labCoulCurv,coulCurv,labnbImagesPC , nbImagesPC, startMorph);
 
 		root = new BorderPane();
 		root.setCenter(this.pCentre);
@@ -175,6 +184,7 @@ public class FormesArrondies extends Application {
 		startMorph.getStyleClass().add("bouton");
 		startMorph.getStyleClass().add("boutonDroit");
 		right.getStyleClass().add("panDroit");
+		nbImagesPC.getStyleClass().add("boutonDroit");
 		
 		
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
@@ -289,6 +299,7 @@ public class FormesArrondies extends Application {
 			gestPoints2.getChildren().remove(points2.remove(points2.size() - 1));
 			closeState = false;
 			clo.setDisable(false);
+			startMorph.setDisable(true);
 
 			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del, coulCurv.getValue());
 			gestPoints1.setOnMouseClicked(clickHandler);
@@ -354,6 +365,7 @@ public class FormesArrondies extends Application {
 		curve2.drawCurve(gestPoints2);
 		closeState = true;
 		clo.setDisable(true);
+		startMorph.setDisable(false);
 
 		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,clo, del, coulCurv.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
@@ -378,7 +390,14 @@ public class FormesArrondies extends Application {
 	
     private void startMorphing(Stage primaryStage) throws Exception {
     	
-		
+    	System.out.println(Double.parseDouble(nbImagesPC.getText()));
+    	System.out.println(Double.parseDouble(nbImagesPC.getText()) < 5);
+		if ((Double.parseDouble(nbImagesPC.getText()) < 5)) {
+			Alert zero = new Alert(AlertType.ERROR);
+			zero.setContentText("Vitesse trop basse !");
+			zero.show();
+			return;
+		}
 		
         List<QCurve> tabD = new ArrayList<>();
         List<QCurve> tabF = new ArrayList<>();
@@ -391,18 +410,36 @@ public class FormesArrondies extends Application {
 
 		//m.imgSuivanteFormeArrondie(tabSuivant);
 		//m.creerImage();
-		 m.creerGif(tabD, tabF, 60);
+		Double nbImages = (100 *60)/(Double.parseDouble(nbImagesPC.getText())); // Produit en croix modifié pour que l'augmentation du % de vitesse donne une baisse d'images
+		System.out.println(nbImages);
+		 m.creerGif(tabD, tabF, nbImages);
 		 
 		 /* Création de la scène de résultats*/
 		 File fRes = new File("img/testGif.gif");
 		 ImageView imgResult = new ImageView(fRes.toURI().toString());
 		 Button retour = new Button("Retour");
 		 retour.setOnAction(e -> primaryStage.setScene(scene));
-		 Text infoResult = new Text("Gif enregistré dans img");
 		 VBox resultBox = new VBox();
-		 resultBox.getChildren().addAll(infoResult,imgResult,retour);
+		 resultBox.getChildren().addAll(imgResult,retour);
 		 showResult = new Scene(resultBox);
 
+    }
+    
+    /**
+     * Fonction permettant au TextField "nbImages" de n'accepter que des chiffres
+     * 
+     * @param field TextField à traiter
+     */
+    public static void verifNbImage(TextField field) {
+    	// On ajoute un TextFormatter au TextField, outil pratique pour ce genre de cas. Ici, <Integer> force le text à changer.
+        field.setTextFormatter(new TextFormatter<Integer>(change -> {
+            String newText = change.getControlNewText();
+            // On vérifie via matches("\\d*") (\\d --> caractères entre 0 et 9, * --> n'importe quel nombre de caractères respectant la condition)
+            if (newText.matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
     }
     
     

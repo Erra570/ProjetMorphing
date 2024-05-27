@@ -32,6 +32,8 @@ public class Delaunay extends Application {
 		ArrayList<Circle> pointGraph = new ArrayList<Circle>();
 		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root);
 		root.setOnMouseClicked(clickHandler);
+		MouseMoveHandlerDelaunay moveHandler = new MouseMoveHandlerDelaunay(pointGraph, root, 1);
+		root.setOnMouseMoved(moveHandler);
 		Button bouton = new Button("Test");
 		root.getChildren().add(bouton);
 

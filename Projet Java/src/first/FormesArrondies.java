@@ -35,6 +35,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import morphingFonction.MorphingImg;
 import presentation.Fichier;
+import triangle.Delaunay;
+import triangle.MouseClickHandlerDelaunay;
 
 /**
  * Classe permettant de créer des courbes pour les formes arrondies
@@ -76,7 +78,11 @@ public class FormesArrondies extends Application {
 	private TextField nbImagesPC;
 	private ColorPicker pickSom;
 	private MouseClickHandler clickHandler;
+	private MouseClickHandlerDelaunay clickHandlerDelaunay;
 	private ColorPicker pickCont;
+	
+	private Delaunay delaunay1;
+	private Delaunay delaunay2;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -294,46 +300,29 @@ public class FormesArrondies extends Application {
 
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
-		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
+		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements //TODO delete
 
-		startMorph = new Button("Commencer le morphing");
+		startMorph = new Button("Trianguler");
 		startMorph.setOnAction(event -> {
-			if (Double.parseDouble(nbImagesPC.getText()) < 5) {
-				Alert basseVitesse = new Alert(AlertType.ERROR);
-				basseVitesse.initModality(Modality.APPLICATION_MODAL);
-				basseVitesse.setHeaderText("Erreur - Vitesse trop basse !");
-				basseVitesse.setContentText("Pour eviter un plantage dû au nombre d'images calculées, veuillez augmenter la vitesse au dessus de 5%");
-				basseVitesse.showAndWait();
-			} else {
-				try {
-					primaryStage.setScene(loadScene);
-					morphingTask = new Task<>() {
-						@Override
-						protected Scene call() throws Exception {
-								System.out.println("Visages");
-							return scene;
-						}
-					};
-					morphingTask.setOnSucceeded(event2 -> primaryStage.setScene(showResult)); // primaryStage.setScene(morphingTask.getValue())
-					new Thread(morphingTask).start();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			delaunay1.initTriang(gestPoints1);
+			delaunay2.initTriang(gestPoints2);
 		});
 		
 		Label labpickSom = new Label("Couleur des points");
+		//TODO verif couleur des points
 		pickSom = new ColorPicker(Color.RED);
 		pickSom.setOnAction(event -> 
 		colorSomFA(pickSom.getValue()));
 
 		Label labnbImagesPC = new Label("Vitesse (%)");
+		//TODO vitesse fonctionnelle ?
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
 		
-		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del, coulCurv.getValue(),pickSom.getValue(),pickCont.getValue());
-		gestPoints1.setOnMouseClicked(clickHandler);
+		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1);
+		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
+		//TODO new move handler ?
 		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
 		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
 
@@ -380,8 +369,9 @@ public class FormesArrondies extends Application {
 		Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
 		imageDepart.setViewport(viewportRect);
 		gestPoints1 = new Pane();
-		gestPoints1.prefHeight(p.getHeight());
-		gestPoints1.prefWidth(p.getWidth());
+		gestPoints1.prefHeight(500);
+		gestPoints1.prefWidth(500);
+		delaunay1 = new Delaunay(gestPoints1);
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;
@@ -400,8 +390,9 @@ public class FormesArrondies extends Application {
 		Rectangle2D viewportRect = new Rectangle2D(0, 0, 500, 500);
 		imageFin.setViewport(viewportRect);
 		gestPoints2 = new Pane();
-		gestPoints2.prefHeight(p.getHeight());
-		gestPoints2.prefWidth(p.getWidth());
+		gestPoints2.prefHeight(500);
+		gestPoints2.prefWidth(500);
+		delaunay2 = new Delaunay(gestPoints2);
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;

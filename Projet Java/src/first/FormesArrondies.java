@@ -85,6 +85,7 @@ public class FormesArrondies extends Application {
 	
 	@SuppressWarnings("deprecation")
 	public void interfaceFormes(Stage primaryStage) {
+		
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
@@ -94,7 +95,7 @@ public class FormesArrondies extends Application {
 		
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Visage");
-		chgmtCote.setOnAction(e -> interfaceVisage(primaryStage));
+		chgmtCote.setOnAction(e -> goToVisage(primaryStage));
 		StackPane haut = new StackPane();
 		haut.getChildren().add(chgmtCote);
 
@@ -238,6 +239,7 @@ public class FormesArrondies extends Application {
 	
 	@SuppressWarnings("deprecation")
 	public void interfaceVisage(Stage primaryStage) {
+		
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
@@ -247,7 +249,7 @@ public class FormesArrondies extends Application {
 		
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Formes");
-		chgmtCote.setOnAction(e -> interfaceFormes(primaryStage));
+		chgmtCote.setOnAction(e -> goToForme(primaryStage));
 		StackPane haut = new StackPane();
 		haut.getChildren().add(chgmtCote);
 
@@ -600,6 +602,26 @@ public class FormesArrondies extends Application {
 			}
 			return null;
 		}));
+	}
+	
+	public void goToVisage(Stage primaryStage) {
+		// Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
+		clickHandler.getcurves1().clear();
+		clickHandler.getcurves2().clear();
+		clickHandler.getPoints1().clear();
+		clickHandler.getPoints2().clear();
+		
+		interfaceVisage(primaryStage);
+	}
+	
+	public void goToForme(Stage primaryStage) {
+		// Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
+		clickHandler.getcurves1().clear();
+		clickHandler.getcurves2().clear();
+		clickHandler.getPoints1().clear();
+		clickHandler.getPoints2().clear();
+		
+		interfaceFormes(primaryStage);
 	}
 
 	public static void main(String[] args) {

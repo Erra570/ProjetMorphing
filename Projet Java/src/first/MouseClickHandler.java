@@ -158,6 +158,38 @@ public class MouseClickHandler implements EventHandler<MouseEvent> {
 			del.setDisable(false);
 		}
 	}
+	
+	/**
+	 * Getter pour points1 
+	 * @return la liste points1
+	 */
+	public List<Circle> getPoints1() {
+		return this.points1;
+	}
+	
+	/**
+	 * Getter pour points2
+	 * @return la liste points2
+	 */
+	public List<Circle> getPoints2() {
+		return this.points2;
+	}
+	
+	/**
+	 * Getter pour curves1
+	 * @return la liste curves1
+	 */
+	public List<QCurve> getcurves1() {
+		return this.curves1;
+	}
+	
+	/**
+	 * Getter pour curves2
+	 * @return la liste curves2
+	 */
+	public List<QCurve> getcurves2() {
+		return this.curves2;
+	}
 
 	/**
 	 * Fonction permettant de changer la couleur des sommets

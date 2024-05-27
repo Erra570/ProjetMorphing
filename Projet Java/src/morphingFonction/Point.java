@@ -1,5 +1,6 @@
 package morphingFonction;
 
+
 /**
  * Classe représentant un point avec des coordonnées x et y.
  * Fournit des méthodes pour déterminer la position relative des points et vérifier l'appartenance à des figures géométriques.

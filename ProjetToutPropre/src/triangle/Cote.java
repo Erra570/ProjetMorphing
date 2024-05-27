@@ -31,4 +31,11 @@ public class Cote {
 			return false;
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "Cote [debut=" + debut + ", fin=" + fin + "]";
+	}
+	
+	
 }

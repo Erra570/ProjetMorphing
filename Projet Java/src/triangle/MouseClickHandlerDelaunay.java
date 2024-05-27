@@ -11,10 +11,12 @@ import javafx.scene.shape.Circle;
 public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 	private ArrayList<Circle> pointGraph;
 	private Pane root;
+	private Color couleur;
 
-	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph, Pane root) {
+	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph, Pane root,Color couleur) {
 		this.pointGraph = pointGraph;
 		this.root = root;
+		this.couleur = couleur;
 	}
 
 	@Override
@@ -38,9 +40,20 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 
 		// Création du point et ajout au dessin
 		Circle point = new Circle(x, y, 7);
-		point.setFill(Color.RED);
+		point.setFill(couleur);
 		pointGraph.add(point);
 		root.getChildren().add(point);
+	}
+	
+	public void setCouleur(Color couleur) {
+		this.couleur = couleur;
+		if (pointGraph.size() != 0) {
+			for (Circle p : pointGraph) {
+				root.getChildren().remove(p);
+				p.setFill(couleur);
+				root.getChildren().add(p);
+			}
+		}
 	}
 
 }

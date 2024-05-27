@@ -76,13 +76,12 @@ public class FormesArrondies extends Application {
 	private ProgressIndicator pBar;
 	private Task<Scene> morphingTask;
 	private TextField nbImagesPC;
-	private ColorPicker pickSom;
+	private ColorPicker pickSom = new ColorPicker(Color.RED);
 	private MouseClickHandler clickHandler;
 	private MouseClickHandlerDelaunay clickHandlerDelaunay;
 	private ColorPicker pickCont;
 	
 	private Delaunay delaunay1;
-	private Delaunay delaunay2;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -187,7 +186,6 @@ public class FormesArrondies extends Application {
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
 		
 		Label labpickSom = new Label("Couleur des sommets");
-		pickSom = new ColorPicker(Color.RED);
 		pickSom.setOnAction(event -> 
 		colorSomFA(pickSom.getValue()));
 		
@@ -266,7 +264,6 @@ public class FormesArrondies extends Application {
 		loading.getChildren().add(texte);
 		loading.getChildren().add(pBar);
 
-		Scene loadScene = new Scene(loading);
 
 		// Image gauche avec bouton pour changer d'image
 		VBox vBoxGauche = new VBox();
@@ -305,21 +302,19 @@ public class FormesArrondies extends Application {
 		startMorph = new Button("Trianguler");
 		startMorph.setOnAction(event -> {
 			delaunay1.initTriang(gestPoints1);
-			delaunay2.initTriang(gestPoints2);
+			startMorph.setDisable(true);
 		});
 		
 		Label labpickSom = new Label("Couleur des points");
 		//TODO verif couleur des points
-		pickSom = new ColorPicker(Color.RED);
-		pickSom.setOnAction(event -> 
-		colorSomFA(pickSom.getValue()));
+		pickSom.setOnAction(event -> {clickHandlerDelaunay.setCouleur(pickSom.getValue());});
 
 		Label labnbImagesPC = new Label("Vitesse (%)");
 		//TODO vitesse fonctionnelle ?
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
 		
-		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1);
+		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1,pickSom.getValue());
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
 		//TODO new move handler ?
@@ -371,7 +366,7 @@ public class FormesArrondies extends Application {
 		gestPoints1 = new Pane();
 		gestPoints1.prefHeight(500);
 		gestPoints1.prefWidth(500);
-		delaunay1 = new Delaunay(gestPoints1);
+		delaunay1 = new Delaunay(gestPoints1, pickSom.getValue());
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;
@@ -392,7 +387,6 @@ public class FormesArrondies extends Application {
 		gestPoints2 = new Pane();
 		gestPoints2.prefHeight(500);
 		gestPoints2.prefWidth(500);
-		delaunay2 = new Delaunay(gestPoints2);
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;

@@ -2,13 +2,8 @@ package triangle;
 
 import java.util.ArrayList;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
@@ -24,16 +19,21 @@ public class Delaunay {
 	private ArrayList<Triangle> listeTriangle = new ArrayList<Triangle>();
 	private Triangle superTriangle;
 	ArrayList<Circle> pointGraph;
+	private Color couleur;
 
-	public Delaunay(Pane root) {
-		
+	public Delaunay(Pane root,Color couleur) {
+		this.couleur = couleur;
 		pointGraph = new ArrayList<Circle>();
-		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root);
+		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root, this.couleur);
 		root.setOnMouseClicked(clickHandler);
 	}
 	
 	public ArrayList<Circle> getPGraphe() {
 		return this.pointGraph;
+	}
+	
+	public ArrayList<Triangle> getLTriangle(){
+		return this.listeTriangle;
 	}
 	
 

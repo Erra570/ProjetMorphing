@@ -157,15 +157,10 @@ public class MorphingImg {
         e.setRepeat(0);  // Répéter l'animation en boucle
         e.setFrameRate(60);  // Définir la cadence d'images
 
-        
-        // On récupère l'image de départ 
-        // BufferedImage imgInitiale = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
-        // imgInitiale = this.getImg();
-        
         // Ajout de quelques images initiales pour commencer le GIF
-        // for(int i = 0; i < 10; i++) {
-        //     e.addFrame(imgInitiale);
-        // }
+        for(int i = 0; i < 10; i++) {
+            e.addFrame(this.getImg());
+        }
         
         // Calcul des incréments de position pour chaque point de contrôle
         QCurve[] tabIncrement = new QCurve[tabD.size()];

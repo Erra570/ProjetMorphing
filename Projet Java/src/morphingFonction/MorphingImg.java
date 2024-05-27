@@ -90,53 +90,16 @@ public class MorphingImg {
 
     /**
      * Met à jour les points de l'image en fonction d'un tableau de nouveaux points et ajuste les pixels de l'image
-     * en fonction des triangles définis par ces points.
-     * 
-     * @param tabSuivant le tableau de nouveaux points de morphing
-     *//*
-    public void imgSuivanteFormeSimple(Point[] tabSuivant) {
-        for(int i = 0; i < tabSuivant.length; i++) {
-            // Vérifie si le point actuel est différent du nouveau point
-            if((this.tabPoint.get(i).getX() != tabSuivant[i].getX()) || (this.tabPoint.get(i).getY() != tabSuivant[i].getY())) {
-                // Détermination des bornes pour le rectangle englobant les points du triangle
-                int minY = Integer.min(Integer.min(Integer.min(this.tabPoint.get(i).getY(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getY()), this.tabPoint.get((i+1) % tabSuivant.length).getY()), tabSuivant[i].getY());
-                int maxY = Integer.max(Integer.max(Integer.max(this.tabPoint.get(i).getY(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getY()), this.tabPoint.get((i+1) % tabSuivant.length).getY()), tabSuivant[i].getY());
-                int minX = Integer.min(Integer.min(Integer.min(this.tabPoint.get(i).getX(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getX()), this.tabPoint.get((i+1) % tabSuivant.length).getX()), tabSuivant[i].getX());
-                int maxX = Integer.max(Integer.max(Integer.max(this.tabPoint.get(i).getX(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getX()), this.tabPoint.get((i+1) % tabSuivant.length).getX()), tabSuivant[i].getX());
-
-                // Parcours de tous les points dans le rectangle englobant
-                for (int y = minY - 1; y < maxY + 1; y++) {
-                    for (int x = minX - 1; x < maxX + 1; x++) {
-                        Point p = new Point(x, y);
-                        // Vérifie si le point est dans le nouveau triangle
-                        if (p.dansTriangle(this.tabPoint.get((i+1) % tabSuivant.length), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length), tabSuivant[i])) {
-                            this.img.setRGB(x, y, this.img.getRGB(img.getWidth()/2,img.getHeight()/2));
-                        } else {
-                            // Vérifie si le point est dans l'ancien triangle
-                            if (p.dansTriangle(this.tabPoint.get(i), this.tabPoint.get((i+1) % tabSuivant.length), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length))) {
-                                this.img.setRGB(x, y, this.img.getRGB(0,0));
-                            }
-                        }
-                    }
-                }
-                // Mise à jour du point
-                this.tabPoint.set(i, tabSuivant[i]);
-            }
-        }
-    }*/
-
-    /**
-     * Met à jour les points de l'image en fonction d'un tableau de nouveaux points et ajuste les pixels de l'image
      * en fonction d'une forme arrondie définie par ces points.
      * 
      * @param tabSuivant le tableau de nouveaux points de morphing
      */
     public void imgSuivanteFormeArrondie(List<QCurve> tabSuivant) {
-        int couleur = this.img.getRGB(img.getWidth()/2,img.getHeight()/2);
-        // Parcours de tous les pixels de l'image
+        int couleur = this.img.getRGB(img.getWidth()/2,img.getHeight()/2);  // Couleur prise au centre de l'image
+        // Parcours de tous les pixels de l'image pour les réinitialiser
         for (int y = 0; y < this.img.getHeight(); y++) {
             for (int x = 0; x < this.img.getWidth(); x++) {
-            	this.img.setRGB(x, y, this.img.getRGB(0,0));
+            	this.img.setRGB(x, y, this.img.getRGB(0,0));  // Réinitialisation des pixels à la couleur du coin supérieur gauche
             }
         }
         for (QCurve c : tabSuivant) {
@@ -144,14 +107,15 @@ public class MorphingImg {
 				double t = (double) i / 1000;
 				int x = (int) Math.round(Math.pow(1 - t, 2) * c.getXDepart() + 2 * (1 - t) * t * c.getXControl() + Math.pow(t, 2) * c.getXFin());
 				int y = (int) Math.round(Math.pow(1 - t, 2) * c.getYDepart() + 2 * (1 - t) * t * c.getYControl() + Math.pow(t, 2) * c.getYFin());
-            	this.img.setRGB(x, y, couleur);
+            	this.img.setRGB(x, y, couleur);  // Mise à jour des pixels le long de la courbe de Bézier
 			}
         }
         
-        Pile p = new Pile();
-        p.empiler(Math.round(img.getWidth()/2), Math.round(img.getHeight()/2));
-    	this.img.setRGB(Math.round(img.getWidth()/2), Math.round(img.getHeight()/2), couleur);
-        
+        Pile p = new Pile();  // Initialisation d'une pile pour le remplissage de l'intérieur de la forme
+        p.empiler(Math.round(img.getWidth()/2), Math.round(img.getHeight()/2));  // Empiler le centre de l'image
+    	this.img.setRGB(Math.round(img.getWidth()/2), Math.round(img.getHeight()/2), couleur);  // Remplissage initial du centre
+
+        // Algorithme de remplissage par propagation
         while (!p.vide()) {
         	Point a = p.sommet();
         	p.depiler();
@@ -174,8 +138,7 @@ public class MorphingImg {
 	    	}	
         }
         
-        
-        // Mise à jour des points
+        // Mise à jour des points après le remplissage
         for(int i = 0; i<tabSuivant.size(); i++) {
             this.tabPoint.set(i, tabSuivant.get(i));
         }
@@ -190,16 +153,16 @@ public class MorphingImg {
      */
     public void creerGif(List<QCurve> tabD, List<QCurve> tabF, double nombreImg) {
         AnimatedGifEncoder e = new AnimatedGifEncoder();
-        e.start("img/testGif.gif");
-        e.setRepeat(0);
-        e.setFrameRate(60);
-        
+        e.start("img/testGif.gif");  // Début de la création du GIF
+        e.setRepeat(0);  // Répéter l'animation en boucle
+        e.setFrameRate(60);  // Définir la cadence d'images
+
         // Ajout de quelques images initiales pour commencer le GIF
         for(int i = 0; i < 10; i++) {
             e.addFrame(this.getImg());
         }
         
-        // Calcul des incréments de position pour chaque point
+        // Calcul des incréments de position pour chaque point de contrôle
         QCurve[] tabIncrement = new QCurve[tabD.size()];
         for (int j = 0; j < tabD.size(); j++) {
         	double XDepart = (tabF.get(j).getXDepart() - tabD.get(j).getXDepart()) / nombreImg;
@@ -209,7 +172,7 @@ public class MorphingImg {
         	double XFin = (tabF.get(j).getXFin() - tabD.get(j).getXFin()) / nombreImg;
         	double YFin = (tabF.get(j).getYFin() - tabD.get(j).getYFin()) / nombreImg;
              
-            tabIncrement[j] = new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE);
+            tabIncrement[j] = new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE);  // Stockage des incréments dans un tableau
         }
         
         // Création des images intermédiaires en interpolant les points
@@ -222,14 +185,14 @@ public class MorphingImg {
             	double YControl = tabD.get(j).getYControl() + (i * tabIncrement[j].getYControl());
             	double XFin = tabD.get(j).getXFin() + (i * tabIncrement[j].getXFin());
             	double YFin = tabD.get(j).getYFin() + (i * tabIncrement[j].getYFin());
-                tabSuivant.add(j, new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE));
+                tabSuivant.add(j, new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE));  // Création des courbes de Bézier interpolées
             }
-            this.imgSuivanteFormeArrondie(tabSuivant);                
-            e.addFrame(this.getImg());
+            this.imgSuivanteFormeArrondie(tabSuivant);  // Mise à jour de l'image avec les nouveaux points                
+            e.addFrame(this.getImg());  // Ajout de l'image mise à jour au GIF
 
-            System.out.println((i*100)/nombreImg);
+            System.out.println((i*100)/nombreImg);  // Affichage de la progression
             if (i == 20)
-            	this.creerImage();
+            	this.creerImage();  // Création d'une image intermédiaire
         }
 
         // Ajout de quelques images finales pour finir le GIF
@@ -237,6 +200,6 @@ public class MorphingImg {
             e.addFrame(this.getImg());
         }
         
-        e.finish();
+        e.finish();  // Finalisation du GIF
     }
 }

@@ -73,7 +73,10 @@ public class FormesArrondies extends Application {
 	private ProgressIndicator pBar;
 	private Task<Scene> morphingTask;
 	private TextField nbImagesPC;
-
+	private ColorPicker pickSom;
+	private MouseClickHandler clickHandler;
+	private ColorPicker pickCont;
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage primaryStage) {
@@ -165,12 +168,32 @@ public class FormesArrondies extends Application {
 		Label labCoulCurv = new Label("Couleur de la courbe");
 		coulCurv = new ColorPicker(Color.BLUE);
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
+		
+		Label labpickSom = new Label("Couleur des sommets");
+		pickSom = new ColorPicker(Color.RED);
+		pickSom.setOnAction(event -> 
+		colorSomFA(pickSom.getValue()));
+		
+		Label labpickCont = new Label("Couleur des points de contrôles");
+		pickCont = new ColorPicker(Color.GREEN);
+		pickCont.setOnAction(event -> 
+		colorContFA(pickCont.getValue()));
+
 
 		Label labnbImagesPC = new Label("Vitesse (%)");
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
+		
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del, coulCurv.getValue(),pickSom.getValue(),pickCont.getValue());
+		gestPoints1.setOnMouseClicked(clickHandler);
 
-		right.getChildren().addAll(clo, del, labCoulCurv, coulCurv, labnbImagesPC, nbImagesPC, startMorph);
+		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
+		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
+
+		gestPoints1.setOnMouseMoved(moveHandler1);
+		gestPoints2.setOnMouseMoved(moveHandler2);
+
+		right.getChildren().addAll(clo, del, labCoulCurv, coulCurv, labpickSom, pickSom, labpickCont, pickCont,labnbImagesPC, nbImagesPC, startMorph);
 
 		root = new BorderPane();
 		root.setCenter(this.pCentre);
@@ -191,16 +214,8 @@ public class FormesArrondies extends Application {
 		startMorph.getStyleClass().add("boutonDroit");
 		right.getStyleClass().add("panDroit");
 		nbImagesPC.getStyleClass().add("boutonDroit");
-
-		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,
-				gestPoints1, gestPoints2, clo, del, coulCurv.getValue());
-		gestPoints1.setOnMouseClicked(clickHandler);
-
-		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
-		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
-
-		gestPoints1.setOnMouseMoved(moveHandler1);
-		gestPoints2.setOnMouseMoved(moveHandler2);
+		pickSom.getStyleClass().add("boutonDroit");
+		pickCont.getStyleClass().add("boutonDroit");
 
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
@@ -307,8 +322,7 @@ public class FormesArrondies extends Application {
 			clo.setDisable(false);
 			startMorph.setDisable(true);
 
-			MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,
-					gestPoints1, gestPoints2, clo, del, coulCurv.getValue());
+			clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2, clo, del, coulCurv.getValue(), pickSom.getValue(),pickCont.getValue());
 			gestPoints1.setOnMouseClicked(clickHandler);
 			MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
 			MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
@@ -347,12 +361,12 @@ public class FormesArrondies extends Application {
 	private void close() {
 
 		Circle pointControl1 = midle(points1.get(points1.size() - 2), points1.get(0));
-		pointControl1.setFill(Color.GREEN);
+		pointControl1.setFill(pickCont.getValue());
 		points1.add(pointControl1);
 		gestPoints1.getChildren().add(pointControl1);
 
 		Circle pointControl2 = midle(points2.get(points2.size() - 2), points2.get(0));
-		pointControl2.setFill(Color.GREEN);
+		pointControl2.setFill(pickCont.getValue());
 		points2.add(pointControl2);
 		gestPoints2.getChildren().add(pointControl2);
 
@@ -371,8 +385,7 @@ public class FormesArrondies extends Application {
 		clo.setDisable(true);
 		startMorph.setDisable(false);
 
-		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,
-				gestPoints1, gestPoints2, clo, del, coulCurv.getValue());
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2, clo, del, coulCurv.getValue(),pickSom.getValue(),pickCont.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 
 		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
@@ -388,11 +401,18 @@ public class FormesArrondies extends Application {
 			curves1.get(i).colorChange(couleur, gestPoints1);
 			curves2.get(i).colorChange(couleur, gestPoints2);
 		}
-		MouseClickHandler clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,
-				gestPoints1, gestPoints2, clo, del, coulCurv.getValue());
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2, clo, del, coulCurv.getValue(), pickSom.getValue(),pickCont.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 	}
 
+	private void colorSomFA(Color coulSom) {
+		clickHandler.changeColorSommets(coulSom);
+	}
+	
+	private void colorContFA(Color coulCont) {
+		clickHandler.changeColorCont(coulCont);
+	}
+	
 	private void startMorphing(Stage primaryStage) throws Exception {
 
 		List<QCurve> tabD = new ArrayList<>();

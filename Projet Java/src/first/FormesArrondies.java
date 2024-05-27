@@ -42,6 +42,7 @@ import presentation.Fichier;
  */
 public class FormesArrondies extends Application {
 
+	// Premier plan
 	private List<QCurve> curves1 = new ArrayList<>(); // liste de courbes
 	private List<QCurve> curves2 = new ArrayList<>(); // liste de courbes pour l'image de fin
 	private List<Circle> points1 = new ArrayList<>(); // liste de points
@@ -77,16 +78,25 @@ public class FormesArrondies extends Application {
 	private MouseClickHandler clickHandler;
 	private ColorPicker pickCont;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void start(Stage primaryStage) {
-
+		interfaceFormes(primaryStage);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void interfaceFormes(Stage primaryStage) {
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
 		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
 		alb = new Album(f);
+		
+		// Partie haute : changement de mode
+		Button chgmtCote = new Button("Passer au Mode Visage");
+		chgmtCote.setOnAction(e -> interfaceVisage(primaryStage));
+		StackPane haut = new StackPane();
+		haut.getChildren().add(chgmtCote);
 
 		// Barre de chargement
 		loading = new VBox();
@@ -198,9 +208,10 @@ public class FormesArrondies extends Application {
 		root = new BorderPane();
 		root.setCenter(this.pCentre);
 		root.setRight(right);
+		root.setTop(haut);
 		scene = new Scene(root);
 
-		// Ajout de la feuille css
+		// Ajouts de la feuille css
 		scene.getStylesheets().add("file:css/Style.css");
 		clo.getStyleClass().add("bouton");
 		clo.getStyleClass().add("boutonDroit");
@@ -222,7 +233,136 @@ public class FormesArrondies extends Application {
 		primaryStage.setTitle("Morphing d'image");
 		primaryStage.setResizable(false);
 		primaryStage.show();
+	}
+	
+	
+	@SuppressWarnings("deprecation")
+	public void interfaceVisage(Stage primaryStage) {
+		/* création du plan central, contenant les images */
+		pCentre = new HBox();
+		pCentre.setSpacing(10);
+		pCentre.setAlignment(Pos.CENTER);
+		f = new Fichier();
+		alb = new Album(f);
+		
+		// Partie haute : changement de mode
+		Button chgmtCote = new Button("Passer au Mode Formes");
+		chgmtCote.setOnAction(e -> interfaceFormes(primaryStage));
+		StackPane haut = new StackPane();
+		haut.getChildren().add(chgmtCote);
 
+		// Barre de chargement
+		loading = new VBox();
+		pBar = new ProgressIndicator();
+		texte = new TextField("Morphing en cours...");
+		loading.getChildren().add(texte);
+		loading.getChildren().add(pBar);
+
+		Scene loadScene = new Scene(loading);
+
+		// Image gauche avec bouton pour changer d'image
+		VBox vBoxGauche = new VBox();
+		vBoxGauche.setAlignment(Pos.CENTER);
+		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
+		vBoxGauche.getChildren().add(creerBoutonGauche());
+		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
+		alb.addObserver(cid);
+		cbg = new ControleBoutonGauche(alb, f);
+		boutonGauche.setOnAction(cbg);
+		boutonGauche.setPrefWidth(450);
+		alb.addObserver(cbg);
+
+		// Image droite avec bouton pour changer d'image
+		VBox vBoxDroite = new VBox();
+		vBoxDroite.setAlignment(Pos.CENTER);
+		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
+		vBoxDroite.getChildren().add(creerBoutonDroite());
+		ControleImageFin cif = new ControleImageFin(alb, imageFin);
+		alb.addObserver(cif);
+		cbd = new ControleBoutonDroite(alb, f);
+		boutonDroite.setOnAction(cbd);
+		boutonDroite.setPrefWidth(450);
+		alb.addObserver(cbd);
+
+		this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
+
+		// Partie droite (boutons et couleurs)
+		right = new VBox();
+		right.setAlignment(Pos.CENTER);
+
+		del = new Button("Supprimer Dernier Point");
+		del.setDisable(true);
+		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
+
+		startMorph = new Button("Commencer le morphing");
+		startMorph.setOnAction(event -> {
+			if (Double.parseDouble(nbImagesPC.getText()) < 5) {
+				Alert basseVitesse = new Alert(AlertType.ERROR);
+				basseVitesse.initModality(Modality.APPLICATION_MODAL);
+				basseVitesse.setHeaderText("Erreur - Vitesse trop basse !");
+				basseVitesse.setContentText("Pour eviter un plantage dû au nombre d'images calculées, veuillez augmenter la vitesse au dessus de 5%");
+				basseVitesse.showAndWait();
+			} else {
+				try {
+					primaryStage.setScene(loadScene);
+					morphingTask = new Task<>() {
+						@Override
+						protected Scene call() throws Exception {
+								System.out.println("Visages");
+							return scene;
+						}
+					};
+					morphingTask.setOnSucceeded(event2 -> primaryStage.setScene(showResult)); // primaryStage.setScene(morphingTask.getValue())
+					new Thread(morphingTask).start();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		Label labpickSom = new Label("Couleur des points");
+		pickSom = new ColorPicker(Color.RED);
+		pickSom.setOnAction(event -> 
+		colorSomFA(pickSom.getValue()));
+
+		Label labnbImagesPC = new Label("Vitesse (%)");
+		nbImagesPC = new TextField("100");
+		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
+		
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del, coulCurv.getValue(),pickSom.getValue(),pickCont.getValue());
+		gestPoints1.setOnMouseClicked(clickHandler);
+
+		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
+		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
+
+		gestPoints1.setOnMouseMoved(moveHandler1);
+		gestPoints2.setOnMouseMoved(moveHandler2);
+
+		right.getChildren().addAll(del, labpickSom, pickSom,labnbImagesPC, nbImagesPC, startMorph);
+
+		root = new BorderPane();
+		root.setCenter(this.pCentre);
+		root.setRight(right);
+		root.setTop(haut);
+		scene = new Scene(root);
+
+		// Ajouts de la feuille css
+		scene.getStylesheets().add("file:css/Style.css");
+		del.getStyleClass().add("bouton");
+		del.getStyleClass().add("boutonDroit");
+		boutonDroite.getStyleClass().add("bouton");
+		boutonGauche.getStyleClass().add("bouton");
+		startMorph.getStyleClass().add("bouton");
+		startMorph.getStyleClass().add("boutonDroit");
+		right.getStyleClass().add("panDroit");
+		nbImagesPC.getStyleClass().add("boutonDroit");
+		pickSom.getStyleClass().add("boutonDroit");
+
+		/* donner un nom et une taille à la fenêtre */
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Morphing d'image");
+		primaryStage.setResizable(false);
+		primaryStage.show();
 	}
 
 	/**

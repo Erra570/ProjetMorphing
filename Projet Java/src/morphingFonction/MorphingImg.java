@@ -5,12 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.paint.Color;
-import presentation.Fichier;
 
 import javax.imageio.ImageIO;
 
 import first.QCurve;
+import javafx.scene.paint.Color;
+import presentation.Fichier;
 
 /**
  * Classe MorphingImg représentant une image sous forme d'une ArrayList de points associés pour le morphing.
@@ -132,7 +132,7 @@ public class MorphingImg {
      * @param tabSuivant le tableau de nouveaux points de morphing
      */
     public void imgSuivanteFormeArrondie(List<QCurve> tabSuivant) {
-        int n = this.img.getRGB(img.getWidth()/2,img.getHeight()/2);
+        int couleur = this.img.getRGB(img.getWidth()/2,img.getHeight()/2);
         // Parcours de tous les pixels de l'image
         for (int y = 0; y < this.img.getHeight(); y++) {
             for (int x = 0; x < this.img.getWidth(); x++) {
@@ -144,46 +144,37 @@ public class MorphingImg {
 				double t = (double) i / 1000;
 				int x = (int) Math.round(Math.pow(1 - t, 2) * c.getXDepart() + 2 * (1 - t) * t * c.getXControl() + Math.pow(t, 2) * c.getXFin());
 				int y = (int) Math.round(Math.pow(1 - t, 2) * c.getYDepart() + 2 * (1 - t) * t * c.getYControl() + Math.pow(t, 2) * c.getYFin());
-            	this.img.setRGB(x, y, n);
+            	this.img.setRGB(x, y, couleur);
 			}
         }
         
-        for (int y = 1; y < this.img.getHeight()-1; y++) {
-            boolean courant = false;
-            boolean basEntre = false;
-            boolean hautEntre = false;
-            boolean basSortie = false;
-            boolean hautSortie = false;
-            for (int x = 1; x < this.img.getWidth()-1; x++) {
-            	if ((this.img.getRGB(x-1, y+1) == n) && (this.img.getRGB(x, y) == n))
-            		basEntre = true;
-            	if ((this.img.getRGB(x+1, y-1) == n) && (this.img.getRGB(x, y) == n))
-            		hautEntre = true;   
-            	
-            	if ((this.img.getRGB(x+1, y+1) == n) && (this.img.getRGB(x, y) == n))
-            		basSortie = true;
-            	if ((this.img.getRGB(x-1, y-1) == n) && (this.img.getRGB(x, y-1) != n) && (this.img.getRGB(x, y) == n))
-            		hautSortie = true;  
-            	
-            	if ((((this.img.getRGB(x-1, y-1) != n) && (this.img.getRGB(x, y-1) != n) && (this.img.getRGB(x+1, y-1) != n)) || ((this.img.getRGB(x-1, y+1) != n) && (this.img.getRGB(x, y+1) != n) && (this.img.getRGB(x+1, y+1) != n))) && (!hautEntre || !basEntre) && (!hautSortie || !basSortie)) {
-            		
-            	}
-            	else {
-            		if ((this.img.getRGB(x, y) == n) && (this.img.getRGB(x+1, y) != n)) {
-                		courant = !courant;
-                		if (!courant) {
-                			hautEntre = false;
-                			basEntre = false;
-                			hautEntre = false;
-                			basSortie = false; 
-                		}
-                	}
-            	}
-            	            	
-            	if (courant)
-            		this.img.setRGB(x, y, n);
-            }
+        Pile p = new Pile();
+        p.empiler(Math.round(img.getWidth()/2), Math.round(img.getHeight()/2));
+    	this.img.setRGB(Math.round(img.getWidth()/2), Math.round(img.getHeight()/2), couleur);
+        
+        while (!p.vide()) {
+        	Point a = p.sommet();
+        	p.depiler();
+        	
+        	if (this.img.getRGB(a.getX()-1, a.getY()) != couleur) {
+        		p.empiler(a.getX()-1, a.getY());
+        		this.img.setRGB(a.getX()-1, a.getY(), couleur);
+        	}
+        	if (this.img.getRGB(a.getX()+1, a.getY()) != couleur) {
+        		p.empiler(a.getX()+1, a.getY());
+        		this.img.setRGB(a.getX()+1, a.getY(), couleur);
+        	}
+        	if (this.img.getRGB(a.getX(), a.getY()+1) != couleur) {
+        		p.empiler(a.getX(), a.getY()+1);
+        		this.img.setRGB(a.getX(), a.getY()+1, couleur);
+        	}
+	    	if (this.img.getRGB(a.getX(), a.getY()-1) != couleur) {
+	    		p.empiler(a.getX(), a.getY()-1);
+	    		this.img.setRGB(a.getX(), a.getY()-1, couleur);
+	    	}	
         }
+        
+        
         // Mise à jour des points
         for(int i = 0; i<tabSuivant.size(); i++) {
             this.tabPoint.set(i, tabSuivant.get(i));
@@ -235,6 +226,10 @@ public class MorphingImg {
             }
             this.imgSuivanteFormeArrondie(tabSuivant);                
             e.addFrame(this.getImg());
+
+            System.out.println((i*100)/nombreImg);
+            if (i == 20)
+            	this.creerImage();
         }
 
         // Ajout de quelques images finales pour finir le GIF

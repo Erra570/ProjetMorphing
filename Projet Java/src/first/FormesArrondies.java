@@ -37,6 +37,8 @@ import morphingFonction.MorphingImg;
 import presentation.Fichier;
 import triangle.Delaunay;
 import triangle.MouseClickHandlerDelaunay;
+import triangle.MouseMoveHandlerDelaunay;
+import triangle.MouseDragHandlerDelaunay;
 
 /**
  * Classe permettant de créer des courbes pour les formes arrondies
@@ -82,6 +84,7 @@ public class FormesArrondies extends Application {
 	private ColorPicker pickCont;
 	
 	private Delaunay delaunay1;
+	private Delaunay delaunay2;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -314,15 +317,15 @@ public class FormesArrondies extends Application {
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
 		
-		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1,pickSom.getValue());
+		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1,delaunay2.getPGraphe(),gestPoints2, pickSom.getValue());
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
 		//TODO new move handler ?
-		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
-		MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
+		MouseMoveHandlerDelaunay moveHandlerDelaunay1 = new MouseMoveHandlerDelaunay(delaunay1.getPGraphe(), gestPoints1, 1);
+		MouseMoveHandlerDelaunay moveHandlerDelaunay2 = new MouseMoveHandlerDelaunay(delaunay2.getPGraphe(), gestPoints2, 2);
 
-		gestPoints1.setOnMouseMoved(moveHandler1);
-		gestPoints2.setOnMouseMoved(moveHandler2);
+		gestPoints1.setOnMouseMoved(moveHandlerDelaunay1);
+		gestPoints2.setOnMouseMoved(moveHandlerDelaunay2);
 
 		right.getChildren().addAll(del, labpickSom, pickSom,labnbImagesPC, nbImagesPC, startMorph);
 
@@ -366,7 +369,7 @@ public class FormesArrondies extends Application {
 		gestPoints1 = new Pane();
 		gestPoints1.prefHeight(500);
 		gestPoints1.prefWidth(500);
-		delaunay1 = new Delaunay(gestPoints1, pickSom.getValue());
+		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pickSom.getValue());
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;
@@ -387,6 +390,7 @@ public class FormesArrondies extends Application {
 		gestPoints2 = new Pane();
 		gestPoints2.prefHeight(500);
 		gestPoints2.prefWidth(500);
+		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pickSom.getValue());
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;

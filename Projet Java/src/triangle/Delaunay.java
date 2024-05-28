@@ -18,18 +18,19 @@ public class Delaunay {
 	private static final Point POINTD = new Point(500,500);
 	private ArrayList<Triangle> listeTriangle = new ArrayList<Triangle>();
 	private Triangle superTriangle;
-	ArrayList<Circle> pointGraph;
+	private  ArrayList<Circle> pointGraph1;
+	private  ArrayList<Circle> pointGraph2;
 	private Color couleur;
 
-	public Delaunay(Pane root,Color couleur) {
+	public Delaunay(Pane root1, Pane root2, Color couleur) {
 		this.couleur = couleur;
-		pointGraph = new ArrayList<Circle>();
-		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root, this.couleur);
-		root.setOnMouseClicked(clickHandler);
+		pointGraph1 = new ArrayList<Circle>();
+		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph1, root1, pointGraph2, root2, this.couleur);
+		root1.setOnMouseClicked(clickHandler);
 	}
 	
 	public ArrayList<Circle> getPGraphe() {
-		return this.pointGraph;
+		return this.pointGraph1;
 	}
 	
 	public ArrayList<Triangle> getLTriangle(){
@@ -40,8 +41,8 @@ public class Delaunay {
 		public void initTriang(Pane root) {
 			try {
 				ArrayList<Point> listePoint = new ArrayList<Point>();
-				for (int i = 0; i < pointGraph.size(); i++) {
-					listePoint.add(new Point(pointGraph.get(i).getCenterX(), pointGraph.get(i).getCenterY()));
+				for (int i = 0; i < pointGraph1.size(); i++) {
+					listePoint.add(new Point(pointGraph1.get(i).getCenterX(), pointGraph1.get(i).getCenterY()));
 				}
 				listePoint.add(POINTA);
 				listePoint.add(POINTB);

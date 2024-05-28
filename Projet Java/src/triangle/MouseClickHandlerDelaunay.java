@@ -56,7 +56,7 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 		point2.setFill(couleur);
 		pointGraph2.add(point2);
 		root2.getChildren().add(point2);
-		del.setDisable(false);s
+		del.setDisable(false);
 	}
 	
 	public void setCouleur(Color couleur) {

@@ -38,7 +38,6 @@ import presentation.Fichier;
 import triangle.Delaunay;
 import triangle.MouseClickHandlerDelaunay;
 import triangle.MouseMoveHandlerDelaunay;
-import triangle.MouseDragHandlerDelaunay;
 
 /**
  * Classe permettant de créer des courbes pour les formes arrondies
@@ -85,6 +84,9 @@ public class FormesArrondies extends Application {
 	
 	private Delaunay delaunay1;
 	private Delaunay delaunay2;
+	
+	private Button zoom;
+	private boolean isZoomed = false;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -343,6 +345,8 @@ public class FormesArrondies extends Application {
 		right.getStyleClass().add("panDroit");
 		nbImagesPC.getStyleClass().add("boutonDroit");
 		pickSom.getStyleClass().add("boutonDroit");
+		
+		creerZoom();
 
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
@@ -387,7 +391,7 @@ public class FormesArrondies extends Application {
 		gestPoints2 = new Pane();
 		gestPoints2.prefHeight(500);
 		gestPoints2.prefWidth(500);
-		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pickSom.getValue());
+		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pickSom.getValue(),del);
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;
@@ -608,6 +612,25 @@ public class FormesArrondies extends Application {
 		clickHandler.getPoints2().clear();
 		
 		interfaceFormes(primaryStage);
+	}
+	
+	public void creerZoom() {
+		zoom = new Button("Zoom");
+		zoom.setOnAction(event -> {
+			if (!isZoomed) {
+				pCentre.setScaleX(2);
+				pCentre.setScaleY(2);
+				pCentre.setScaleY(2);
+				isZoomed = true;
+			}
+			else {
+				pCentre.setScaleX(1);
+				pCentre.setScaleY(1);
+				pCentre.setScaleY(1);
+				isZoomed = false;
+			}
+		});
+		right.getChildren().add(zoom);
 	}
 
 	public static void main(String[] args) {

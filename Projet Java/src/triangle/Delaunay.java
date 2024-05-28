@@ -2,6 +2,7 @@ package triangle;
 
 import java.util.ArrayList;
 
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,30 +19,42 @@ public class Delaunay {
 	private static final Point POINTD = new Point(500,500);
 	private ArrayList<Triangle> listeTriangle = new ArrayList<Triangle>();
 	private Triangle superTriangle;
-	ArrayList<Circle> pointGraph;
+	private  ArrayList<Circle> pointGraph1;
+	private  ArrayList<Circle> pointGraph2;
 	private Color couleur;
 
-	public Delaunay(Pane root,Color couleur) {
+	
+	public Delaunay(Pane root1, Pane root2, Color couleur, Button del) {
 		this.couleur = couleur;
-		pointGraph = new ArrayList<Circle>();
-		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root, this.couleur);
-		root.setOnMouseClicked(clickHandler);
+		pointGraph1 = new ArrayList<Circle>();
+		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph1, root1, pointGraph2, root2, this.couleur,del);
+		root1.setOnMouseClicked(clickHandler);
 	}
 	
 	public ArrayList<Circle> getPGraphe() {
-		return this.pointGraph;
+		return this.pointGraph1;
 	}
 	
 	public ArrayList<Triangle> getLTriangle(){
 		return this.listeTriangle;
 	}
 	
+	public void deleteLastPoint(Pane root, Button del) {
+		if (!this.getPGraphe().isEmpty()) {
+			root.getChildren().remove(this.getPGraphe().size() -1);
+			this.getPGraphe().remove(this.getPGraphe().size() - 1);
+			if (this.getPGraphe().size() == 0) {
+				del.setDisable(true);
+			}
+		}
+	}
+	
 
 		public void initTriang(Pane root) {
 			try {
 				ArrayList<Point> listePoint = new ArrayList<Point>();
-				for (int i = 0; i < pointGraph.size(); i++) {
-					listePoint.add(new Point(pointGraph.get(i).getCenterX(), pointGraph.get(i).getCenterY()));
+				for (int i = 0; i < pointGraph1.size(); i++) {
+					listePoint.add(new Point(pointGraph1.get(i).getCenterX(), pointGraph1.get(i).getCenterY()));
 				}
 				listePoint.add(POINTA);
 				listePoint.add(POINTB);
@@ -135,28 +148,6 @@ public class Delaunay {
 					listeTriangle.get(i).getPoint_1().getX(), listeTriangle.get(i).getPoint_1().getY()));
 		}
 		return listeLigne;
-	}
-	
-	public ArrayList<Triangle> listeTriangleFin(ArrayList<Circle> pointDebut, ArrayList<Circle> pointFin) throws Exception{
-		ArrayList<Triangle> listeTFin = new ArrayList<>();
-		for(int j = 0; j<listeTriangle.size(); j++) {
-			Point point_1 = null;
-			Point point_2 = null;
-			Point point_3 = null;
-			for(int i = 0; i<pointDebut.size(); i++) {
-				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_1().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_1().getY()) {
-					point_1 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
-				}
-				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_2().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_2().getY()) {
-					point_2 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
-				}
-				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_3().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_3().getY()) {
-					point_3 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
-				}
-			}
-			listeTFin.add(j, new Triangle(point_1, point_2, point_3));
-		}
-		return listeTFin;
 	}
 
 }

@@ -3,6 +3,7 @@ package triangle;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -12,11 +13,13 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 	private ArrayList<Circle> pointGraph;
 	private Pane root;
 	private Color couleur;
+	private Button del;
 
-	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph, Pane root,Color couleur) {
+	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph, Pane root,Color couleur, Button del) {
 		this.pointGraph = pointGraph;
 		this.root = root;
 		this.couleur = couleur;
+		this.del = del;
 	}
 
 	@Override
@@ -43,6 +46,8 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 		point.setFill(couleur);
 		pointGraph.add(point);
 		root.getChildren().add(point);
+		del.setDisable(false);
+		
 	}
 	
 	public void setCouleur(Color couleur) {

@@ -2,6 +2,7 @@ package triangle;
 
 import java.util.ArrayList;
 
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -21,10 +22,10 @@ public class Delaunay {
 	ArrayList<Circle> pointGraph;
 	private Color couleur;
 
-	public Delaunay(Pane root,Color couleur) {
+	public Delaunay(Pane root,Color couleur, Button del) {
 		this.couleur = couleur;
 		pointGraph = new ArrayList<Circle>();
-		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root, this.couleur);
+		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph, root, this.couleur,del);
 		root.setOnMouseClicked(clickHandler);
 	}
 	
@@ -34,6 +35,16 @@ public class Delaunay {
 	
 	public ArrayList<Triangle> getLTriangle(){
 		return this.listeTriangle;
+	}
+	
+	public void deleteLastPoint(Pane root, Button del) {
+		if (!this.getPGraphe().isEmpty()) {
+			root.getChildren().remove(this.getPGraphe().size() -1);
+			this.getPGraphe().remove(this.getPGraphe().size() - 1);
+			if (this.getPGraphe().size() == 0) {
+				del.setDisable(true);
+			}
+		}
 	}
 	
 

@@ -297,7 +297,7 @@ public class FormesArrondies extends Application {
 
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
-		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements //TODO delete
+		del.setOnAction(event -> delaunay1.deleteLastPoint(gestPoints1,del)); // Définir le gestionnaire d'événements //TODO delete
 
 		startMorph = new Button("Trianguler");
 		startMorph.setOnAction(event -> {
@@ -306,7 +306,6 @@ public class FormesArrondies extends Application {
 		});
 		
 		Label labpickSom = new Label("Couleur des points");
-		//TODO verif couleur des points
 		pickSom.setOnAction(event -> {clickHandlerDelaunay.setCouleur(pickSom.getValue());});
 
 		Label labnbImagesPC = new Label("Vitesse (%)");
@@ -314,7 +313,7 @@ public class FormesArrondies extends Application {
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
 		
-		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1,pickSom.getValue());
+		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1,pickSom.getValue(),del);
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
 		//TODO new move handler ?
@@ -366,7 +365,7 @@ public class FormesArrondies extends Application {
 		gestPoints1 = new Pane();
 		gestPoints1.prefHeight(500);
 		gestPoints1.prefWidth(500);
-		delaunay1 = new Delaunay(gestPoints1, pickSom.getValue());
+		delaunay1 = new Delaunay(gestPoints1, pickSom.getValue(),del);
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;

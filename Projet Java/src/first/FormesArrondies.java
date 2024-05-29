@@ -92,7 +92,20 @@ public class FormesArrondies extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		interfaceFormes(primaryStage);
+		VBox menu = new VBox();
+		HBox choix = new HBox();
+		ImageView icon = new ImageView();
+		Button formes = new Button("Faire un Morphing de Formes");
+		formes.setOnAction(e -> interfaceFormes(primaryStage));
+		Button visages = new Button("Faire un Morphing de Visages");
+		visages.setOnAction(e -> interfaceVisage(primaryStage));
+		choix.getChildren().addAll(formes,visages);
+		menu.getChildren().addAll(icon,choix);
+		Scene menuPrincipal = new Scene(menu);
+		primaryStage.setScene(menuPrincipal);
+		primaryStage.setTitle("Morphing d'image");
+		primaryStage.setResizable(false);
+		primaryStage.show();
 	}
 
 	public void interfaceFormes(Stage primaryStage) {
@@ -100,8 +113,8 @@ public class FormesArrondies extends Application {
 		creationCommune();
 
 		// Partie haute : changement de mode
-		Button chgmtCote = new Button("Passer au Mode Visage");
-		chgmtCote.setOnAction(e -> goToVisage(primaryStage));
+		Button chgmtCote = new Button("Choix du Mode");
+		chgmtCote.setOnAction(e -> start(primaryStage));
 		StackPane haut = new StackPane();
 		haut.getChildren().add(chgmtCote);
 
@@ -214,8 +227,8 @@ public class FormesArrondies extends Application {
 		creationCommune();
 
 		// Partie haute : changement de mode
-		Button chgmtCote = new Button("Passer au Mode Formes");
-		chgmtCote.setOnAction(e -> goToForme(primaryStage));
+		Button chgmtCote = new Button("Choix du Mode");
+		chgmtCote.setOnAction(e -> start(primaryStage));
 		StackPane haut = new StackPane();
 		haut.getChildren().add(chgmtCote);
 
@@ -286,8 +299,6 @@ public class FormesArrondies extends Application {
 
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Morphing d'image");
-		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 	

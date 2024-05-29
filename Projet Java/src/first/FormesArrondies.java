@@ -38,7 +38,6 @@ import presentation.Fichier;
 import triangle.Delaunay;
 import triangle.MouseClickHandlerDelaunay;
 import triangle.MouseMoveHandlerDelaunay;
-import triangle.MouseDragHandlerDelaunay;
 
 /**
  * Classe permettant de créer des courbes pour les formes arrondies
@@ -301,7 +300,10 @@ public class FormesArrondies extends Application {
 
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
-		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements //TODO delete
+		del.setOnAction(event -> {
+			delaunay1.deleteLastPoint(gestPoints1, del);
+			delaunay2.deleteLastPoint(gestPoints2, del);
+		}); // Définir le gestionnaire d'événements //TODO delete
 
 		startMorph = new Button("Trianguler");
 		startMorph.setOnAction(event -> {
@@ -310,7 +312,7 @@ public class FormesArrondies extends Application {
 		});
 
 		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(), gestPoints1,
-				delaunay2.getPGraphe(), gestPoints2, pickSom.getValue(), modeState);
+				delaunay2.getPGraphe(), gestPoints2, pickSom.getValue(), modeState,del);
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
 		Label labpickSom = new Label("Couleur des points");
@@ -375,7 +377,7 @@ public class FormesArrondies extends Application {
 		gestPoints1 = new Pane();
 		gestPoints1.prefHeight(500);
 		gestPoints1.prefWidth(500);
-		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pointGraph1, pointGraph2, pickSom.getValue(),modeState);
+		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pointGraph1, pointGraph2, pickSom.getValue(),modeState,del);
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;
@@ -396,7 +398,7 @@ public class FormesArrondies extends Application {
 		gestPoints2 = new Pane();
 		gestPoints2.prefHeight(500);
 		gestPoints2.prefWidth(500);
-		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pointGraph2, pointGraph1, pickSom.getValue(),modeState);
+		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pointGraph2, pointGraph1, pickSom.getValue(),modeState,del);
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;

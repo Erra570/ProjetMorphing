@@ -41,7 +41,7 @@ public class MouseMoveHandlerDelaunay implements EventHandler<MouseEvent> {
 			if (p.getBoundsInParent().contains(event.getX(), event.getY())) {
 				p.setCursor(Cursor.HAND);
 				System.out.println("" + listePoint.indexOf(p) + " " + ID);
-				MouseDragHandlerDelaunay dragHandler = new MouseDragHandlerDelaunay(listePoint, root,
+				MouseDragHandlerDelaunay dragHandler = new MouseDragHandlerDelaunay(listePoint,
 						listePoint.indexOf(p));
 				p.setOnMouseDragged(dragHandler);
 			}

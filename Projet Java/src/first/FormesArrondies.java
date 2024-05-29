@@ -87,21 +87,17 @@ public class FormesArrondies extends Application {
 
 	private Delaunay delaunay1;
 	private Delaunay delaunay2;
+	
+	private Scene loadScene;
 
 	@Override
 	public void start(Stage primaryStage) {
 		interfaceFormes(primaryStage);
 	}
 
-	@SuppressWarnings("deprecation")
 	public void interfaceFormes(Stage primaryStage) {
 		modeState=false;
-		/* création du plan central, contenant les images */
-		pCentre = new HBox();
-		pCentre.setSpacing(10);
-		pCentre.setAlignment(Pos.CENTER);
-		f = new Fichier();
-		alb = new Album(f);
+		créationCommune();
 
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Visage");
@@ -109,52 +105,16 @@ public class FormesArrondies extends Application {
 		StackPane haut = new StackPane();
 		haut.getChildren().add(chgmtCote);
 
-		// Barre de chargement
-		loading = new VBox();
-		pBar = new ProgressIndicator();
-		texte = new TextField("Morphing en cours...");
-		loading.getChildren().add(texte);
-		loading.getChildren().add(pBar);
-
-		Scene loadScene = new Scene(loading);
-
-		// Image gauche avec bouton pour changer d'image
-		VBox vBoxGauche = new VBox();
-		vBoxGauche.setAlignment(Pos.CENTER);
-		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
-		vBoxGauche.getChildren().add(creerBoutonGauche());
-		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
-		alb.addObserver(cid);
-		cbg = new ControleBoutonGauche(alb, f);
-		boutonGauche.setOnAction(cbg);
-		boutonGauche.setPrefWidth(450);
-		alb.addObserver(cbg);
-
-		// Image droite avec bouton pour changer d'image
-		VBox vBoxDroite = new VBox();
-		vBoxDroite.setAlignment(Pos.CENTER);
-		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
-		vBoxDroite.getChildren().add(creerBoutonDroite());
-		ControleImageFin cif = new ControleImageFin(alb, imageFin);
-		alb.addObserver(cif);
-		cbd = new ControleBoutonDroite(alb, f);
-		boutonDroite.setOnAction(cbd);
-		boutonDroite.setPrefWidth(450);
-		alb.addObserver(cbd);
-
-		this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
-
-		// Partie droite (boutons et couleurs)
+		// Partie droite (bouton)
 		right = new VBox();
 		right.setAlignment(Pos.CENTER);
 		clo = new Button("Fermer Forme");
 		clo.setOnAction(event -> close()); // Définir le gestionnaire d'événements
 		clo.setDisable(true);
-
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
 		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements
-
+		
 		startMorph = new Button("Commencer le morphing");
 		startMorph.setDisable(true);
 		startMorph.setOnAction(event -> {
@@ -187,6 +147,9 @@ public class FormesArrondies extends Application {
 			}
 		});
 
+		// Partie Gauche (Paramètres)
+		VBox left = new VBox();
+		left.setAlignment(Pos.CENTER);
 		Label labCoulCurv = new Label("Couleur de la courbe");
 		coulCurv = new ColorPicker(Color.BLUE);
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
@@ -212,13 +175,14 @@ public class FormesArrondies extends Application {
 		gestPoints1.setOnMouseMoved(moveHandler1);
 		gestPoints2.setOnMouseMoved(moveHandler2);
 
-		right.getChildren().addAll(clo, del, labCoulCurv, coulCurv, labpickSom, pickSom, labpickCont, pickCont,
-				labnbImagesPC, nbImagesPC, startMorph);
+		right.getChildren().addAll(clo, del,labnbImagesPC, nbImagesPC, startMorph);
+		left.getChildren().addAll(labCoulCurv,coulCurv,labpickSom,pickSom,labpickCont,pickCont,labnbImagesPC,nbImagesPC);
 
 		root = new BorderPane();
 		root.setCenter(this.pCentre);
 		root.setRight(right);
 		root.setTop(haut);
+		root.setLeft(left);
 		scene = new Scene(root);
 
 		// Ajouts de la feuille css
@@ -245,15 +209,9 @@ public class FormesArrondies extends Application {
 		primaryStage.show();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void interfaceVisage(Stage primaryStage) {
 		modeState = true;
-		/* création du plan central, contenant les images */
-		pCentre = new HBox();
-		pCentre.setSpacing(10);
-		pCentre.setAlignment(Pos.CENTER);
-		f = new Fichier();
-		alb = new Album(f);
+		créationCommune();
 
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Formes");
@@ -261,40 +219,7 @@ public class FormesArrondies extends Application {
 		StackPane haut = new StackPane();
 		haut.getChildren().add(chgmtCote);
 
-		// Barre de chargement
-		loading = new VBox();
-		pBar = new ProgressIndicator();
-		texte = new TextField("Morphing en cours...");
-		loading.getChildren().add(texte);
-		loading.getChildren().add(pBar);
-
-		// Image gauche avec bouton pour changer d'image
-		VBox vBoxGauche = new VBox();
-		vBoxGauche.setAlignment(Pos.CENTER);
-		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
-		vBoxGauche.getChildren().add(creerBoutonGauche());
-		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
-		alb.addObserver(cid);
-		cbg = new ControleBoutonGauche(alb, f);
-		boutonGauche.setOnAction(cbg);
-		boutonGauche.setPrefWidth(450);
-		alb.addObserver(cbg);
-
-		// Image droite avec bouton pour changer d'image
-		VBox vBoxDroite = new VBox();
-		vBoxDroite.setAlignment(Pos.CENTER);
-		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
-		vBoxDroite.getChildren().add(creerBoutonDroite());
-		ControleImageFin cif = new ControleImageFin(alb, imageFin);
-		alb.addObserver(cif);
-		cbd = new ControleBoutonDroite(alb, f);
-		boutonDroite.setOnAction(cbd);
-		boutonDroite.setPrefWidth(450);
-		alb.addObserver(cbd);
-
-		this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
-
-		// Partie droite (boutons et couleurs)
+		// Partie droite (boutons)
 		right = new VBox();
 		right.setAlignment(Pos.CENTER);
 
@@ -303,7 +228,7 @@ public class FormesArrondies extends Application {
 		del.setOnAction(event -> {
 			delaunay1.deleteLastPoint(gestPoints1, del);
 			delaunay2.deleteLastPoint(gestPoints2, del);
-		}); // Définir le gestionnaire d'événements //TODO delete
+		}); // Définir le gestionnaire d'événements
 
 		startMorph = new Button("Trianguler");
 		startMorph.setOnAction(event -> {
@@ -315,8 +240,10 @@ public class FormesArrondies extends Application {
 				delaunay2.getPGraphe(), gestPoints2, pickSom.getValue(), modeState,del);
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
+		// Partie gauche : paramètres
+		VBox left = new VBox();
+		left.setAlignment(Pos.CENTER);
 		Label labpickSom = new Label("Couleur des points");
-		// TODO verif couleur des points
 		pickSom.setOnAction(event -> {
 			clickHandlerDelaunay.setCouleur(pickSom.getValue());
 		});
@@ -326,7 +253,6 @@ public class FormesArrondies extends Application {
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
 
-		// TODO new move handler ?
 		MouseMoveHandlerDelaunay moveHandlerDelaunay1 = new MouseMoveHandlerDelaunay(delaunay1.getPGraphe(),
 				gestPoints1, 1);
 		MouseMoveHandlerDelaunay moveHandlerDelaunay2 = new MouseMoveHandlerDelaunay(delaunay2.getPGraphe(),
@@ -335,12 +261,14 @@ public class FormesArrondies extends Application {
 		gestPoints1.setOnMouseMoved(moveHandlerDelaunay1);
 		gestPoints2.setOnMouseMoved(moveHandlerDelaunay2);
 
-		right.getChildren().addAll(del, labpickSom, pickSom, labnbImagesPC, nbImagesPC, startMorph);
+		right.getChildren().addAll(del, startMorph);
+		left.getChildren().addAll(labpickSom, pickSom, labnbImagesPC, nbImagesPC);
 
 		root = new BorderPane();
 		root.setCenter(this.pCentre);
 		root.setRight(right);
 		root.setTop(haut);
+		root.setLeft(left);
 		scene = new Scene(root);
 
 		// Ajouts de la feuille css
@@ -354,6 +282,7 @@ public class FormesArrondies extends Application {
 		right.getStyleClass().add("panDroit");
 		nbImagesPC.getStyleClass().add("boutonDroit");
 		pickSom.getStyleClass().add("boutonDroit");
+		left.getStyleClass().add("panDroit");
 
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
@@ -361,7 +290,8 @@ public class FormesArrondies extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-
+	
+	
 	/**
 	 * Création de l'image gauche sur l'interface
 	 * 
@@ -623,6 +553,51 @@ public class FormesArrondies extends Application {
 
 		interfaceFormes(primaryStage);
 	}
+	
+	@SuppressWarnings("deprecation")
+	public void créationCommune() {
+		/* création du plan central, contenant les images */
+		pCentre = new HBox();
+		pCentre.setSpacing(10);
+		pCentre.setAlignment(Pos.CENTER);
+		f = new Fichier();
+		alb = new Album(f);
+		
+		// Barre de chargement
+		loading = new VBox();
+		pBar = new ProgressIndicator();
+		texte = new TextField("Morphing en cours...");
+		loading.getChildren().add(texte);
+		loading.getChildren().add(pBar);
+		loadScene = new Scene(loading);
+		
+		// Image gauche avec bouton pour changer d'image
+		VBox vBoxGauche = new VBox();
+		vBoxGauche.setAlignment(Pos.CENTER);
+		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
+		vBoxGauche.getChildren().add(creerBoutonGauche());
+		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
+		alb.addObserver(cid);
+		cbg = new ControleBoutonGauche(alb, f);
+		boutonGauche.setOnAction(cbg);
+		boutonGauche.setPrefWidth(450);
+		alb.addObserver(cbg);
+		
+		// Image droite avec bouton pour changer d'image
+		VBox vBoxDroite = new VBox();
+		vBoxDroite.setAlignment(Pos.CENTER);
+		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
+		vBoxDroite.getChildren().add(creerBoutonDroite());
+		ControleImageFin cif = new ControleImageFin(alb, imageFin);
+		alb.addObserver(cif);
+		cbd = new ControleBoutonDroite(alb, f);
+		boutonDroite.setOnAction(cbd);
+		boutonDroite.setPrefWidth(450);
+		alb.addObserver(cbd);
+		
+		this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
+	}
+
 
 	public static void main(String[] args) {
 		launch(args);

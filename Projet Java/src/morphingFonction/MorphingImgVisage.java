@@ -29,8 +29,8 @@ public class MorphingImgVisage {
      * @param f le fichier image à charger
      * @param tabPoint la liste des points de morphing associés à l'image
      */
-    public MorphingImgVisage(Fichier f, List<Triangle> tabPoint) throws Exception {
-        this.img = ImageIO.read(f.getF());  // Lecture de l'image à partir du fichier
+    public MorphingImgVisage(File f, List<Triangle> tabPoint) throws Exception {
+        this.img = ImageIO.read(f);  // Lecture de l'image à partir du fichier
         this.tabPoint = new ArrayList<>();
         for(int i = 0; i<tabPoint.size(); i++) {
             this.tabPoint.add(tabPoint.get(i));  // Copie des points de morphing
@@ -90,6 +90,7 @@ public class MorphingImgVisage {
      * @param tabSuivant le tableau de nouveaux points de morphing
      */
     public void imgSuivanteVisage(List<Triangle> tabSuivant, List<Triangle> tabFin, BufferedImage imgFin, double t) {
+    	BufferedImage imgSuivant = new BufferedImage(this.img.getWidth(), this.img.getHeight(), BufferedImage.TYPE_INT_RGB);
     	for (int y = 0; y < img.getHeight(); y++) {
 			for (int x = 0; x < img.getWidth(); x++) {
 				for (int i = 0; i<tabPoint.size(); i++) {
@@ -104,12 +105,13 @@ public class MorphingImgVisage {
 				        int b = (int) ((1 - t) * cPoint.getBlue() + t * cFin.getBlue());
 				        Color c = new Color(r,g,b);
 				        for(Point e : ensembleP) {
-				    		img.setRGB((int) e.getX(), (int) e.getY(), c.getRGB());
+				    		imgSuivant.setRGB((int) e.getX(), (int) e.getY(), c.getRGB());
 				    	}
 					}
 				}
 			}
     	}
+    	this.img = imgSuivant;
     }
     
     public Color couleurMoyenne(BufferedImage img, Set<Point> ensemble) {
@@ -122,7 +124,7 @@ public class MorphingImgVisage {
             g += c.getGreen();
             b += c.getBlue();
     	}
-    	return new Color(r/ensemble.size(), g/ensemble.size(), b/ensemble.size())
+    	return new Color(r/ensemble.size(), g/ensemble.size(), b/ensemble.size());
     }
 
     /**
@@ -131,7 +133,7 @@ public class MorphingImgVisage {
      * @param tabD liste des points de départ
      * @param tabF liste des points d'arrivée
      * @param nombreImg nombre d'images dans l'animation
-     */
+     *//*
     public void creerGif(List<QCurve> tabD, List<QCurve> tabF, double nombreImg) {
         AnimatedGifEncoder e = new AnimatedGifEncoder();
         e.start("img/testGif.gif");  // Début de la création du GIF
@@ -182,5 +184,5 @@ public class MorphingImgVisage {
         }
         
         e.finish();  // Finalisation du GIF
-    }
+    }*/
 }

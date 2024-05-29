@@ -95,8 +95,14 @@ public class FormesArrondies extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		VBox menu = new VBox();
+		menu.setPrefSize(1300, 500);
 		HBox choix = new HBox();
+		choix.setAlignment(Pos.BOTTOM_CENTER);
+		File f = new File("img/logo.png");
+		Image p = new Image(f.toURI().toString());
 		ImageView icon = new ImageView();
+		icon.setImage(p);
+		menu.setAlignment(Pos.CENTER);
 		Button formes = new Button("Faire un Morphing de Formes");
 		formes.setOnAction(e -> interfaceFormes(primaryStage));
 		Button visages = new Button("Faire un Morphing de Visages");
@@ -104,8 +110,15 @@ public class FormesArrondies extends Application {
 		choix.getChildren().addAll(formes,visages);
 		menu.getChildren().addAll(icon,choix);
 		Scene menuPrincipal = new Scene(menu);
+		menuPrincipal.getStylesheets().add("file:css/Style.css");
+		menu.getStyleClass().add("menu");
+		formes.getStyleClass().add("bouton");
+		visages.getStyleClass().add("bouton");
+		menu.setSpacing(10);
+		choix.setSpacing(10);
+		menu.requestFocus();
 		primaryStage.setScene(menuPrincipal);
-		primaryStage.setTitle("Morphing d'image");
+		primaryStage.setTitle("Projet Morphing");
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
@@ -117,11 +130,14 @@ public class FormesArrondies extends Application {
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Choix du Mode");
 		chgmtCote.setOnAction(e -> start(primaryStage));
+		chgmtCote.getStyleClass().add("bouton");
 		StackPane haut = new StackPane();
+		haut.getStyleClass().add("menu");
 		haut.getChildren().add(chgmtCote);
 
 		// Partie droite (bouton)
 		right = new VBox();
+		right.getStyleClass().add("menu");
 		right.setAlignment(Pos.CENTER);
 		clo = new Button("Fermer Forme");
 		clo.setOnAction(event -> close()); // Définir le gestionnaire d'événements
@@ -132,6 +148,7 @@ public class FormesArrondies extends Application {
 		
 		startMorph = new Button("Commencer le morphing");
 		startMorph.setDisable(true);
+		startMorph.getStyleClass().add("start");
 		startMorph.setOnAction(event -> {
 			if (Double.parseDouble(nbImagesPC.getText()) < 5) {
 				Alert basseVitesse = new Alert(AlertType.ERROR);
@@ -147,7 +164,7 @@ public class FormesArrondies extends Application {
 						@Override
 						protected Scene call() throws Exception {
 							try {
-								startMorphing(primaryStage);
+								startMorphing(primaryStage,texte);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -164,6 +181,7 @@ public class FormesArrondies extends Application {
 
 		// Partie Gauche (Paramètres)
 		VBox left = new VBox();
+		left.getStyleClass().add("menu");
 		left.setAlignment(Pos.CENTER);
 		Label labCoulCurv = new Label("Couleur de la courbe");
 		coulCurv = new ColorPicker(Color.BLUE);
@@ -210,6 +228,10 @@ public class FormesArrondies extends Application {
 		boutonGauche.getStyleClass().add("bouton");
 		coulCurv.getStyleClass().add("bouton");
 		coulCurv.getStyleClass().add("boutonDroit");
+		pickSom.getStyleClass().add("bouton");
+		pickSom.getStyleClass().add("boutonDroit");
+		pickCont.getStyleClass().add("bouton");
+		pickCont.getStyleClass().add("boutonDroit");
 		startMorph.getStyleClass().add("bouton");
 		startMorph.getStyleClass().add("boutonDroit");
 		right.getStyleClass().add("panDroit");
@@ -219,7 +241,6 @@ public class FormesArrondies extends Application {
 
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Morphing d'image");
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
@@ -524,7 +545,7 @@ public class FormesArrondies extends Application {
 		clickHandler.changeColorCont(coulCont);
 	}
 
-	private void startMorphing(Stage primaryStage) throws Exception {
+	private void startMorphing(Stage primaryStage,TextField progression) throws Exception {
 
 		List<QCurve> tabD = new ArrayList<>();
 		List<QCurve> tabF = new ArrayList<>();
@@ -541,7 +562,7 @@ public class FormesArrondies extends Application {
 																					// l'augmentation du % de vitesse
 																					// donne une baisse d'images
 		System.out.println(nbImages);
-		m.creerGif(tabD, tabF, nbImages);
+		m.creerGif(tabD, tabF, nbImages,progression);
 
 		/* Création de la scène de résultats */
 		File fRes = new File("img/testGif.gif");
@@ -549,7 +570,9 @@ public class FormesArrondies extends Application {
 		Button retour = new Button("Retour");
 		retour.setOnAction(e -> primaryStage.setScene(scene));
 		VBox resultBox = new VBox();
+		resultBox.setPrefSize(1300, 500);
 		resultBox.getChildren().addAll(imgResult, retour);
+		resultBox.setAlignment(Pos.CENTER);
 		showResult = new Scene(resultBox);
 
 	}
@@ -618,6 +641,7 @@ public class FormesArrondies extends Application {
 	public void creationCommune() {
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
+		pCentre.getStyleClass().add("menu");
 		pCentre.setSpacing(10);
 		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
@@ -625,11 +649,16 @@ public class FormesArrondies extends Application {
 		
 		// Barre de chargement
 		loading = new VBox();
+		loading.setPrefSize(1300, 500);
+		loading.setSpacing(30);
 		pBar = new ProgressIndicator();
-		texte = new TextField("Morphing en cours...");
-		loading.getChildren().add(texte);
+		texte = new TextField("Morphing en cours : 0%");
+		texte.setMaxWidth(300);
 		loading.getChildren().add(pBar);
+		loading.getChildren().add(texte);
+		loading.setAlignment(Pos.CENTER);
 		loadScene = new Scene(loading);
+		loading.requestFocus();
 		
 		// Image gauche avec bouton pour changer d'image
 		VBox vBoxGauche = new VBox();

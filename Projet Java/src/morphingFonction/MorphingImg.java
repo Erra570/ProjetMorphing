@@ -9,6 +9,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import first.QCurve;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import presentation.Fichier;
 
@@ -151,7 +152,7 @@ public class MorphingImg {
      * @param tabF liste des points d'arrivée
      * @param nombreImg nombre d'images dans l'animation
      */
-    public void creerGif(List<QCurve> tabD, List<QCurve> tabF, double nombreImg) {
+    public void creerGif(List<QCurve> tabD, List<QCurve> tabF, double nombreImg, TextField progression) {
         AnimatedGifEncoder e = new AnimatedGifEncoder();
         e.start("img/testGif.gif");  // Début de la création du GIF
         e.setRepeat(0);  // Répéter l'animation en boucle
@@ -191,6 +192,7 @@ public class MorphingImg {
             e.addFrame(this.getImg());  // Ajout de l'image mise à jour au GIF
 
             System.out.println((i*100)/nombreImg);  // Affichage de la progression
+            progression.setText("Morphing en cours : "+ ((i*100)/nombreImg) + "%");
             if (i == 20)
             	this.creerImage();  // Création d'une image intermédiaire
         }

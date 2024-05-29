@@ -97,7 +97,7 @@ public class FormesArrondies extends Application {
 
 	public void interfaceFormes(Stage primaryStage) {
 		modeState=false;
-		créationCommune();
+		creationCommune();
 
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Visage");
@@ -211,7 +211,7 @@ public class FormesArrondies extends Application {
 
 	public void interfaceVisage(Stage primaryStage) {
 		modeState = true;
-		créationCommune();
+		creationCommune();
 
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Formes");
@@ -555,7 +555,7 @@ public class FormesArrondies extends Application {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void créationCommune() {
+	public void creationCommune() {
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);

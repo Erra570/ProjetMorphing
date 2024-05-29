@@ -1,5 +1,7 @@
 package triangle;
 
+import morphingFonction.PointMorphing;
+
 public class Point {
 	private double x;
 	private double y;
@@ -57,6 +59,8 @@ public class Point {
 		return "Point [x=" + x + ", y=" + y + "]";
 	}
 	
-	
+	public PointMorphing transtypage() {
+		return new PointMorphing((int) this.x, (int) this.y);
+	}
 
 }

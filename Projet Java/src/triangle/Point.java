@@ -41,24 +41,24 @@ public class Point {
 			return false;
 		}
 	}
-	
+
 	public double distance(Point point) {
 		double dx = this.getX() - point.getX();
 		double dy = this.getY() - point.getY();
-		return Math.sqrt(dx*dx + dy*dy);
+		return Math.sqrt(dx * dx + dy * dy);
 	}
-	
+
 	public double distance2(Point point) {
 		double dx = this.getX() - point.getX();
 		double dy = this.getY() - point.getY();
-		return dx*dx + dy*dy;
+		return dx * dx + dy * dy;
 	}
 
 	@Override
 	public String toString() {
 		return "Point [x=" + x + ", y=" + y + "]";
 	}
-	
+
 	public PointMorphing transtypage() {
 		return new PointMorphing((int) this.x, (int) this.y);
 	}

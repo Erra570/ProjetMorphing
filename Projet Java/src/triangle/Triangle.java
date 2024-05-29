@@ -1,8 +1,5 @@
 package triangle;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Triangle {
 	private Point point_1;
 	private Point point_2;
@@ -100,43 +97,5 @@ public class Triangle {
         // Vérification des signes
         return cross1 >= 0 && cross2 >= 0 && cross3 >= 0;
     }
-    
-    public Set<Point> pointNouveauTriangle (Point p, Triangle t) {
-    	Set<Point> ensemble = new HashSet<>();
-    	for (int i = 0; i<5; i++) {
-    		for (int j = 0; j<5; j++) {
-		    	double denominator = ((this.point_2.getY() - this.point_3.getY()) * (this.point_1.getX() - this.point_3.getX()) + (this.point_3.getX() - this.point_2.getX()) * (this.point_1.getY() - this.point_3.getY()));
-		        double u = ((this.point_2.getY() - this.point_3.getY()) * (p.getX() + (1./10. * i) - this.point_3.getX()) + (this.point_3.getX() - this.point_2.getX()) * (p.getY() + (1./10. * j) - this.point_3.getY())) / denominator;
-		        double v = ((this.point_3.getY() - this.point_1.getY()) * (p.getX() + (1./10. * i) - this.point_3.getX()) + (this.point_1.getX() - this.point_3.getX()) * (p.getY() + (1./10. * j) - this.point_3.getY())) / denominator;
-		        double w = 1 - u - v;
-		        if (u>=0 && v>=0 && w>=0) {
-			        double[] tabBarycentrique = new double[]{u, v, w};
-			        
-			        int x = (int) Math.round(tabBarycentrique[0] * t.point_1.getX() + tabBarycentrique[1] * t.point_2.getX() + tabBarycentrique[2] * t.point_3.getX());
-			        int y = (int) Math.round(tabBarycentrique[0] * t.point_1.getY() + tabBarycentrique[1] * t.point_2.getY() + tabBarycentrique[2] * t.point_3.getY());
-			        
-			        Point m = new Point(x, y);
-			        boolean b = false;
-			        for(Point n : ensemble) {
-			        	if (!b && n.getX()==m.getX() && n.getY()==m.getY())
-			        		b = !b;
-			        }
-			        if (!b)
-			        	ensemble.add(m);
-		        }
-    		}
-    	}
-    	return ensemble;
-    }
-    
-    public static void main(String[] args) throws Exception{
-        Triangle triangle1 = new Triangle(new Point(0, 0), new Point(5, 0), new Point(0, 5));
-        Triangle triangle2 = new Triangle(new Point(0, 0), new Point(10, 0), new Point(0, 10));
-        Point p = new Point(0, 4);
 
-        Set<Point> e = triangle1.pointNouveauTriangle(p, triangle2);
-
-        for (Point m : e)
-        	System.out.println("Le point dans le deuxième triangle a les coordonnées : (" + m.getX() + ", " + m.getY() + ")");
-    }
 }

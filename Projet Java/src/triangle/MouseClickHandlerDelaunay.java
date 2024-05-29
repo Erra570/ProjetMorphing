@@ -3,7 +3,6 @@ package triangle;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -15,16 +14,15 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 	private ArrayList<Circle> pointGraph2;
 	private Pane root2;
 	private Color couleur;
-	private Button del;
+	private boolean modeState=false;
 
-
-	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph1, Pane root1, ArrayList<Circle> pointGraph2, Pane root2, Color couleur, Button del) {
+	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph1, Pane root1, ArrayList<Circle> pointGraph2, Pane root2, Color couleur, boolean modeState) {
 		this.pointGraph1 = pointGraph1;
 		this.root1 = root1;
 		this.pointGraph2 = pointGraph2;
 		this.root2 = root2;
 		this.couleur = couleur;
-		this.del = del;
+		this.modeState=modeState;
 	}
 
 	@Override
@@ -37,6 +35,10 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 				}
 			}
 		}
+		if(!modeState) {
+			return;
+		}
+		
 
 		// Si la souris n'est pas dans le plan, on n'ajoute pas de points
 		double x = event.getX();
@@ -45,6 +47,8 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 		if (!root1.contains(x, y)) {
 			return;
 		}
+		
+		
 
 		// Création du point et ajout au dessin
 		Circle point1 = new Circle(x, y, 7);
@@ -56,7 +60,6 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 		point2.setFill(couleur);
 		pointGraph2.add(point2);
 		root2.getChildren().add(point2);
-		del.setDisable(false);
 	}
 	
 	public void setCouleur(Color couleur) {

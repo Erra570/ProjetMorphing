@@ -20,7 +20,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
@@ -39,6 +38,7 @@ import presentation.Fichier;
 import triangle.Delaunay;
 import triangle.MouseClickHandlerDelaunay;
 import triangle.MouseMoveHandlerDelaunay;
+import triangle.MouseDragHandlerDelaunay;
 
 /**
  * Classe permettant de créer des courbes pour les formes arrondies
@@ -51,6 +51,8 @@ public class FormesArrondies extends Application {
 	private List<QCurve> curves2 = new ArrayList<>(); // liste de courbes pour l'image de fin
 	private List<Circle> points1 = new ArrayList<>(); // liste de points
 	private List<Circle> points2 = new ArrayList<>(); // liste de points pour l'image de fin
+	private ArrayList<Circle> pointGraph1 = new ArrayList<>(); // liste de points
+	private ArrayList<Circle> pointGraph2 = new ArrayList<>(); // liste de points pour l'image de fin
 	private Pane gestPoints1;
 	private Pane gestPoints2;
 	private boolean closeState = false; // etat de fermeture du périmètre
@@ -82,27 +84,26 @@ public class FormesArrondies extends Application {
 	private MouseClickHandler clickHandler;
 	private MouseClickHandlerDelaunay clickHandlerDelaunay;
 	private ColorPicker pickCont;
-	
+	private boolean modeState=false;
+
 	private Delaunay delaunay1;
 	private Delaunay delaunay2;
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		interfaceFormes(primaryStage);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public void interfaceFormes(Stage primaryStage) {
-		
+		modeState=false;
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
 		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
 		alb = new Album(f);
-		
-		
-		
+
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Visage");
 		chgmtCote.setOnAction(e -> goToVisage(primaryStage));
@@ -162,7 +163,8 @@ public class FormesArrondies extends Application {
 				Alert basseVitesse = new Alert(AlertType.ERROR);
 				basseVitesse.initModality(Modality.APPLICATION_MODAL);
 				basseVitesse.setHeaderText("Erreur - Vitesse trop basse !");
-				basseVitesse.setContentText("Pour eviter un plantage dû au nombre d'images calculées, veuillez augmenter la vitesse au dessus de 5%");
+				basseVitesse.setContentText(
+						"Pour eviter un plantage dû au nombre d'images calculées, veuillez augmenter la vitesse au dessus de 5%");
 				basseVitesse.showAndWait();
 			} else {
 				try {
@@ -189,22 +191,20 @@ public class FormesArrondies extends Application {
 		Label labCoulCurv = new Label("Couleur de la courbe");
 		coulCurv = new ColorPicker(Color.BLUE);
 		coulCurv.setOnAction(event -> changeColor(coulCurv.getValue()));
-		
+
 		Label labpickSom = new Label("Couleur des sommets");
-		pickSom.setOnAction(event -> 
-		colorSomFA(pickSom.getValue()));
-		
+		pickSom.setOnAction(event -> colorSomFA(pickSom.getValue()));
+
 		Label labpickCont = new Label("Couleur des points de contrôles");
 		pickCont = new ColorPicker(Color.GREEN);
-		pickCont.setOnAction(event -> 
-		colorContFA(pickCont.getValue()));
-
+		pickCont.setOnAction(event -> colorContFA(pickCont.getValue()));
 
 		Label labnbImagesPC = new Label("Vitesse (%)");
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
-		
-		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState,gestPoints1, gestPoints2, clo, del, coulCurv.getValue(),pickSom.getValue(),pickCont.getValue());
+
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,
+				clo, del, coulCurv.getValue(), pickSom.getValue(), pickCont.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 
 		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
@@ -213,10 +213,11 @@ public class FormesArrondies extends Application {
 		gestPoints1.setOnMouseMoved(moveHandler1);
 		gestPoints2.setOnMouseMoved(moveHandler2);
 
-		right.getChildren().addAll(clo, del, labCoulCurv, coulCurv, labpickSom, pickSom, labpickCont, pickCont,labnbImagesPC, nbImagesPC, startMorph);
+		right.getChildren().addAll(clo, del, labCoulCurv, coulCurv, labpickSom, pickSom, labpickCont, pickCont,
+				labnbImagesPC, nbImagesPC, startMorph);
 
 		root = new BorderPane();
-		root.setCenter(pCentre);
+		root.setCenter(this.pCentre);
 		root.setRight(right);
 		root.setTop(haut);
 		scene = new Scene(root);
@@ -244,18 +245,17 @@ public class FormesArrondies extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-	
-	
+
 	@SuppressWarnings("deprecation")
 	public void interfaceVisage(Stage primaryStage) {
-		
+		modeState = true;
 		/* création du plan central, contenant les images */
 		pCentre = new HBox();
 		pCentre.setSpacing(10);
 		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
 		alb = new Album(f);
-		
+
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Formes");
 		chgmtCote.setOnAction(e -> goToForme(primaryStage));
@@ -268,7 +268,6 @@ public class FormesArrondies extends Application {
 		texte = new TextField("Morphing en cours...");
 		loading.getChildren().add(texte);
 		loading.getChildren().add(pBar);
-
 
 		// Image gauche avec bouton pour changer d'image
 		VBox vBoxGauche = new VBox();
@@ -302,34 +301,42 @@ public class FormesArrondies extends Application {
 
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
-		del.setOnAction(event -> delaunay1.deleteLastPoint(gestPoints1,del)); // Définir le gestionnaire d'événements //TODO delete
+		del.setOnAction(event -> delete()); // Définir le gestionnaire d'événements //TODO delete
 
 		startMorph = new Button("Trianguler");
 		startMorph.setOnAction(event -> {
 			delaunay1.initTriang(gestPoints1);
 			startMorph.setDisable(true);
 		});
-		
-		Label labpickSom = new Label("Couleur des points");
-		pickSom.setOnAction(event -> {clickHandlerDelaunay.setCouleur(pickSom.getValue());});
 
-		Label labnbImagesPC = new Label("Vitesse (%)");
-		//TODO vitesse fonctionnelle ?
-		nbImagesPC = new TextField("100");
-		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
-		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(),gestPoints1,delaunay2.getPGraphe(),gestPoints2, pickSom.getValue(),del);
+		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(), gestPoints1,
+				delaunay2.getPGraphe(), gestPoints2, pickSom.getValue(), modeState);
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
-		MouseMoveHandlerDelaunay moveHandlerDelaunay1 = new MouseMoveHandlerDelaunay(delaunay1.getPGraphe(), gestPoints1, 1);
-		MouseMoveHandlerDelaunay moveHandlerDelaunay2 = new MouseMoveHandlerDelaunay(delaunay2.getPGraphe(), gestPoints2, 2);
+		Label labpickSom = new Label("Couleur des points");
+		// TODO verif couleur des points
+		pickSom.setOnAction(event -> {
+			clickHandlerDelaunay.setCouleur(pickSom.getValue());
+		});
+
+		Label labnbImagesPC = new Label("Vitesse (%)");
+		// TODO vitesse fonctionnelle ?
+		nbImagesPC = new TextField("100");
+		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
+
+		// TODO new move handler ?
+		MouseMoveHandlerDelaunay moveHandlerDelaunay1 = new MouseMoveHandlerDelaunay(delaunay1.getPGraphe(),
+				gestPoints1, 1);
+		MouseMoveHandlerDelaunay moveHandlerDelaunay2 = new MouseMoveHandlerDelaunay(delaunay2.getPGraphe(),
+				gestPoints2, 2);
 
 		gestPoints1.setOnMouseMoved(moveHandlerDelaunay1);
 		gestPoints2.setOnMouseMoved(moveHandlerDelaunay2);
 
-		right.getChildren().addAll(del, labpickSom, pickSom,labnbImagesPC, nbImagesPC, startMorph);
+		right.getChildren().addAll(del, labpickSom, pickSom, labnbImagesPC, nbImagesPC, startMorph);
 
 		root = new BorderPane();
-		root.setCenter(pCentre);
+		root.setCenter(this.pCentre);
 		root.setRight(right);
 		root.setTop(haut);
 		scene = new Scene(root);
@@ -368,7 +375,7 @@ public class FormesArrondies extends Application {
 		gestPoints1 = new Pane();
 		gestPoints1.prefHeight(500);
 		gestPoints1.prefWidth(500);
-		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pickSom.getValue(),del);
+		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pointGraph1, pointGraph2, pickSom.getValue(),modeState);
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;
@@ -389,7 +396,7 @@ public class FormesArrondies extends Application {
 		gestPoints2 = new Pane();
 		gestPoints2.prefHeight(500);
 		gestPoints2.prefWidth(500);
-		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pickSom.getValue(),del);
+		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pointGraph2, pointGraph1, pickSom.getValue(),modeState);
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;
@@ -452,7 +459,8 @@ public class FormesArrondies extends Application {
 			clo.setDisable(false);
 			startMorph.setDisable(true);
 
-			clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2, clo, del, coulCurv.getValue(), pickSom.getValue(),pickCont.getValue());
+			clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1,
+					gestPoints2, clo, del, coulCurv.getValue(), pickSom.getValue(), pickCont.getValue());
 			gestPoints1.setOnMouseClicked(clickHandler);
 			MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
 			MouseMoveHandler moveHandler2 = new MouseMoveHandler(curves2, points2, closeState, gestPoints2, 2);
@@ -515,7 +523,8 @@ public class FormesArrondies extends Application {
 		clo.setDisable(true);
 		startMorph.setDisable(false);
 
-		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2, clo, del, coulCurv.getValue(),pickSom.getValue(),pickCont.getValue());
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,
+				clo, del, coulCurv.getValue(), pickSom.getValue(), pickCont.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 
 		MouseMoveHandler moveHandler1 = new MouseMoveHandler(curves1, points1, closeState, gestPoints1, 1);
@@ -531,18 +540,19 @@ public class FormesArrondies extends Application {
 			curves1.get(i).colorChange(couleur, gestPoints1);
 			curves2.get(i).colorChange(couleur, gestPoints2);
 		}
-		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2, clo, del, coulCurv.getValue(), pickSom.getValue(),pickCont.getValue());
+		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,
+				clo, del, coulCurv.getValue(), pickSom.getValue(), pickCont.getValue());
 		gestPoints1.setOnMouseClicked(clickHandler);
 	}
 
 	private void colorSomFA(Color coulSom) {
 		clickHandler.changeColorSommets(coulSom);
 	}
-	
+
 	private void colorContFA(Color coulCont) {
 		clickHandler.changeColorCont(coulCont);
 	}
-	
+
 	private void startMorphing(Stage primaryStage) throws Exception {
 
 		List<QCurve> tabD = new ArrayList<>();
@@ -591,24 +601,24 @@ public class FormesArrondies extends Application {
 			return null;
 		}));
 	}
-	
+
 	public void goToVisage(Stage primaryStage) {
 		// Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
 		clickHandler.getcurves1().clear();
 		clickHandler.getcurves2().clear();
 		clickHandler.getPoints1().clear();
 		clickHandler.getPoints2().clear();
-		
+
 		interfaceVisage(primaryStage);
 	}
-	
+
 	public void goToForme(Stage primaryStage) {
 		// Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
 		clickHandler.getcurves1().clear();
 		clickHandler.getcurves2().clear();
 		clickHandler.getPoints1().clear();
 		clickHandler.getPoints2().clear();
-		
+
 		interfaceFormes(primaryStage);
 	}
 

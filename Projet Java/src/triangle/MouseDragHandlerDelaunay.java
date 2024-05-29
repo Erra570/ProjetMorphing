@@ -18,10 +18,12 @@ import java.util.List;
 public class MouseDragHandlerDelaunay implements EventHandler<MouseEvent> {
 
 	private List<Circle> listePoint;
+	private Pane root;
 	private int indexPoint;
 
 	public MouseDragHandlerDelaunay(List<Circle> listePoint, Pane root, int indexPoint) {
 		this.listePoint = listePoint;
+		this.root = root;
 		this.indexPoint = indexPoint;
 	}
 

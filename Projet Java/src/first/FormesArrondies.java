@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
@@ -85,9 +86,6 @@ public class FormesArrondies extends Application {
 	private Delaunay delaunay1;
 	private Delaunay delaunay2;
 	
-	private Button zoom;
-	private boolean isZoomed = false;
-	
 	@Override
 	public void start(Stage primaryStage) {
 		interfaceFormes(primaryStage);
@@ -102,6 +100,8 @@ public class FormesArrondies extends Application {
 		pCentre.setAlignment(Pos.CENTER);
 		f = new Fichier();
 		alb = new Album(f);
+		
+		
 		
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Passer au Mode Visage");
@@ -216,7 +216,7 @@ public class FormesArrondies extends Application {
 		right.getChildren().addAll(clo, del, labCoulCurv, coulCurv, labpickSom, pickSom, labpickCont, pickCont,labnbImagesPC, nbImagesPC, startMorph);
 
 		root = new BorderPane();
-		root.setCenter(this.pCentre);
+		root.setCenter(pCentre);
 		root.setRight(right);
 		root.setTop(haut);
 		scene = new Scene(root);
@@ -329,7 +329,7 @@ public class FormesArrondies extends Application {
 		right.getChildren().addAll(del, labpickSom, pickSom,labnbImagesPC, nbImagesPC, startMorph);
 
 		root = new BorderPane();
-		root.setCenter(this.pCentre);
+		root.setCenter(pCentre);
 		root.setRight(right);
 		root.setTop(haut);
 		scene = new Scene(root);
@@ -345,8 +345,6 @@ public class FormesArrondies extends Application {
 		right.getStyleClass().add("panDroit");
 		nbImagesPC.getStyleClass().add("boutonDroit");
 		pickSom.getStyleClass().add("boutonDroit");
-		
-		creerZoom();
 
 		/* donner un nom et une taille à la fenêtre */
 		primaryStage.setScene(scene);
@@ -612,25 +610,6 @@ public class FormesArrondies extends Application {
 		clickHandler.getPoints2().clear();
 		
 		interfaceFormes(primaryStage);
-	}
-	
-	public void creerZoom() {
-		zoom = new Button("Zoom");
-		zoom.setOnAction(event -> {
-			if (!isZoomed) {
-				pCentre.setScaleX(2);
-				pCentre.setScaleY(2);
-				pCentre.setScaleY(2);
-				isZoomed = true;
-			}
-			else {
-				pCentre.setScaleX(1);
-				pCentre.setScaleY(1);
-				pCentre.setScaleY(1);
-				isZoomed = false;
-			}
-		});
-		right.getChildren().add(zoom);
 	}
 
 	public static void main(String[] args) {

@@ -2,7 +2,6 @@ package triangle;
 
 import java.util.ArrayList;
 
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -20,12 +19,13 @@ public class Delaunay {
 	private ArrayList<Triangle> listeTriangle = new ArrayList<Triangle>();
 	private Triangle superTriangle;
 	private  ArrayList<Circle> pointGraph1;
+	private  ArrayList<Circle> pointGraph2;
 	private Color couleur;
 
-	public Delaunay(Pane root1, Pane root2, ArrayList<Circle> pointGraph1, ArrayList<Circle> pointGraph2, Color couleur, boolean modeState, Button del) {
+	public Delaunay(Pane root1, Pane root2, ArrayList<Circle> pointGraph1, ArrayList<Circle> pointGraph2, Color couleur, boolean modeState) {
 		this.couleur = couleur;
 		this.pointGraph1=pointGraph1;
-		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph1, root1, pointGraph2, root2, this.couleur, modeState, del);
+		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph1, root1, pointGraph2, root2, this.couleur, modeState);
 		root1.setOnMouseClicked(clickHandler);
 	}
 	
@@ -37,15 +37,6 @@ public class Delaunay {
 		return this.listeTriangle;
 	}
 	
-	public void deleteLastPoint(Pane root, Button del) {
-		if (!this.getPGraphe().isEmpty()) {
-			root.getChildren().remove(this.getPGraphe().size() -1);
-			this.getPGraphe().remove(this.getPGraphe().size() - 1);
-			if (this.getPGraphe().size() == 0) {
-				del.setDisable(true);
-			}
-		}
-	}
 
 		public void initTriang(Pane root) {
 			try {

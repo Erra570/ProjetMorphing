@@ -4,6 +4,7 @@ import javafx.scene.shape.Circle;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 import java.util.List;
 
@@ -17,10 +18,12 @@ import java.util.List;
 public class MouseDragHandlerDelaunay implements EventHandler<MouseEvent> {
 
 	private List<Circle> listePoint;
+	private Pane root;
 	private int indexPoint;
 
-	public MouseDragHandlerDelaunay(List<Circle> listePoint, int indexPoint) {
+	public MouseDragHandlerDelaunay(List<Circle> listePoint, Pane root, int indexPoint) {
 		this.listePoint = listePoint;
+		this.root = root;
 		this.indexPoint = indexPoint;
 	}
 

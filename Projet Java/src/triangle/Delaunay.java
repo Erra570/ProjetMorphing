@@ -22,10 +22,10 @@ public class Delaunay {
 	private  ArrayList<Circle> pointGraph1;
 	private Color couleur;
 
-	public Delaunay(Pane root1, Pane root2, ArrayList<Circle> pointGraph1, ArrayList<Circle> pointGraph2, Color couleur, boolean modeState,Button del) {
+	public Delaunay(Pane root1, Pane root2, ArrayList<Circle> pointGraph1, ArrayList<Circle> pointGraph2, Color couleur, boolean modeState,Button del,Button start) {
 		this.couleur = couleur;
 		this.pointGraph1=pointGraph1;
-		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph1, root1, pointGraph2, root2, this.couleur, modeState,del);
+		MouseClickHandlerDelaunay clickHandler = new MouseClickHandlerDelaunay(pointGraph1, root1, pointGraph2, root2, this.couleur, modeState,del,start);
 		root1.setOnMouseClicked(clickHandler);
 	}
 	
@@ -57,12 +57,13 @@ public class Delaunay {
 			}
 		}
 		
-		public void deleteLastPoint(Pane root, Button del) {
+		public void deleteLastPoint(Pane root, Button del,Button start) {
 			if (!this.getPGraphe().isEmpty()) {
 				root.getChildren().remove(this.getPGraphe().size() -1);
 				this.getPGraphe().remove(this.getPGraphe().size() - 1);
 				if (this.getPGraphe().size() == 0) {
 					del.setDisable(true);
+					start.setDisable(true);
 				}
 			}
 		}

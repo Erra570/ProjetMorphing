@@ -17,9 +17,10 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 	private Color couleur;
 	private boolean modeState = false;
 	private Button del;
+	private Button start;
 
 	public MouseClickHandlerDelaunay(ArrayList<Circle> pointGraph1, Pane root1, ArrayList<Circle> pointGraph2,
-			Pane root2, Color couleur, boolean modeState,Button del) {
+			Pane root2, Color couleur, boolean modeState,Button del,Button start) {
 		this.pointGraph1 = pointGraph1;
 		this.root1 = root1;
 		this.pointGraph2 = pointGraph2;
@@ -27,11 +28,12 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 		this.couleur = couleur;
 		this.modeState = modeState;
 		this.del = del;
+		this.start = start;
 	}
 
 	@Override
 	public void handle(MouseEvent event) {
-		// La souris est au dessus d'un point préexistant, la fonction ne fait rien
+		// La souris est au dessus d'un point prï¿½existant, la fonction ne fait rien
 		if (pointGraph1.size() != 0) {
 			for (Circle p : pointGraph1) {
 				if (p.getBoundsInParent().contains(event.getX(), event.getY())) {
@@ -51,7 +53,7 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 			return;
 		}
 
-		// Création du point et ajout au dessin
+		// Crï¿½ation du point et ajout au dessin
 		Circle point1 = new Circle(x, y, 7);
 		point1.setFill(couleur);
 		pointGraph1.add(point1);
@@ -62,6 +64,7 @@ public class MouseClickHandlerDelaunay implements EventHandler<MouseEvent> {
 		pointGraph2.add(point2);
 		root2.getChildren().add(point2);
 		del.setDisable(false);
+		start.setDisable(false);
 	}
 
 	public void setCouleur(Color couleur) {

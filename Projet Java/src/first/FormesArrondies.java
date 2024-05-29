@@ -34,10 +34,12 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import morphingFonction.MorphingImg;
+import morphingFonction.MorphingImgVisage;
 import presentation.Fichier;
 import triangle.Delaunay;
 import triangle.MouseClickHandlerDelaunay;
 import triangle.MouseMoveHandlerDelaunay;
+import triangle.Triangle;
 
 /**
  * Classe permettant de créer des courbes pour les formes arrondies
@@ -239,18 +241,44 @@ public class FormesArrondies extends Application {
 		del = new Button("Supprimer Dernier Point");
 		del.setDisable(true);
 		del.setOnAction(event -> {
-			delaunay1.deleteLastPoint(gestPoints1, del);
-			delaunay2.deleteLastPoint(gestPoints2, del);
+			delaunay1.deleteLastPoint(gestPoints1, del,startMorph);
+			delaunay2.deleteLastPoint(gestPoints2, del,startMorph);
 		}); // Définir le gestionnaire d'événements
 
-		startMorph = new Button("Trianguler");
+		startMorph = new Button("Commencer le morphing");
+		startMorph.setDisable(true);
 		startMorph.setOnAction(event -> {
-			delaunay1.initTriang(gestPoints1);
-			startMorph.setDisable(true);
+			if (Double.parseDouble(nbImagesPC.getText()) < 5) {
+				Alert basseVitesse = new Alert(AlertType.ERROR);
+				basseVitesse.initModality(Modality.APPLICATION_MODAL);
+				basseVitesse.setHeaderText("Erreur - Vitesse trop basse !");
+				basseVitesse.setContentText(
+						"Pour eviter un plantage dû au nombre d'images calculées, veuillez augmenter la vitesse au dessus de 5%");
+				basseVitesse.showAndWait();
+			} else {
+				try {
+					primaryStage.setScene(loadScene);
+					morphingTask = new Task<>() {
+						@Override
+						protected Scene call() throws Exception {
+							try {
+								startMorphingVisages(primaryStage);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							return scene;
+						}
+					};
+					morphingTask.setOnSucceeded(event2 -> primaryStage.setScene(showResult)); // primaryStage.setScene(morphingTask.getValue())
+					new Thread(morphingTask).start();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		});
 
 		clickHandlerDelaunay = new MouseClickHandlerDelaunay(delaunay1.getPGraphe(), gestPoints1,
-				delaunay2.getPGraphe(), gestPoints2, pickSom.getValue(), modeState,del);
+				delaunay2.getPGraphe(), gestPoints2, pickSom.getValue(), modeState,del,startMorph);
 		gestPoints1.setOnMouseClicked(clickHandlerDelaunay);
 
 		// Partie gauche : paramètres
@@ -318,7 +346,7 @@ public class FormesArrondies extends Application {
 		gestPoints1 = new Pane();
 		gestPoints1.prefHeight(500);
 		gestPoints1.prefWidth(500);
-		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pointGraph1, pointGraph2, pickSom.getValue(),modeState,del);
+		delaunay1 = new Delaunay(gestPoints1, gestPoints2, pointGraph1, pointGraph2, pickSom.getValue(),modeState,del,startMorph);
 		StackPane stack1 = new StackPane();
 		stack1.getChildren().addAll(imageDepart, gestPoints1);
 		return stack1;
@@ -339,7 +367,7 @@ public class FormesArrondies extends Application {
 		gestPoints2 = new Pane();
 		gestPoints2.prefHeight(500);
 		gestPoints2.prefWidth(500);
-		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pointGraph2, pointGraph1, pickSom.getValue(),modeState,del);
+		delaunay2 = new Delaunay(gestPoints2, gestPoints1, pointGraph2, pointGraph1, pickSom.getValue(),modeState,del,startMorph);
 		StackPane stack2 = new StackPane();
 		stack2.getChildren().addAll(imageFin, gestPoints2);
 		return stack2;
@@ -524,6 +552,27 @@ public class FormesArrondies extends Application {
 		resultBox.getChildren().addAll(imgResult, retour);
 		showResult = new Scene(resultBox);
 
+	}
+	
+	private void startMorphingVisages(Stage primaryStage) throws Exception {
+		List<Triangle> tabG = delaunay1.getLTriangle();
+		List<Triangle> tabD = delaunay1.listeTriangleFin(pointGraph1, pointGraph2);
+		Fichier fG = cbg.getF();
+		Fichier fD = cbd.getF();
+		Double nbImages = (100 * 60) / (Double.parseDouble(nbImagesPC.getText()));
+		
+		MorphingImgVisage m = new MorphingImgVisage(fG,tabG);
+		
+		m.creerGif(tabG, tabD, fD, nbImages);
+		
+		/* Création de la scène de résultats */
+		File fRes = new File("img/testGif.gif");
+		ImageView imgResult = new ImageView(fRes.toURI().toString());
+		Button retour = new Button("Retour");
+		retour.setOnAction(e -> primaryStage.setScene(scene));
+		VBox resultBox = new VBox();
+		resultBox.getChildren().addAll(imgResult, retour);
+		showResult = new Scene(resultBox);
 	}
 
 	/**

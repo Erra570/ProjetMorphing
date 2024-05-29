@@ -93,9 +93,10 @@ public class MorphingImgVisage {
         BufferedImage imgSuivant = new BufferedImage(this.img.getWidth(), this.img.getHeight(), BufferedImage.TYPE_INT_RGB);
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
+            	boolean bool = false;
                 for (int i = 0; i < tabPoint.size(); i++) {
                     PointMorphing p = new PointMorphing(x, y);
-                    if (p.dansTriangle(tabPoint.get(i).getPoint_1().transtypage(), tabPoint.get(i).getPoint_2().transtypage(), tabPoint.get(i).getPoint_3().transtypage())) {
+                    if (p.dansTriangle(tabPoint.get(i).getPoint_1().transtypage(), tabPoint.get(i).getPoint_2().transtypage(), tabPoint.get(i).getPoint_3().transtypage()) && !bool) {
                         Set<Point> ensembleP = tabPoint.get(i).pointNouveauTriangle(new Point(x, y), tabSuivant.get(i));
                         Set<Point> ensembleFin = tabPoint.get(i).pointNouveauTriangle(new Point(x, y), tabFin.get(i));
                         Color cFin = couleurMoyenne(imgFin, ensembleFin);
@@ -107,6 +108,7 @@ public class MorphingImgVisage {
                         for (Point e : ensembleP) {
                             imgSuivant.setRGB((int) e.getX(), (int) e.getY(), c.getRGB());
                         }
+                        bool = true;
                     }
                 }
             }
@@ -199,11 +201,10 @@ public class MorphingImgVisage {
             e.addFrame(imgSuivant);  // Ajout de l'image mise à jour au GIF
 
             System.out.println((i * 100) / nombreImg);  // Affichage de la progression
-            /*if (i == 20) {
-                this.creerImage();  // Création d'une image intermédiaire
-            }*/
         }
-
+        
+        imgSuivant = ImageIO.read(f);
+        
         // Ajout de quelques images finales pour finir le GIF
         for (int i = 0; i < 10; i++) {
             e.addFrame(imgSuivant);

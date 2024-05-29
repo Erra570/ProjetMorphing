@@ -26,19 +26,22 @@ public class Album extends Observable {
 	
 	private Image imageDepart; // Image de départ
 	private Image imageFin; // Image de fin
-	private Fichier f; // Fichier image à ajouter
+	private Fichier fD; // Fichier image à ajouter
+	private Fichier fG; // Fichier image à ajouter
 
 	/**
 	 * Constructeur de la classe album
 	 * 
 	 * @param f fichier à ajouter
 	 */
-	public Album(Fichier f) {
+	public Album(Fichier fG, Fichier fD) {
 		// à la création de l'album, on importe une image par défaut (le carrée gris) et on initialise les 2 images
 		File file = new File("img/default.png");
 		this.imageDepart = new Image(file.toURI().toString());
-		this.f = f;
-		this.f.setF(file);
+		this.fD = fD;
+		this.fG = fG;
+		this.fD.setF(file);
+		this.fG.setF(file);
 		this.imageFin = new Image(file.toURI().toString());
 	}
 

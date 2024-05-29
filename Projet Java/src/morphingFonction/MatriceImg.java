@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
  */
 public class MatriceImg {
 	private BufferedImage img;
-	private List<Point> tabPoint;
+	private List<PointMorphing> tabPoint;
 	
     /**
      * Constructeur de la classe MatriceImg
@@ -23,7 +23,7 @@ public class MatriceImg {
      * @param f le fichier image à charger
      * @param tabPoint la liste des points de morphing associés à l'image
      */
-	public MatriceImg(File f, List<Point> tabPoint) throws Exception {
+	public MatriceImg(File f, List<PointMorphing> tabPoint) throws Exception {
 		this.img = ImageIO.read(f);
 		this.tabPoint = new ArrayList<>();
 		for(int i = 0; i<tabPoint.size(); i++)
@@ -53,7 +53,7 @@ public class MatriceImg {
      * 
      * @return la liste
      */
-	public List<Point> getTabPoint() {
+	public List<PointMorphing> getTabPoint() {
 		return tabPoint;
 	}
 
@@ -62,7 +62,7 @@ public class MatriceImg {
      * 
      * @param tabPoint liste des points de morphing
      */
-	public void setTabPoint(List<Point> tabPoint) {
+	public void setTabPoint(List<PointMorphing> tabPoint) {
 		this.tabPoint = tabPoint;
 	}
 
@@ -102,7 +102,7 @@ public class MatriceImg {
      * 
      * @param tabSuivant le tableau de nouveaux points de morphing
      */
-	public void matriceSuivante(Point[] tabSuivant) {
+	public void matriceSuivante(PointMorphing[] tabSuivant) {
 		for(int i = 0; i<tabSuivant.length; i++) {
 			if((this.tabPoint.get(i).getX() != tabSuivant[i].getX()) || (this.tabPoint.get(i).getY() != tabSuivant[i].getY())) {
 				int minY = Integer.min(Integer.min(Integer.min(this.tabPoint.get(i).getY(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getY()), this.tabPoint.get((i+1) % tabSuivant.length).getY()), tabSuivant[i].getY());
@@ -111,7 +111,7 @@ public class MatriceImg {
 				int maxX = Integer.max(Integer.max(Integer.max(this.tabPoint.get(i).getX(), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length).getX()), this.tabPoint.get((i+1) % tabSuivant.length).getX()), tabSuivant[i].getX());
 				for (int y = minY - 1; y < maxY + 1; y++) {
 					for (int x = minX - 1; x < maxX + 1; x++) {
-						Point p = new Point(x,y);
+						PointMorphing p = new PointMorphing(x,y);
 						if (p.dansTriangle(this.tabPoint.get((i+1) % tabSuivant.length), this.tabPoint.get((i-1+tabSuivant.length) % tabSuivant.length), tabSuivant[i]))
 							this.img.setRGB(x, y, this.img.getRGB(img.getWidth()/2,img.getHeight()/2));
 						else {

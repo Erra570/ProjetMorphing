@@ -2,17 +2,17 @@ package morphingFonction;
 
 public class Pile {
 
-	private Point[] tab;
+	private PointMorphing[] tab;
 	private int courant;
 	
 	public Pile() { 
-		this.tab = new Point[500*500];
+		this.tab = new PointMorphing[500*500];
 		courant = -1;
 	}
 	
 	public void empiler(int x, int y) {
 		courant++;
-		this.tab[courant] =  new Point(x,y);
+		this.tab[courant] =  new PointMorphing(x,y);
 	}
 
 	public void depiler() {
@@ -20,7 +20,7 @@ public class Pile {
 			courant--;
 	}
 
-	public Point sommet() {
+	public PointMorphing sommet() {
 		return (this.vide()) ?	null : this.tab[courant];
 	}
 

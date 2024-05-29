@@ -117,7 +117,7 @@ public class MorphingImg {
 
         // Algorithme de remplissage par propagation
         while (!p.vide()) {
-        	Point a = p.sommet();
+        	PointMorphing a = p.sommet();
         	p.depiler();
         	
         	if (this.img.getRGB(a.getX()-1, a.getY()) != couleur) {

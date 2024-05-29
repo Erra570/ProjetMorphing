@@ -133,8 +133,8 @@ public class MorphingImgVisage {
      * @param tabD liste des points de départ
      * @param tabF liste des points d'arrivée
      * @param nombreImg nombre d'images dans l'animation
-     *//*
-    public void creerGif(List<QCurve> tabD, List<QCurve> tabF, double nombreImg) {
+     */
+    public void creerGif(List<Triangle> tabD, List<Triangle> tabF, File f, double nombreImg) {
         AnimatedGifEncoder e = new AnimatedGifEncoder();
         e.start("img/testGif.gif");  // Début de la création du GIF
         e.setRepeat(0);  // Répéter l'animation en boucle
@@ -145,32 +145,10 @@ public class MorphingImgVisage {
             e.addFrame(this.getImg());
         }
         
-        // Calcul des incréments de position pour chaque point de contrôle
-        QCurve[] tabIncrement = new QCurve[tabD.size()];
-        for (int j = 0; j < tabD.size(); j++) {
-        	double XDepart = (tabF.get(j).getXDepart() - tabD.get(j).getXDepart()) / nombreImg;
-        	double YDepart = (tabF.get(j).getYDepart() - tabD.get(j).getYDepart()) / nombreImg;
-        	double XControl = (tabF.get(j).getXControl() - tabD.get(j).getXControl()) / nombreImg;
-        	double YControl = (tabF.get(j).getYControl() - tabD.get(j).getYControl()) / nombreImg;
-        	double XFin = (tabF.get(j).getXFin() - tabD.get(j).getXFin()) / nombreImg;
-        	double YFin = (tabF.get(j).getYFin() - tabD.get(j).getYFin()) / nombreImg;
-             
-            tabIncrement[j] = new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE);  // Stockage des incréments dans un tableau
-        }
-        
         // Création des images intermédiaires en interpolant les points
         for(int i = 1; i <= nombreImg; i++) {
-            List<QCurve> tabSuivant = new ArrayList<>();
-            for (int j = 0; j < tabD.size(); j++) {
-            	double XDepart = tabD.get(j).getXDepart() + (i * tabIncrement[j].getXDepart());
-            	double YDepart = tabD.get(j).getYDepart() + (i * tabIncrement[j].getYDepart());
-            	double XControl = tabD.get(j).getXControl() + (i * tabIncrement[j].getXControl());
-            	double YControl = tabD.get(j).getYControl() + (i * tabIncrement[j].getYControl());
-            	double XFin = tabD.get(j).getXFin() + (i * tabIncrement[j].getXFin());
-            	double YFin = tabD.get(j).getYFin() + (i * tabIncrement[j].getYFin());
-                tabSuivant.add(j, new QCurve(XDepart, YDepart, XControl, YControl, XFin, YFin, Color.BLUE));  // Création des courbes de Bézier interpolées
-            }
-            this.imgSuivanteFormeArrondie(tabSuivant);  // Mise à jour de l'image avec les nouveaux points                
+            List<Triangle> tabSuivant = 
+            this.imgSuivanteVisage(tabSuivant, tabF, ImageIO.read(f), (1/nombreImg) * i);  // Mise à jour de l'image avec les nouveaux points                
             e.addFrame(this.getImg());  // Ajout de l'image mise à jour au GIF
 
             System.out.println((i*100)/nombreImg);  // Affichage de la progression
@@ -184,5 +162,5 @@ public class MorphingImgVisage {
         }
         
         e.finish();  // Finalisation du GIF
-    }*/
+    }
 }

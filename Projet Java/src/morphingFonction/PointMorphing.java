@@ -5,7 +5,7 @@ package morphingFonction;
  * Classe représentant un point avec des coordonnées x et y.
  * Fournit des méthodes pour déterminer la position relative des points et vérifier l'appartenance à des figures géométriques.
  */
-public class Point {
+public class PointMorphing {
     private int x;  // Coordonnée x du point
     private int y;  // Coordonnée y du point
 
@@ -51,7 +51,7 @@ public class Point {
      * @param x la coordonnée x
      * @param y la coordonnée y
      */
-    public Point(int x, int y) {
+    public PointMorphing(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -64,7 +64,7 @@ public class Point {
      * @param b le point b
      * @return la position relative
      */
-    public double position(Point a, Point b) {
+    public double position(PointMorphing a, PointMorphing b) {
         return ((((double) (a.getX() - this.getX())) * ((double) (b.getY() - this.getY()))) 
                 - (((double) (a.getY() - this.getY())) * ((double) (b.getX() - this.getX()))));
     }
@@ -78,7 +78,7 @@ public class Point {
      * @param c le point c
      * @return true si le point est à l'intérieur du triangle, false sinon
      */
-    public boolean dansTriangle(Point a, Point b, Point c) {
+    public boolean dansTriangle(PointMorphing a, PointMorphing b, PointMorphing c) {
         return (((position(c, a) >= 0) && (position(a, b) >= 0) && (position(b, c) >= 0)) 
                 || ((position(c, a) <= 0) && (position(a, b) <= 0) && (position(b, c) <= 0)));
     }

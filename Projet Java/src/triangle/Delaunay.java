@@ -149,5 +149,27 @@ public class Delaunay {
 		}
 		return listeLigne;
 	}
+	
+	public ArrayList<Triangle> listeTriangleFin(ArrayList<Circle> pointDebut, ArrayList<Circle> pointFin) throws Exception{
+		ArrayList<Triangle> listeTFin = new ArrayList<>();
+		for(int j = 0; j<listeTriangle.size(); j++) {
+			Point point_1 = null;
+			Point point_2 = null;
+			Point point_3 = null;
+			for(int i = 0; i<pointDebut.size(); i++) {
+				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_1().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_1().getY()) {
+					point_1 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
+				}
+				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_2().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_2().getY()) {
+					point_2 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
+				}
+				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_3().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_3().getY()) {
+					point_3 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
+				}
+			}
+			listeTFin.add(j, new Triangle(point_1, point_2, point_3));
+		}
+		return listeTFin;
+	}
 
 }

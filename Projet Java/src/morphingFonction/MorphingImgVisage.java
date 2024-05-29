@@ -9,9 +9,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import first.QCurve;
 import java.awt.Color;
-import presentation.Fichier;
 import triangle.Point;
 import triangle.Triangle;
 
@@ -126,15 +124,47 @@ public class MorphingImgVisage {
     	}
     	return new Color(r/ensemble.size(), g/ensemble.size(), b/ensemble.size());
     }
-
+    
+    
+    private Point calculMoyenneCoord(Point pDebut, Point pFin, double t) {
+        double x = Math.round((1 - t) * pDebut.getX() + t * pFin.getX());
+        double y = Math.round((1 - t) * pDebut.getY() + t * pFin.getY());
+        return new Point(x, y);
+    }
+    
+    
+    /**
+     * 
+     * @param tabD liste des points de départ
+     * @param tabF liste des points de fin
+     * @param t entre 0 et 1
+     * @return la moyenne des deux tableaux
+     * @throws Exception 
+     */
+    public List<Triangle> triangleMoyenne(List<Triangle> tabD, List<Triangle> tabF, double t) throws Exception {
+    	List<Triangle> res = new ArrayList<>();
+        for (int i = 0; i < tabD.size(); i++) {
+            Triangle triD = tabD.get(i);
+            Triangle triF = tabF.get(i);
+            
+            Point p1 = calculMoyenneCoord(triD.getPoint_1(), triF.getPoint_1(), t);
+            Point p2 = calculMoyenneCoord(triD.getPoint_2(), triF.getPoint_2(), t);
+            Point p3 = calculMoyenneCoord(triD.getPoint_3(), triF.getPoint_3(), t);
+            
+            res.add(new Triangle(p1, p2, p3));
+        }
+        return res;
+    }
+    
     /**
      * Crée un GIF animé en interpolant entre deux ensembles de points de morphing.
      * 
      * @param tabD liste des points de départ
      * @param tabF liste des points d'arrivée
      * @param nombreImg nombre d'images dans l'animation
+     * @throws Exception 
      */
-    public void creerGif(List<Triangle> tabD, List<Triangle> tabF, File f, double nombreImg) {
+    public void creerGif(List<Triangle> tabD, List<Triangle> tabF, File f, double nombreImg) throws Exception {
         AnimatedGifEncoder e = new AnimatedGifEncoder();
         e.start("img/testGif.gif");  // Début de la création du GIF
         e.setRepeat(0);  // Répéter l'animation en boucle
@@ -147,7 +177,7 @@ public class MorphingImgVisage {
         
         // Création des images intermédiaires en interpolant les points
         for(int i = 1; i <= nombreImg; i++) {
-            List<Triangle> tabSuivant = 
+            List<Triangle> tabSuivant = triangleMoyenne(tabD, tabF, (1/nombreImg) * i);
             this.imgSuivanteVisage(tabSuivant, tabF, ImageIO.read(f), (1/nombreImg) * i);  // Mise à jour de l'image avec les nouveaux points                
             e.addFrame(this.getImg());  // Ajout de l'image mise à jour au GIF
 

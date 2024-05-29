@@ -65,7 +65,8 @@ public class FormesArrondies extends Application {
 	private Button boutonGauche;
 	private Button boutonDroite;
 	private TextField texte;
-	private Fichier f;
+	private Fichier fD;
+	private Fichier fG;
 	private BorderPane root;
 	private VBox loading;
 	private HBox pCentre;
@@ -578,15 +579,17 @@ public class FormesArrondies extends Application {
 	}
 	
 	private void startMorphingVisages(Stage primaryStage) throws Exception {
-		List<Triangle> tabG = delaunay1.getLTriangle();
+		List<Triangle> tabG = delaunay1.triangulation(delaunay1.convertionPoint());
 		List<Triangle> tabD = delaunay1.listeTriangleFin(pointGraph1, pointGraph2);
 		Fichier fG = cbg.getF();
+		System.out.println(fG.getF());
 		Fichier fD = cbd.getF();
+		System.out.println(fD.getF());
 		Double nbImages = (100 * 60) / (Double.parseDouble(nbImagesPC.getText()));
 		
-		MorphingImgVisage m = new MorphingImgVisage(fG,tabG);
+		MorphingImgVisage m = new MorphingImgVisage(fG.getF(),tabG);
 		
-		m.creerGif(tabG, tabD, fD, nbImages);
+		m.creerGif(tabG, tabD, fD.getF(), nbImages);
 		
 		/* Création de la scène de résultats */
 		File fRes = new File("img/testGif.gif");
@@ -644,8 +647,9 @@ public class FormesArrondies extends Application {
 		pCentre.getStyleClass().add("menu");
 		pCentre.setSpacing(10);
 		pCentre.setAlignment(Pos.CENTER);
-		f = new Fichier();
-		alb = new Album(f);
+		fG = new Fichier();
+		fD = new Fichier();
+		alb = new Album(fG, fD);
 		
 		// Barre de chargement
 		loading = new VBox();
@@ -667,7 +671,7 @@ public class FormesArrondies extends Application {
 		vBoxGauche.getChildren().add(creerBoutonGauche());
 		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
 		alb.addObserver(cid);
-		cbg = new ControleBoutonGauche(alb, f);
+		cbg = new ControleBoutonGauche(alb, fG);
 		boutonGauche.setOnAction(cbg);
 		boutonGauche.setPrefWidth(450);
 		alb.addObserver(cbg);
@@ -679,7 +683,7 @@ public class FormesArrondies extends Application {
 		vBoxDroite.getChildren().add(creerBoutonDroite());
 		ControleImageFin cif = new ControleImageFin(alb, imageFin);
 		alb.addObserver(cif);
-		cbd = new ControleBoutonDroite(alb, f);
+		cbd = new ControleBoutonDroite(alb, fD);
 		boutonDroite.setOnAction(cbd);
 		boutonDroite.setPrefWidth(450);
 		alb.addObserver(cbd);

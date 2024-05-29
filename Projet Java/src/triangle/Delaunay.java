@@ -19,7 +19,7 @@ public class Delaunay {
 	private static final Point POINTD = new Point(500,500);
 	private ArrayList<Triangle> listeTriangle = new ArrayList<Triangle>();
 	private Triangle superTriangle;
-	private  ArrayList<Circle> pointGraph1;
+	private ArrayList<Circle> pointGraph1;
 	private Color couleur;
 
 	public Delaunay(Pane root1, Pane root2, ArrayList<Circle> pointGraph1, ArrayList<Circle> pointGraph2, Color couleur, boolean modeState,Button del,Button start) {
@@ -157,17 +157,25 @@ public class Delaunay {
 			Point point_3 = null;
 			for(int i = 0; i<pointDebut.size(); i++) {
 				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_1().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_1().getY()) {
-					point_1 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
+					point_1 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterY());
 				}
 				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_2().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_2().getY()) {
-					point_2 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
+					point_2 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterY());
 				}
 				if (pointDebut.get(i).getCenterX() == listeTriangle.get(j).getPoint_3().getX() && pointDebut.get(i).getCenterY() == listeTriangle.get(j).getPoint_3().getY()) {
-					point_3 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterX());
+					point_3 = new Point(pointFin.get(i).getCenterX(), pointFin.get(i).getCenterY());
 				}
 			}
 			listeTFin.add(j, new Triangle(point_1, point_2, point_3));
 		}
 		return listeTFin;
+	}
+	
+	public ArrayList<Point> convertionPoint() {
+		ArrayList<Point> listeP = new ArrayList<>();
+		for(int i = 0; i<this.pointGraph1.size(); i++) {
+			listeP.add(i, new Point(this.pointGraph1.get(i).getCenterX(),this.pointGraph1.get(i).getCenterY()));
+		}
+		return listeP;
 	}
 }

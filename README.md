@@ -5,6 +5,7 @@
 #
 
 Application permettant de créer une transition entre deux images (visages ou formes)
+L'image doit absolument faire 500x500 pixels !
 
 
 

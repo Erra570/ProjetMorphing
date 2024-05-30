@@ -1,29 +1,5 @@
 .bouton {
   -fx-cursor: hand;
-  -fx-background-color: #686d76;
-  -fx-text-fill: #eeeeee;
-}
-
-.bouton .color-picker-label {
-  -fx-text-fill: #eeeeee;
-}
-
-.bouton:hover {
-  -fx-background-color: #373a40;
-}
-
-.start {
-  -fx-cursor: hand;
-  -fx-background-color: #dc5f00;
-  -fx-text-fill: #eeeeee;
-}
-
-.start:hover {
-  -fx-background-color: #843900;
-}
-
-.start:disabled {
-  -fx-background-color: #686d76;
 }
 
 .boutonDroit {
@@ -39,8 +15,4 @@
 
 #centeredText {
   -fx-alignment: center;
-}
-
-.menu {
-  -fx-background-color: #eeeeee;
 }

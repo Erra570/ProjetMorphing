@@ -3,8 +3,8 @@ package abstraction;
 import java.io.File;
 import java.util.Observable;
 
+import ihm.Fichier;
 import javafx.scene.image.Image;
-import presentation.Fichier;
 
 /**
  * Classe faisant la liaison entre les fichiers et les images

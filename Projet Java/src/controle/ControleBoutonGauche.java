@@ -5,10 +5,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import abstraction.Album;
+import ihm.Fichier;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
-import presentation.Fichier;
 
 @SuppressWarnings("deprecation")
 public class ControleBoutonGauche implements Observer, EventHandler<ActionEvent>{

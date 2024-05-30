@@ -174,7 +174,7 @@ public class Delaunay {
 	public ArrayList<Point> convertionPoint() {
 		ArrayList<Point> listeP = new ArrayList<>();
 		for(int i = 0; i<this.pointGraph1.size(); i++) {
-			listeP.add(i, new Point(this.pointGraph1.get(i).getCenterX(),this.pointGraph1.get(i).getCenterY()));
+			listeP.add(new Point(this.pointGraph1.get(i).getCenterX(),this.pointGraph1.get(i).getCenterY()));
 		}
 		return listeP;
 	}

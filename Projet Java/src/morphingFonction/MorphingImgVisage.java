@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import gif.AnimatedGifEncoder;
+
 import java.awt.Color;
 import triangle.Point;
 import triangle.Triangle;
@@ -71,6 +73,8 @@ public class MorphingImgVisage {
 
     /**
      * Enregistre l'image actuelle dans un fichier.
+     * 
+     * @param img l'image à sauvegarder
      */
     public void creerImage(BufferedImage img) {
         try {
@@ -88,6 +92,7 @@ public class MorphingImgVisage {
      * @param tabFin la liste des triangles de fin pour le morphing
      * @param imgFin l'image finale pour le morphing
      * @param t le paramètre de transition (entre 0 et 1)
+     * @return l'image interpolée
      */
     public BufferedImage imgSuivanteVisage(List<Triangle> tabSuivant, List<Triangle> tabFin, BufferedImage imgFin, double t) {
         BufferedImage imgSuivant = new BufferedImage(this.img.getWidth(), this.img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -200,7 +205,7 @@ public class MorphingImgVisage {
             imgSuivant = this.imgSuivanteVisage(tabSuivant, tabF, ImageIO.read(f), (1 / nombreImg) * i);  // Mise à jour de l'image avec les nouveaux points                
             e.addFrame(imgSuivant);  // Ajout de l'image mise à jour au GIF
 
-            System.out.println((i * 100) / nombreImg);  // Affichage de la progression
+            System.out.println(Math.round((i * 100) / nombreImg) + "%");  // Affichage de la progression
         }
         
         imgSuivant = ImageIO.read(f);

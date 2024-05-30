@@ -38,7 +38,6 @@ import morphingFonction.MorphingImgVisage;
 import triangle.Delaunay;
 import triangle.MouseClickHandlerDelaunay;
 import triangle.MouseMoveHandlerDelaunay;
-import triangle.Point;
 import triangle.Triangle;
 
 /**
@@ -252,12 +251,15 @@ public class mainApp extends Application {
 
 		// Partie haute : changement de mode
 		Button chgmtCote = new Button("Choix du Mode");
+		chgmtCote.getStyleClass().add("bouton");
 		chgmtCote.setOnAction(e -> start(primaryStage));
 		StackPane haut = new StackPane();
+		haut.getStyleClass().add("menu");
 		haut.getChildren().add(chgmtCote);
 
 		// Partie droite (boutons)
 		right = new VBox();
+		right.getStyleClass().add("menu");
 		right.setAlignment(Pos.CENTER);
 
 		del = new Button("Supprimer Dernier Point");
@@ -268,6 +270,7 @@ public class mainApp extends Application {
 		}); // Définir le gestionnaire d'événements
 
 		startMorph = new Button("Commencer le morphing");
+		startMorph.getStyleClass().add("start");
 		startMorph.setDisable(true);
 		startMorph.setOnAction(event -> {
 			if (Double.parseDouble(nbImagesPC.getText()) < 5) {
@@ -284,7 +287,7 @@ public class mainApp extends Application {
 						@Override
 						protected Scene call() throws Exception {
 							try {
-								startMorphingVisages(primaryStage);
+								startMorphingVisages(primaryStage,texte);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -312,7 +315,6 @@ public class mainApp extends Application {
 		});
 
 		Label labnbImagesPC = new Label("Vitesse (%)");
-		// TODO vitesse fonctionnelle ?
 		nbImagesPC = new TextField("100");
 		nbImagesPC.setOnKeyPressed(e -> verifNbImage(nbImagesPC));
 
@@ -569,16 +571,19 @@ public class mainApp extends Application {
 		File fRes = new File("img/testGif.gif");
 		ImageView imgResult = new ImageView(fRes.toURI().toString());
 		Button retour = new Button("Retour");
+		retour.getStyleClass().add("bouton");
 		retour.setOnAction(e -> primaryStage.setScene(scene));
 		VBox resultBox = new VBox();
+		resultBox.getStyleClass().add("menu");
 		resultBox.setPrefSize(1300, 500);
 		resultBox.getChildren().addAll(imgResult, retour);
 		resultBox.setAlignment(Pos.CENTER);
+		showResult.getStylesheets().add("css/Style.css");
 		showResult = new Scene(resultBox);
 
 	}
 	
-	private void startMorphingVisages(Stage primaryStage) throws Exception {
+	private void startMorphingVisages(Stage primaryStage,TextField texte) throws Exception {
 		Circle a = new Circle(0,0,1);
 		Circle b = new Circle(0,500,1);
 		Circle c = new Circle(500,0,1);
@@ -604,15 +609,20 @@ public class mainApp extends Application {
 		
 		MorphingImgVisage m = new MorphingImgVisage(fG.getF(),tabG);
 		
-		m.creerGif(tabG, tabD, fD.getF(), nbImages);
+		m.creerGif(tabG, tabD, fD.getF(), nbImages,texte);
 		
 		/* Création de la scène de résultats */
 		File fRes = new File("img/testGif.gif");
 		ImageView imgResult = new ImageView(fRes.toURI().toString());
 		Button retour = new Button("Retour");
+		retour.getStyleClass().add("bouton");
 		retour.setOnAction(e -> primaryStage.setScene(scene));
 		VBox resultBox = new VBox();
+		resultBox.getStyleClass().add("menu");
+		resultBox.setPrefSize(1300, 500);
 		resultBox.getChildren().addAll(imgResult, retour);
+		resultBox.setAlignment(Pos.CENTER);
+		showResult.getStylesheets().add("css/Style.css");
 		showResult = new Scene(resultBox);
 	}
 

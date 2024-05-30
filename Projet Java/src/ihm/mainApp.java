@@ -41,8 +41,7 @@ import triangle.MouseMoveHandlerDelaunay;
 import triangle.Triangle;
 
 /**
- * Classe permettant de créer des courbes pour les formes arrondies
- *
+ * Classe principale de l'application permettant de créer un morphing entre deux images.
  */
 public class mainApp extends Application {
 
@@ -92,6 +91,11 @@ public class mainApp extends Application {
 	
 	private Scene loadScene;
 
+	
+	 /**
+     * Méthode principale de l'application. Lance l'interface utilisateur.
+     * @param primaryStage La fenêtre principale de l'application.
+     */
 	@Override
 	public void start(Stage primaryStage) {
 		VBox menu = new VBox();
@@ -123,6 +127,11 @@ public class mainApp extends Application {
 		primaryStage.show();
 	}
 
+	
+	/**
+     * Interface pour effectuer le morphing de formes.
+     * @param primaryStage La scène principale.
+     */
 	public void interfaceFormes(Stage primaryStage) {
 		modeState=false;
 		creationCommune();
@@ -164,7 +173,7 @@ public class mainApp extends Application {
 						@Override
 						protected Scene call() throws Exception {
 							try {
-								startMorphing(primaryStage,texte);
+								startMorphingForme(primaryStage,texte);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -245,6 +254,10 @@ public class mainApp extends Application {
 		primaryStage.show();
 	}
 
+	/**
+     * Interface pour effectuer le morphing de visages.
+     * @param primaryStage La scène principale.
+     */
 	public void interfaceVisage(Stage primaryStage) {
 		modeState = true;
 		creationCommune();
@@ -530,95 +543,113 @@ public class mainApp extends Application {
 
 	}
 
+	/**
+	 * Change la couleur des courbes pour les formes arrondies.
+	 * @param couleur La nouvelle couleur des courbes.
+	 */
 	private void changeColor(Color couleur) {
-		for (int i = 0; i < curves1.size(); i++) {
-			curves1.get(i).colorChange(couleur, gestPoints1);
-			curves2.get(i).colorChange(couleur, gestPoints2);
-		}
-		clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,
-				clo, del, coulCurv.getValue(), pickSom.getValue(), pickCont.getValue());
-		gestPoints1.setOnMouseClicked(clickHandler);
+	    for (int i = 0; i < curves1.size(); i++) {
+	        curves1.get(i).colorChange(couleur, gestPoints1);
+	        curves2.get(i).colorChange(couleur, gestPoints2);
+	    }
+	    clickHandler = new MouseClickHandler(curves1, curves2, points1, points2, closeState, gestPoints1, gestPoints2,
+	            clo, del, coulCurv.getValue(), pickSom.getValue(), pickCont.getValue());
+	    gestPoints1.setOnMouseClicked(clickHandler);
 	}
 
+	/**
+	 * Change la couleur des sommets pour les formes arrondies.
+	 * @param coulSom La nouvelle couleur des sommets.
+	 */
 	private void colorSomFA(Color coulSom) {
-		clickHandler.changeColorSommets(coulSom);
+	    clickHandler.changeColorSommets(coulSom);
 	}
 
+	/**
+	 * Change la couleur des points de contrôle pour les formes arrondies.
+	 * @param coulCont La nouvelle couleur des points de contrôle.
+	 */
 	private void colorContFA(Color coulCont) {
-		clickHandler.changeColorCont(coulCont);
+	    clickHandler.changeColorCont(coulCont);
 	}
 
-	private void startMorphing(Stage primaryStage,TextField progression) throws Exception {
+	/**
+	 * Démarre le processus de morphing pour les formes arrondies.
+	 * @param primaryStage La fenêtre principale de l'application.
+	 * @param progression Le champ de texte pour afficher la progression.
+	 * @throws Exception Si une erreur survient pendant le morphing.
+	 */
+	private void startMorphingForme(Stage primaryStage, TextField progression) throws Exception {
 
-		List<QCurve> tabD = new ArrayList<>();
-		List<QCurve> tabF = new ArrayList<>();
-		for (int i = 0; i < curves1.size(); i++) {
-			tabD.add(i, curves1.get(i));
-			tabF.add(i, curves2.get(i));
-		}
+	    List<QCurve> tabD = new ArrayList<>();
+	    List<QCurve> tabF = new ArrayList<>();
+	    for (int i = 0; i < curves1.size(); i++) {
+	        tabD.add(i, curves1.get(i));
+	        tabF.add(i, curves2.get(i));
+	    }
 
-		MorphingImgForme m = new MorphingImgForme(cbg.getF(), tabD);
+	    MorphingImgForme m = new MorphingImgForme(cbg.getF(), tabD);
 
-		// m.imgSuivanteFormeArrondie(tabSuivant);
-		// m.creerImage();
-		Double nbImages = (100 * 60) / (Double.parseDouble(nbImagesPC.getText())); // Produit en croix modifié pour que
-																					// l'augmentation du % de vitesse
-																					// donne une baisse d'images
-		System.out.println(nbImages);
-		m.creerGif(tabD, tabF, nbImages,progression);
+	    Double nbImages = (100 * 60) / (Double.parseDouble(nbImagesPC.getText()));
+	    m.creerGif(tabD, tabF, nbImages, progression);
 
-		/* Création de la scène de résultats */
-		File fRes = new File("img/testGif.gif");
-		ImageView imgResult = new ImageView(fRes.toURI().toString());
-		Button retour = new Button("Retour");
-		retour.setOnAction(e -> primaryStage.setScene(scene));
-		VBox resultBox = new VBox();
-		resultBox.setPrefSize(1300, 500);
-		resultBox.getChildren().addAll(imgResult, retour);
-		resultBox.setAlignment(Pos.CENTER);
-		showResult = new Scene(resultBox);
-
+	    /* Création de la scène de résultats */
+	    File fRes = new File("img/testGif.gif");
+	    ImageView imgResult = new ImageView(fRes.toURI().toString());
+	    Button retour = new Button("Retour");
+	    retour.getStyleClass().add("bouton");
+	    retour.setOnAction(e -> primaryStage.setScene(scene));
+	    VBox resultBox = new VBox();
+	    resultBox.getStyleClass().add("menu");
+	    resultBox.setPrefSize(1300, 500);
+	    resultBox.getChildren().addAll(imgResult, retour);
+	    resultBox.setAlignment(Pos.CENTER);
+	    showResult = new Scene(resultBox);
 	}
-	
-	private void startMorphingVisages(Stage primaryStage,TextField texte) throws Exception {
-		Circle a = new Circle(0,0,1);
-		Circle b = new Circle(0,500,1);
-		Circle c = new Circle(500,0,1);
-		Circle d = new Circle(500,500,1);
 
-		pointGraph1.add(a);
-		pointGraph1.add(b);
-		pointGraph1.add(c);
-		pointGraph1.add(d);
-		
-		pointGraph2.add(a);
-		pointGraph2.add(b);
-		pointGraph2.add(c);
-		pointGraph2.add(d);
-		
-		List<Triangle> tabG = delaunay1.triangulation(delaunay1.convertionPoint());
-		List<Triangle> tabD = delaunay1.listeTriangleFin(pointGraph1, pointGraph2);
-		Fichier fG = cbg.getF();
-		System.out.println(fG.getF());
-		Fichier fD = cbd.getF();
-		System.out.println(fD.getF());
-		Double nbImages = (100 * 60) / (Double.parseDouble(nbImagesPC.getText()));
-		
-		MorphingImgVisage m = new MorphingImgVisage(fG.getF(),tabG);
-		
-		m.creerGif(tabG, tabD, fD.getF(), nbImages,texte);
-		
-		/* Création de la scène de résultats */
-		File fRes = new File("img/testGif.gif");
-		ImageView imgResult = new ImageView(fRes.toURI().toString());
-		Button retour = new Button("Retour");
-		retour.getStyleClass().add("bouton");
-		retour.setOnAction(e -> primaryStage.setScene(scene));
-		VBox resultBox = new VBox();
-		resultBox.setPrefSize(1300, 500);
-		resultBox.getChildren().addAll(imgResult, retour);
-		resultBox.setAlignment(Pos.CENTER);
-		showResult = new Scene(resultBox);
+	/**
+	 * Démarre le processus de morphing pour les visages.
+	 * @param primaryStage La fenêtre principale de l'application.
+	 * @param texte Le champ de texte pour afficher la progression.
+	 * @throws Exception Si une erreur survient pendant le morphing.
+	 */
+	private void startMorphingVisages(Stage primaryStage, TextField texte) throws Exception {
+	    Circle a = new Circle(0, 0, 1);
+	    Circle b = new Circle(0, 500, 1);
+	    Circle c = new Circle(500, 0, 1);
+	    Circle d = new Circle(500, 500, 1);
+
+	    pointGraph1.add(a);
+	    pointGraph1.add(b);
+	    pointGraph1.add(c);
+	    pointGraph1.add(d);
+
+	    pointGraph2.add(a);
+	    pointGraph2.add(b);
+	    pointGraph2.add(c);
+	    pointGraph2.add(d);
+
+	    List<Triangle> tabG = delaunay1.triangulation(delaunay1.convertionPoint());
+	    List<Triangle> tabD = delaunay1.listeTriangleFin(pointGraph1, pointGraph2);
+	    Fichier fG = cbg.getF();
+	    Fichier fD = cbd.getF();
+	    Double nbImages = (100 * 60) / (Double.parseDouble(nbImagesPC.getText()));
+
+	    MorphingImgVisage m = new MorphingImgVisage(fG.getF(), tabG);
+	    m.creerGif(tabG, tabD, fD.getF(), nbImages, texte);
+
+	    /* Création de la scène de résultats */
+	    File fRes = new File("img/testGif.gif");
+	    ImageView imgResult = new ImageView(fRes.toURI().toString());
+	    Button retour = new Button("Retour");
+	    retour.getStyleClass().add("bouton");
+	    retour.setOnAction(e -> primaryStage.setScene(scene));
+	    VBox resultBox = new VBox();
+	    resultBox.getStyleClass().add("menu");
+	    resultBox.setPrefSize(1300, 500);
+	    resultBox.getChildren().addAll(imgResult, retour);
+	    resultBox.setAlignment(Pos.CENTER);
+	    showResult = new Scene(resultBox);
 	}
 
 	/**
@@ -640,79 +671,93 @@ public class mainApp extends Application {
 		}));
 	}
 
+	/**
+	 * Navigue vers l'interface de morphing de visages.
+	 * @param primaryStage La fenêtre principale de l'application.
+	 */
 	public void goToVisage(Stage primaryStage) {
-		// Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
-		clickHandler.getcurves1().clear();
-		clickHandler.getcurves2().clear();
-		clickHandler.getPoints1().clear();
-		clickHandler.getPoints2().clear();
+	    // Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
+	    clickHandler.getcurves1().clear();
+	    clickHandler.getcurves2().clear();
+	    clickHandler.getPoints1().clear();
+	    clickHandler.getPoints2().clear();
 
-		interfaceVisage(primaryStage);
+	    interfaceVisage(primaryStage);
 	}
 
+	/**
+	 * Navigue vers l'interface de morphing de formes.
+	 * @param primaryStage La fenêtre principale de l'application.
+	 */
 	public void goToForme(Stage primaryStage) {
-		// Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
-		clickHandler.getcurves1().clear();
-		clickHandler.getcurves2().clear();
-		clickHandler.getPoints1().clear();
-		clickHandler.getPoints2().clear();
+	    // Nettoyage des listes de points pour éviter tous problèmes (on repart de 0)
+	    clickHandler.getcurves1().clear();
+	    clickHandler.getcurves2().clear();
+	    clickHandler.getPoints1().clear();
+	    clickHandler.getPoints2().clear();
 
-		interfaceFormes(primaryStage);
+	    interfaceFormes(primaryStage);
 	}
-	
+
+	/**
+	 * Crée les éléments communs à l'interface de morphing de visages et de formes.
+	 */
 	@SuppressWarnings("deprecation")
 	public void creationCommune() {
-		/* création du plan central, contenant les images */
-		pCentre = new HBox();
-		pCentre.getStyleClass().add("menu");
-		pCentre.setSpacing(10);
-		pCentre.setAlignment(Pos.CENTER);
-		fG = new Fichier();
-		fD = new Fichier();
-		alb = new Album(fG, fD);
-		
-		// Barre de chargement
-		loading = new VBox();
-		loading.setPrefSize(1300, 500);
-		loading.setSpacing(30);
-		pBar = new ProgressIndicator();
-		texte = new TextField("Morphing en cours : 0%");
-		texte.setMaxWidth(300);
-		loading.getChildren().add(pBar);
-		loading.getChildren().add(texte);
-		loading.setAlignment(Pos.CENTER);
-		loadScene = new Scene(loading);
-		loading.requestFocus();
-		
-		// Image gauche avec bouton pour changer d'image
-		VBox vBoxGauche = new VBox();
-		vBoxGauche.setAlignment(Pos.CENTER);
-		vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
-		vBoxGauche.getChildren().add(creerBoutonGauche());
-		ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
-		alb.addObserver(cid);
-		cbg = new ControleBoutonGauche(alb, fG);
-		boutonGauche.setOnAction(cbg);
-		boutonGauche.setPrefWidth(450);
-		alb.addObserver(cbg);
-		
-		// Image droite avec bouton pour changer d'image
-		VBox vBoxDroite = new VBox();
-		vBoxDroite.setAlignment(Pos.CENTER);
-		vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
-		vBoxDroite.getChildren().add(creerBoutonDroite());
-		ControleImageFin cif = new ControleImageFin(alb, imageFin);
-		alb.addObserver(cif);
-		cbd = new ControleBoutonDroite(alb, fD);
-		boutonDroite.setOnAction(cbd);
-		boutonDroite.setPrefWidth(450);
-		alb.addObserver(cbd);
-		
-		this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
+	    /* création du plan central, contenant les images */
+	    pCentre = new HBox();
+	    pCentre.getStyleClass().add("menu");
+	    pCentre.setSpacing(10);
+	    pCentre.setAlignment(Pos.CENTER);
+	    fG = new Fichier();
+	    fD = new Fichier();
+	    alb = new Album(fG, fD);
+	    
+	    // Barre de chargement
+	    loading = new VBox();
+	    loading.setPrefSize(1300, 500);
+	    loading.setSpacing(30);
+	    pBar = new ProgressIndicator();
+	    texte = new TextField("Morphing en cours : 0%");
+	    texte.setMaxWidth(300);
+	    loading.getChildren().add(pBar);
+	    loading.getChildren().add(texte);
+	    loading.setAlignment(Pos.CENTER);
+	    loadScene = new Scene(loading);
+	    loading.requestFocus();
+	    
+	    // Image gauche avec bouton pour changer d'image
+	    VBox vBoxGauche = new VBox();
+	    vBoxGauche.setAlignment(Pos.CENTER);
+	    vBoxGauche.getChildren().add(creerImageDepart(alb.getImageDepart()));
+	    vBoxGauche.getChildren().add(creerBoutonGauche());
+	    ControleImageDepart cid = new ControleImageDepart(alb, imageDepart);
+	    alb.addObserver(cid);
+	    cbg = new ControleBoutonGauche(alb, fG);
+	    boutonGauche.setOnAction(cbg);
+	    boutonGauche.setPrefWidth(450);
+	    alb.addObserver(cbg);
+	    
+	    // Image droite avec bouton pour changer d'image
+	    VBox vBoxDroite = new VBox();
+	    vBoxDroite.setAlignment(Pos.CENTER);
+	    vBoxDroite.getChildren().add(creerImageFin(alb.getImageFin()));
+	    vBoxDroite.getChildren().add(creerBoutonDroite());
+	    ControleImageFin cif = new ControleImageFin(alb, imageFin);
+	    alb.addObserver(cif);
+	    cbd = new ControleBoutonDroite(alb, fD);
+	    boutonDroite.setOnAction(cbd);
+	    boutonDroite.setPrefWidth(450);
+	    alb.addObserver(cbd);
+	    
+	    this.pCentre.getChildren().addAll(vBoxGauche, vBoxDroite);
 	}
 
-
+	/**
+	 * Point d'entrée de l'application.
+	 * @param args Les arguments de la ligne de commande.
+	 */
 	public static void main(String[] args) {
-		launch(args);
+	    launch(args);
 	}
 }

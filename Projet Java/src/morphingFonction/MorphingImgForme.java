@@ -184,8 +184,8 @@ public class MorphingImgForme {
             this.imgSuivanteFormeArrondie(tabSuivant);  // Mise à jour de l'image avec les nouveaux points                
             e.addFrame(this.getImg());  // Ajout de l'image mise à jour au GIF
 
-            System.out.println((i*100)/nombreImg);  // Affichage de la progression
-            progression.setText("Morphing en cours : "+ ((i*100)/nombreImg) + "%");
+            System.out.println(Math.round((i * 100) / nombreImg));  // Affichage de la progression
+            progression.setText("Morphing en cours : "+ Math.round((i * 100) / nombreImg) + "%");
             if (i == 20)
             	this.creerImage();  // Création d'une image intermédiaire
         }

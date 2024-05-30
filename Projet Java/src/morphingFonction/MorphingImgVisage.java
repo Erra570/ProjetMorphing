@@ -206,7 +206,7 @@ public class MorphingImgVisage {
             e.addFrame(imgSuivant);  // Ajout de l'image mise à jour au GIF
 
             System.out.println(Math.round((i * 100) / nombreImg) + "%");  // Affichage de la progression
-            texte.setText("Morphing en cours : "+ ((i*100)/nombreImg) + "%");
+            texte.setText("Morphing en cours : "+ Math.round((i * 100) / nombreImg) + "%");
         }
         
         imgSuivant = ImageIO.read(f);

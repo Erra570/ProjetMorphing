@@ -571,14 +571,11 @@ public class mainApp extends Application {
 		File fRes = new File("img/testGif.gif");
 		ImageView imgResult = new ImageView(fRes.toURI().toString());
 		Button retour = new Button("Retour");
-		retour.getStyleClass().add("bouton");
 		retour.setOnAction(e -> primaryStage.setScene(scene));
 		VBox resultBox = new VBox();
-		resultBox.getStyleClass().add("menu");
 		resultBox.setPrefSize(1300, 500);
 		resultBox.getChildren().addAll(imgResult, retour);
 		resultBox.setAlignment(Pos.CENTER);
-		showResult.getStylesheets().add("css/Style.css");
 		showResult = new Scene(resultBox);
 
 	}
@@ -618,11 +615,9 @@ public class mainApp extends Application {
 		retour.getStyleClass().add("bouton");
 		retour.setOnAction(e -> primaryStage.setScene(scene));
 		VBox resultBox = new VBox();
-		resultBox.getStyleClass().add("menu");
 		resultBox.setPrefSize(1300, 500);
 		resultBox.getChildren().addAll(imgResult, retour);
 		resultBox.setAlignment(Pos.CENTER);
-		showResult.getStylesheets().add("css/Style.css");
 		showResult = new Scene(resultBox);
 	}
 

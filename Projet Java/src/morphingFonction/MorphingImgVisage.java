@@ -1,6 +1,5 @@
 package morphingFonction;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +10,8 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import gif.AnimatedGifEncoder;
-import javafx.scene.control.TextField;
+
+import java.awt.Color;
 import triangle.Point;
 import triangle.Triangle;
 
@@ -186,7 +186,7 @@ public class MorphingImgVisage {
      * @param nombreImg nombre d'images dans l'animation
      * @throws Exception en cas d'erreur
      */
-    public void creerGif(List<Triangle> tabD, List<Triangle> tabF, File f, double nombreImg,TextField texte) throws Exception {
+    public void creerGif(List<Triangle> tabD, List<Triangle> tabF, File f, double nombreImg) throws Exception {
         AnimatedGifEncoder e = new AnimatedGifEncoder();
         e.start("img/testGif.gif");  // Début de la création du GIF
         e.setRepeat(0);  // Répéter l'animation en boucle
@@ -206,7 +206,6 @@ public class MorphingImgVisage {
             e.addFrame(imgSuivant);  // Ajout de l'image mise à jour au GIF
 
             System.out.println(Math.round((i * 100) / nombreImg) + "%");  // Affichage de la progression
-            texte.setText("Morphing en cours : "+ ((i*100)/nombreImg) + "%");
         }
         
         imgSuivant = ImageIO.read(f);
